@@ -1,0 +1,393 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: LBAW O Ardina Web API
+  description: Especificação de Recursos Web (A7) para "O Ardina"
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/edgarlourenco/Ardina/1.0.0
+  - description: 'Production Server'
+    url: http://lbaw2163.lbaw.fe.up.pt/
+
+externalDocs:
+  description: Descubra sobre o API aqui.
+  url: https://git.fe.up.pt/lbaw/lbaw2122/lbaw2163/-/blob/main/A8.md
+
+tags:
+  - name: 'M01: Autenticação e Perfil Individual'
+  - name: 'M02: Criar e Editar Noticia/Comentário'
+  - name: 'M03: Ver utilizadores/Conteúdo'
+  - name: 'M04: Procura utilizadores/Conteúdo'
+  - name: 'M05: Notificações'
+  - name: 'M06: Adminstração do Admin'
+  - name: 'M07: Páginas Estáticas'
+  
+  
+  
+paths: 
+  # -------------------- M01 --------------------  
+  /login/:
+    get:
+      operationId: R101
+      summary: 'R101: Formulário de Login'
+      description: 'Providenciar Formulário de Login. Acesso: PUB'
+      tags: 
+        - 'M01: Autenticação e Perfil Individual'
+      responses:
+       '200':
+        description: 'Ok. Mostrar US09'
+    post:
+      operationId: R102
+      summary: 'R102: Ação de Login'
+      description: 'Processa o pedido de Login. Acesso: PUB'
+      tags:
+      - 'M01: Autenticação e Perfil Individual'
+      
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                Username:
+                  type: string
+                Password:
+                  type: string
+              required:
+                - Username
+                - Password
+                
+      responses:
+        '303':
+          description: 'Redirecionar depois de login'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'OK. Redirect to US12 - Homepage'
+                  value: '/'
+                303Error:
+                  description: 'Autenticação Falhada.Redirecionar para Formulário de Login'
+                  value: '/login/'
+  
+  /logout/:
+    post:
+      operationId: R103
+      summary: 'R103: Ação de Logout'
+      description: 'Logout do Utilizador Autenticado. Acess: USR,ADM, BAN'
+      tags:
+        - 'M01: Autenticação e Perfil Individual'
+      
+      responses:
+        '303':
+          description: 'Redirecionar depois de processar logout'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirecionar para Formulário de Login'
+                  value: '/login/'
+                303Error:
+                  description: 'Logout Falhado. Tente novamente'
+                  value: '/'
+                
+  /recuperacao-password/:
+    post:
+      operationId: R104
+      summary: 'R104: Recuperação de Password'
+      description: 'Ação de recuperação de Password. Access: PUB'
+      tags:
+        - 'M01: Autenticação e Perfil Individual'
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                Username:
+                  type: string
+              required:
+                - Username
+  
+      responses:
+        '303':
+          description: 'Pedido de recuperação de password efetuado. Redirecionar para Login'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirecionar para US09'
+                  value: '/login/'
+                303Error:
+                  description: 'Recuperação de password falhada.'
+                  value: '/login/'
+
+  /signup/:
+    get:
+      operationId: R105
+      summary: 'R105: Ver Formulário de Registo'
+      description: 'Providenciar formulário para novo registo'
+      tags:
+        - 'M01: Autenticação e Perfil Individual'
+      responses:
+        '200':
+          description: 'Ok. Mostrar US10'
+          
+    post:
+      operationId: R106
+      summary: 'R106: Ação de Registo'
+      description: 'Processa a informação de registo para submissão. Acess: PUB'
+      tags: 
+        - 'M01: Autenticação e Perfil Individual'
+      
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                Username:
+                  type: string
+                Email:
+                  type: string
+                Password:
+                  type: string
+                Foto:
+                  type: string
+                Contato:
+                  type: integer
+              required:
+                - Username
+                - Email
+                - Password
+                - Contato
+      
+      responses:
+        '303':
+          description: 'Redirecionar após registo'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok Redirecionar para Login'
+                  value: '/login/'
+                303Error:
+                  description: 'Erro. Tente novamente'
+                  value: '/signup/'
+                  
+  /utilizador/{nome}/edit/:
+    get:
+      operationId: R107
+      summary: 'R107: Editar Formulário de Perfil de Utilizador'
+      description: 'Formulário para Editar Perfil. Acesso: USR'
+      tags:
+        - 'M01: Autenticação e Perfil Individual'
+      parameters: 
+        - in: path
+          name: nome
+          schema:
+            type: string
+          required: true
+          
+      responses:
+        '200':
+          description: 'Ok. Mostrar US21'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditUser'
+      
+    patch:
+      operationId: R108
+      summary: 'R108: Editar Perfil de Utilizador'
+      description: 'Processa a Edição editada pelo utilizador. Acesso:USR'
+      tags:
+        - 'M01: Autenticação e Perfil Individual'
+      parameters:
+        - in: path
+          name: nome
+          schema: 
+            type: string
+          required: true
+     
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                email:
+                  type: string
+                contacto:
+                  type: integer
+              required:
+                - nome
+                - email
+                - contacto
+      
+      responses:
+        '303':
+          description: 'Redirecionar após edição de utilizador'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirecionar para US21'
+                  value: '/utilizador/{nome}/edit'
+                303Error:
+                  description: 'Edição falhada. Redirecionar para US21'
+                  value: '/utilizador/{nome}/edit'
+
+  /utilizador/{nome}/edit/mudanca-password/:
+    
+    patch:
+      operationId: R109
+      summary: 'R109: Alteracao de password'
+      description: 'Processa o formulário de mudança de palavra-passe'
+      tags:
+        - 'M01: Autenticação e Perfil Individual'
+      
+      parameters:
+        - in: path
+          name: nome
+          schema:
+            type: string
+          required: true
+      
+      requestBody:
+        required: True
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                pass_antiga:
+                  type: string
+                  format: password
+                pass_nova:
+                  type: string
+                  format: password
+              required:
+                - pass_antiga
+                - pass_nova
+        
+      responses:
+        '303':
+          description: 'Redirecionar após mudança de password'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirecionar para US21'
+                  value: 'utilizador/{nome}/edit/'
+                303Error:
+                  description: 'Erro a mudar password. Redirecionar para US21'
+                  value: 'utilizador/{nome}/edit/'
+                    
+  /utilizador/{nome}/apagar_conta/:
+    patch:
+      operationId: R111
+      summary: 'R110: Apagar utilizador'
+      description: 'Apagar conta. Acesso: USR'
+      tags: 
+        - 'M01: Autenticação e Perfil Individual'
+      
+      parameters: 
+        - in: path
+          name: nome
+          schema:
+            type: string
+          required: true
+          
+      responses:
+        '303':
+          description: 'Redirecionar após eliminação de conta.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirecionar para US09'
+                  value: '/'
+                303Error:
+                  description: 'Erro a eliminar conta. Tente novamente'
+                  value: '/username/{nome}/edit/'
+                  
+                  
+# -------------------- M02 --------------------
+
+  /noticias/criar/:
+    post:
+      operationId:
+      summary: 'R201: Criar noticia'
+      description: 'Criar notícia nova. Acesso: USR'
+      tags: 
+        - 'M02: Criar e Editar Noticia/Comentário'
+      
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+                type: object
+                properties:
+                  titulo:
+                    type: string
+                  descricao:
+                    type: string
+                  image:
+                    type: string
+                    format: binary
+                required:
+                  - titulo
+                  - descricao
+      
+      responses:
+        '303':
+          description: 'Redirecionar após criação de noticia'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirecionar para noticia criada.'
+                  value: 'noticas/{id}⁄'
+                303Error:
+                  description: 'Falha ao criar notícia. Tentar novamente'
+                  value: '/noticias/criar/'
+components:
+  schemas:
+    EditUser:
+      type: object
+      properties:
+        nome: 
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        foto:
+          type: string
+        contacto:
+          type: integer
