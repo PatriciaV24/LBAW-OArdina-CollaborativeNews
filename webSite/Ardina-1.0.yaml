@@ -790,9 +790,153 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Utilizador'
+                      
+  # -------------------- M05 -------------------- 
+  /notificacoes/:
+    get:
+      operationId: R501
+      summary: 'R501: Ver Notificacoes do Utilizador'
+      description: 'Providenciar Notifacoes ao Utilizador. Access: USR, ADM'
+      tags: 
+        - 'M05: Notificações'
+      
+      responses:
+        '200': 
+          description: 'Ok. Mostrar Notifacoes'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  seguidor:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NSeguidor'
+                  votos:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NVotos'
+                  comentarios:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NComentario'
+                  bloqueado:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NBloqueado'
+        '401':
+          description: 'Login para ver notificacoes'
+          
+    patch:
+      operationId: R502
+      summary: 'R502: Marcar notificacoes como lidas'
+      description: 'R502: Marcar as notificacoes do utilizador como lidas. Acesso: USR, ADM'
+      tags:
+        - 'M05: Notificações'
+        
+      parameters:
+        - in: header
+          name: notificacao
+          schema:
+            type: object
+            properties:
+              tipo_notificacao:
+                type: string
+              id_notificacao:
+                type: integer
+            required:
+              - tipo_notificacao
+              - id_notificacao
+          required: true
+      
+      responses:
+        '201':
+          description: 'Notificacao lida'
+        '404':
+          description: 'Notificacao nao lida'
+    
+    delete:
+      operationId: R503
+      summary: 'R503: Apagar notificacao'
+      description: 'Apagar notificacao do utilizador'
+      tags: 
+        - 'M05: Notificações'
+      
+      parameters:
+        - in: header
+          name: notificacao
+          schema:
+            type: object
+            properties:
+              tipo_notificacao:
+                type: string
+              id_notificacao:
+                type: integer
+            required:
+              - tipo_notificacao
+              - id_notificacao
+          required: true
+      
+      responses:
+        '201':
+          description: 'Notificacao apagada'
+        '404':
+          description: 'Notificacao expirada'
+      
+        
+        
+                    
   
 components:
   schemas:
+    NBloqueado:
+      type: object
+      properties:
+        id:
+          type: integer
+        bloq_id:
+          type: integer
+        motivo:
+          type: string
+        lido:
+          type: boolean
+        data:
+          type: string
+        
+    NComentario:
+      type: object
+      properties:
+        comentario_id:
+          type: integer
+        lido:
+          type: boolean
+        data:
+          type: string
+      
+    NVotos:
+      type: object
+      properties:
+        utilizadorvoto_id:
+          type: integer
+        noticia_id:
+          type: integer
+        lido:
+          type: boolean
+        date:
+          type: string
+        
+    NSeguidor:
+      type: object
+      properties:
+        follower_id:
+          type: integer
+        novo_seguidor:
+          type: boolean
+        lido:
+          type: boolean
+        date:
+          type: string
+      
     Utilizador:
       type: object
       properties:
