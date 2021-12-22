@@ -78,7 +78,7 @@ paths:
     post:
       operationId: R103
       summary: 'R103: Ação de Logout'
-      description: 'Logout do Utilizador Autenticado. Acess: USR,ADM, BAN'
+      description: 'Logout do Utilizador Autenticado. Acesso: USR,ADM, BAN'
       tags:
         - 'M01: Autenticação e Perfil Individual'
       
@@ -145,7 +145,7 @@ paths:
     post:
       operationId: R106
       summary: 'R106: Ação de Registo'
-      description: 'Processa a informação de registo para submissão. Acess: PUB'
+      description: 'Processa a informação de registo para submissão. Acesso: PUB'
       tags: 
         - 'M01: Autenticação e Perfil Individual'
       
@@ -207,7 +207,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EditUser'
+                $ref: '#/components/schemas/EditarUser'
       
     patch:
       operationId: R108
@@ -336,9 +336,10 @@ paths:
                   
 # -------------------- M02 --------------------
 
-  /noticias/criar/:
+  /noticia/criar/:
+  
     post:
-      operationId:
+      operationId: R201
       summary: 'R201: Criar noticia'
       description: 'Criar notícia nova. Acesso: USR'
       tags: 
@@ -372,13 +373,439 @@ paths:
               examples:
                 303Success:
                   description: 'Ok. Redirecionar para noticia criada.'
-                  value: 'noticas/{id}⁄'
+                  value: 'noticia/{id}⁄'
                 303Error:
                   description: 'Falha ao criar notícia. Tentar novamente'
-                  value: '/noticias/criar/'
+                  value: '/noticia/criar/'
+  
+  /comentarios/criar/:
+    post:
+      operationId: R202
+      summary: 'R202: Criar comentário'
+      description: 'Criar comentário. Acesso: USR'
+      tags:
+        - 'M02: Criar e Editar Noticia/Comentário'
+      
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: string
+              properties:
+                texto:
+                  type: string
+              required:
+                - texto
+      
+      responses:
+        '303':
+          description: 'Redirecionar após comentário'
+          headers:
+            Location:
+              schema: 
+                type: string
+              examples:
+                303Success: 
+                  description: 'Ok. Redirecionar para noticia'
+                  value: '/noticia/{id}/'
+                303Error:
+                  description: 'Falha ao criar comentário. Redirecionar noticia'
+                  value: '/noticia/{id}/'
+  
+  /noticia/{id}/:
+    patch:
+      operationId: R203
+      summary: 'R203: Editar noticia'
+      description: 'Editar conteúdo de noticia. Acesso: AUT'
+      tags:
+        - 'M02: Criar e Editar Noticia/Comentário'
+        
+      parameters: 
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                titulo:
+                  type: string
+                descricao:
+                  type: string
+                imagem:
+                  type: string
+              required:
+                - descricao
+                
+      responses:
+        '303':
+          description: 'Redirecionar após editar noticia'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirecionar para a noticia editada.'
+                  value: '/noticia/{id}/'
+                303Error:
+                  description: 'Falha ao criar noticia. Redirecionar para a noticia'
+                  value: '/noticia/{id}/'
+                    
+    delete:
+      operationId: R204
+      summary: 'R204: Apagar notícia'
+      description: 'Apagar noticia. Acesso: AUT'
+      tags: 
+        - 'M02: Criar e Editar Noticia/Comentário'
+      
+      parameters: 
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          
+      responses:
+        '303':
+          description: 'Redirecionar após eliminar noticia'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirecionar para página inicial'
+                  value: '/'
+                303Error:
+                  description: 'Ok. Redirecionar para noticia'
+                  value: '/noticia/{id}'
+                  
+  /comentarios/:
+    patch:
+      operationId: R205
+      summary: 'R205: Editar comentario'
+      description: 'Editar comentario. Acesso: AUT'
+      tags: 
+      - 'M02: Criar e Editar Noticia/Comentário'
+      
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                texto:
+                  type: string
+              required:
+                - texto
+      
+      responses:
+        '303':
+          description: 'Redirecionar após editar comentário'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirecionar para noticia comentada'
+                  value: '/noticia/{id}'
+                303Error:
+                  description: 'Erro ao editar comentario. Redirecionar para noticia'
+                  value: '/noticia/{id}'
+  
+    delete:
+      operationId: R206
+      summary: 'R206: Apagar comentário'
+      description: 'Apagar comentário em noticia. Acesso: AUT'
+      tags:
+        - 'M02: Criar e Editar Noticia/Comentário'
+        
+      parameters:
+        - in: header
+          name: id
+          schema:
+            type: integer
+          required: true
+      
+      responses:
+        '303':
+          description: 'Redirecionar após eliminar comentario'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirecionar para noticia'
+                  value: '/noticia/{id}'
+                303Error:
+                  description: 'Erro. Redirecionar para noticia'
+                  value: '/noticia/{id}'
+                  
+    # -------------------- M03 -------------------- 
+    
+  /:
+    get:
+      operationId: R301
+      summary: 'R301: Pagina Inicial'
+      description: 'Mostrar Pagina Inicial. Acesso: PUB, USR, ADM'
+      tags:
+        - 'M03: Ver utilizadores/Conteúdo'
+      
+      responses:
+        '200':
+          description: 'Ok. IF PUB: Mostrar página inicial sem log-in; ELSE: Mostrar página inical logado com o perfil no topo direito'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ultimas_noticias:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Noticia'
+                  pesquisa:
+                    type: array
+                    items:
+                      type: string
+  
+  /noticia/{id}:
+    get:
+      operationId: R302
+      summary: 'R302: Ver uma noticia especifica'
+      description: 'Ver uma noticia especifica. Acesso: PUB, USR, ADM, AUT'
+      tags:
+       - 'M03: Ver utilizadores/Conteúdo'
+       
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      
+      responses:
+        '200':
+          description: 'Ok. Mostrar a noticia escolhida'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Noticia'
+        '404':
+          description: 'Noticia não encontrada'
+          
+  /utilizador/{nome}:
+    get:
+      operationId: R303
+      summary: 'R303: Ver perfil de utilizador'
+      description: 'Ver perfil de utilizador. Acesso: PUB, USR, ADM'
+      tags:
+        - 'M03: Ver utilizadores/Conteúdo'
+        
+      parameters:
+        - in: path
+          name: nome
+          schema:
+            type: string
+          required: true
+        
+      responses:
+        '200':
+          description: 'Ok. Mostrar perfil do utilizador pretendido'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  utilizador:
+                    $ref: '#/components/schemas/Utilizador'
+                  publicacoes:
+                    $ref: '#/components/schemas/Noticia'
+                  a_seguir:
+                    $ref: '#/components/schemas/Seguir'
+        '404':
+          description: 'Utilizador não encontrado'
+          
+  /api/carregar-noticias:
+    get:
+      operationId: R304
+      summary: 'R304: Carregar mais noticias'
+      description: 'Carregar mais noticias. Acesso: PUB, USR, ADM'
+      tags:
+        - 'M03: Ver utilizadores/Conteúdo'
+      parameters:
+        - in: query
+          name: paginacao
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: pagina
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: sortBy
+          schema:
+            type: integer
+          required: false
+      
+      responses:
+        '200':
+          description: 'Retorna noticias para paginacao'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  noticias:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Noticia'
+        '400':
+          description: 'Erro nos parametros'
+          
+  /api/carregar-utilizadores:
+    get:
+      operationId: R305
+      summary: 'R305: Carregar mais utilizadores'
+      description: 'Carregar mais utilizadores. Acesso: PUB, USR'
+      tags: 
+        - 'M03: Ver utilizadores/Conteúdo'
+      parameters:
+        - in: query
+          name: paginacao
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: pagina
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: sortBy
+          schema:
+            type: integer
+          required: false
+      
+      responses:
+        '200':
+          description: 'Retorna utilizadores para paginacao'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  utilizadores:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Utilizador'
+  
+  /api/carregar-comentarios:
+    get:
+      operationId: R306
+      summary: 'R306: Carregar mais comentários'
+      description: 'Carregar mais comentários da noticia. Acesso: PUB, USR'
+      tags:
+        - 'M03: Ver utilizadores/Conteúdo'
+      parameters:
+        - in: query
+          name: paginacao
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: pagina
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: id
+          schema:
+            type: integer
+          required: false
+      
+      responses:
+        '200':
+          description: 'Retorna comentários da noticia para paginacao'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comentarios:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Comentario'
+        '400': 
+          description: 'Erro nos parametros'
+      
+  # -------------------- M04 -------------------- 
+  /pesquisa/:
+    get:
+      operationId: R401
+      summary: 'R401: Pesquisa de utilizadores/conteudo'
+      description: 'Providencia conteudo ou utilizadores pesquisados. Acesso: PUB, USR, ADM'
+      tags:
+        - 'M04: Procura utilizadores/Conteúdo'
+      
+      parameters:
+        - in: query
+          name: pesquisa
+          schema:
+            type: string
+          required: false
+          allowReserved: true
+      
+      responses:
+        '200':
+          description: 'Ok. Mostrar resultado da pesquisa'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  noticias:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Noticia'
+                  comentarios:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Comentario'
+                  utilizadores:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Utilizador'
+  
 components:
   schemas:
-    EditUser:
+    Utilizador:
+      type: object
+      properties:
+        nome:
+          type: string
+        email:
+          type: string
+        photo:
+          type: string
+        permissao:
+          type: string
+          
+    EditarUser:
       type: object
       properties:
         nome: 
@@ -391,3 +818,50 @@ components:
           type: string
         contacto:
           type: integer
+    
+    Noticia:
+      type: object
+      properties:
+        id:
+          type: integer
+        autor_id:
+          type: integer
+        titulo:
+          type: string
+        descricao:
+          type: string
+        data:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        comentario:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comentario'
+          default: []
+    
+    Comentario:
+      type: object
+      properties:
+        id:
+          type: integer
+        autor_id:
+          type: integer
+        not_id:
+          type: integer
+        texto:
+          type: string
+        data:
+          type: string
+    
+    Seguir:
+      type: object
+      properties:
+        id: 
+          type: integer
+        nome:
+          type: string
+        photo:
+          type: string
