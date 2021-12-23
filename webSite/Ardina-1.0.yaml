@@ -987,7 +987,33 @@ paths:
   
 
   # -------------------- M07 --------------------         
-  /pedidos/{id}/aceitar/:
+  /pedidos/noticia/{id}/aceitar/:
+    patch:
+      operationId: R701
+      summary: 'R701: Aceitar report'
+      description: 'Aceitar report. Acesso: ADM'
+      tags:
+        - 'M07: Adminstração do Admin'
+      
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: header
+          name: tempo_ban
+          schema:
+            type: integer
+          required: false
+      
+      responses:
+        '201':
+          description: 'Report aceite'
+        '401':
+          description: 'Só pode ser aceite por um moderador'
+  
+  /pedidos/comentario/{id}/aceitar/:
     patch:
       operationId: R702
       summary: 'R702: Aceitar report'
@@ -1012,11 +1038,79 @@ paths:
           description: 'Report aceite'
         '401':
           description: 'Só pode ser aceite por um moderador'
-  
-  /pedidos/{id}/rejeitar/:
+          
+  /pedidos/utilizador/{id}/aceitar/:
     patch:
       operationId: R703
-      summary: 'R703: Rejeitar report'
+      summary: 'R703: Aceitar report'
+      description: 'Aceitar report. Acesso: ADM'
+      tags:
+        - 'M07: Adminstração do Admin'
+      
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: header
+          name: tempo_ban
+          schema:
+            type: integer
+          required: false
+      
+      responses:
+        '201':
+          description: 'Report aceite'
+        '401':
+          description: 'Só pode ser aceite por um moderador'
+  
+  /pedidos/noticia/{id}/rejeitar/:
+    patch:
+      operationId: R704
+      summary: 'R704: Rejeitar report'
+      description: 'Rejeitar report. Acesso: ADM'
+      tags:
+        - 'M07: Adminstração do Admin'
+      
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          
+      responses:
+        '201':
+          description: 'Report rejeitado'
+        '401':
+          description: 'Só pode ser rejeitado por um moderador'
+
+  /pedidos/comentario/{id}/rejeitar/:
+    patch:
+      operationId: R705
+      summary: 'R705: Rejeitar report'
+      description: 'Rejeitar report. Acesso: ADM'
+      tags:
+        - 'M07: Adminstração do Admin'
+      
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          
+      responses:
+        '201':
+          description: 'Report rejeitado'
+        '401':
+          description: 'Só pode ser rejeitado por um moderador'
+
+  /pedidos/utilizador/{id}/rejeitar/:
+    patch:
+      operationId: R706
+      summary: 'R706: Rejeitar report'
       description: 'Rejeitar report. Acesso: ADM'
       tags:
         - 'M07: Adminstração do Admin'
@@ -1035,10 +1129,166 @@ paths:
           description: 'Só pode ser rejeitado por um moderador'
   
   # -------------------- M08 --------------------
+  /faq/:
+    get:
+      operationId: R801
+      summary: 'R801: Ver FAQ'
+      description: 'Pagina de Perguntas Frequentes. Acesso: PUB, USR, ADM'
+      tags:
+        - 'M08: Páginas Estáticas'
+
+      responses:
+        '200':
+          description: 'Ok. IF PUB, USR Mostrar Pergunta e Resposta
+                            IF ADM Mostrar edição da pergunta e resposta'
+          content: 
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Faq'
+                      
+    post:
+      operationId: R802
+      summary: 'R802: Criar FAQ'
+      description: 'Criar pergunta e resposta frequente. Access: ADM'
+      tags:
+        - 'M08: Páginas Estáticas'
+      
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - pergunta
+                - resposta
+              properties:
+                id:
+                  type: integer
+                autor_id:
+                  type: integer
+                pergunta:
+                  type: string
+                resposta:
+                  type: string
+                  
+      responses:
+        '303':
+          description: 'Redirecionar após criar faq.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirecionar para FAQ'
+                  value: '/faq/'
+                303Error:
+                  description: 'Falha ao criar FAQ. Redirecionar para FAQ'
+                  value: '/faq/'
+          
+    patch:
+      operationId: R803
+      summary: 'R803: Editar FAQ'
+      description: 'Editar pergunta e resposta frequente. Access: ADM'
+      tags:
+        - 'M08: Páginas Estáticas'
+      
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - question
+                - answer
+              properties:
+                id:
+                  type: integer
+                autor_id:
+                  type: integer
+                question:
+                  type: string
+                answer:
+                  type: string
+                  
+      responses:
+        '303':
+          description: 'Redirecionar após editar FAQ.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirecionar para FAQ'
+                  value: '/faq/'
+                303Error:
+                  description: 'Falha ao Editar FAQ. Redirecionar para FAQ'
+                  value: '/faq/'
+                  
+    delete:
+      operationId: R804
+      summary: 'R804: Apagar FAQ'
+      description: 'Apagar pergunta e resposta frequente. Access: ADM'
+      tags:
+        - 'M08: Páginas Estáticas'
+          
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: integer
+          required: true
+          
+      responses:
+        '303':
+          description: 'Redirecionar após apagar FAQ.'
+          headers:
+            Location:
+              schema:
+                type: string
+              examples:
+                303Success:
+                  description: 'Ok. Redirecionar para FAQ'
+                  value: '/faq/'
+                303Error:
+                  description: 'Falha ao criar FAQ. Redirecionar para FAQ'
+                  value: '/faq/'
+                  
+  /sobrenos/:
+    get:
+      operationId: R805
+      summary: 'R805: Sobre nós'
+      description: 'Sobre nós. Acesso: PUB, USR, ADM'
+      tags:
+        - 'M08: Páginas Estáticas'
+      
+      responses:
+        '200':
+          description: 'Ok. Mostrar página Sobre Nós'
   
   
 components:
   schemas:
+    Faq:
+      type: object
+      properties:
+        id:
+          type: integer
+        autor_id:
+          type: integer
+        pergunta:
+          type: string
+        resposta:
+          type: string
+  
+  
     NBloqueado:
       type: object
       properties:
