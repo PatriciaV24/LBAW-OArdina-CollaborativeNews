@@ -20,8 +20,9 @@ tags:
   - name: 'M03: Ver utilizadores/Conteúdo'
   - name: 'M04: Procura utilizadores/Conteúdo'
   - name: 'M05: Notificações'
-  - name: 'M06: Adminstração do Admin'
-  - name: 'M07: Páginas Estáticas'
+  - name: 'M06: Pedidos Administracao'
+  - name: 'M07: Adminstração do Admin'
+  - name: 'M08: Páginas Estáticas'
   
   
   
@@ -883,9 +884,158 @@ paths:
         '404':
           description: 'Notificacao expirada'
       
-        
-        
-                    
+   # -------------------- M06 -------------------- 
+  /comentario/report/:
+    post:
+      operationId: R601
+      summary: 'R601: Reportar Comentario'
+      description: 'R601: Reportar comentario de utilizador. Acesso: USR'
+      tags:
+        - 'M06: Pedidos Administracao'
+      
+      parameters:
+        - in: header
+          name: id
+          schema:
+              type: integer
+          required: true
+      
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                descricao:
+                  type: string
+              required:
+                - descricao
+      
+      responses:
+        '201':
+          description: 'Report criado'
+        '401':
+          description: 'Login para reportar'
+  
+  
+  /noticia/{id}/report/:
+    post:
+      operationId: R602
+      summary: 'R602: Reportar noticia'
+      description: 'R602: Reportar noticia de utilizador. Acesso: USR'
+      tags: 
+        - 'M06: Pedidos Administracao'
+      
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+      
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                descricao:
+                  type: string
+              required:
+                - descricao
+      
+      responses:
+        '201':
+          description: 'Report criado'
+        '401':
+          description: 'Login para reportar'
+          
+  /utilizador/{nome}/report/:
+    post:
+      operationId: R603
+      summary: 'R603: Reportar utilizador'
+      description: 'Reportar utilizador. Acesso: USR'
+      tags:
+        - 'M06: Pedidos Administracao'
+      
+      parameters:
+        - in: path
+          name: nome
+          schema:
+            type: string
+          required: true
+      
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                descricao:
+                  type: string
+              required:
+                - descricao
+      
+      responses:
+        '201':
+          description: 'Report criado'
+        '401':
+          description: 'Login para reportar'
+  
+
+  # -------------------- M07 --------------------         
+  /pedidos/{id}/aceitar/:
+    patch:
+      operationId: R702
+      summary: 'R702: Aceitar report'
+      description: 'Aceitar report. Acesso: ADM'
+      tags:
+        - 'M07: Adminstração do Admin'
+      
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+        - in: header
+          name: tempo_ban
+          schema:
+            type: integer
+          required: false
+      
+      responses:
+        '201':
+          description: 'Report aceite'
+        '401':
+          description: 'Só pode ser aceite por um moderador'
+  
+  /pedidos/{id}/rejeitar/:
+    patch:
+      operationId: R703
+      summary: 'R703: Rejeitar report'
+      description: 'Rejeitar report. Acesso: ADM'
+      tags:
+        - 'M07: Adminstração do Admin'
+      
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          
+      responses:
+        '201':
+          description: 'Report rejeitado'
+        '401':
+          description: 'Só pode ser rejeitado por um moderador'
+  
+  # -------------------- M08 --------------------
+  
   
 components:
   schemas:
