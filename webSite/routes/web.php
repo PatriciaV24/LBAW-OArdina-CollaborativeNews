@@ -20,12 +20,9 @@ Route::post('/recuperacao_password/', [UserController::class, 'recuperacao_passw
 Route::get('/signup/', [RegisterController::class, 'showRegistrationForm'])->name('signup');
 
 
-// Ver Site
-
-Route::middleware(['deleted']) -> group(function() {
     
-    //Sem precisar de autenticação
-    Route::middleware(['banned']) -> group(function() {
+//Sem precisar de autenticação
+    Route::middleware(['banido']) -> group(function() {
         
         //Ver noticia
         Route::get('/noticia/{id}/', [NoticiaController::class, 'show']) -> where(['id' => '[0-9]+']);
@@ -67,12 +64,36 @@ Route::middleware(['deleted']) -> group(function() {
             //Notificacoes
             Route::get('/notificacoes/', [NotificacoesController::class, 'mostrar']);
             Route::delete('/notificacoes/', [NotificacoesController::class, 'apagar']);
+            
+            //FAQ
+            Route::post('/faq/', [FAQController::class, 'create']);
+            Route::patch('/faq/{id}/', [FAQController::class, 'edit'])->where(['id'=>'[0-9]+'])->middleware(['admin']);
+            Route::delete('/faq/{id}/', [FAQController::class, 'delete'])->where(['id'=>'[0-9]+'])->middleware(['admin']); 
 
-            //
+            //Report Utilizador
+            Route::post('/utilizador/{nome}/report/', [UserController::class, 'report'])->where(['id'=>'[0-9]+']);
+            Route::post('/utilizador/{nome}/ban/', [UserController::class, 'ban'])->middleware(['admin']);
 
+            //Perfil
+            Route::post('/utilizador/{nome}/edit', [UserController::class, 'EditarUser']);
+            Route::post('/mudanca_password/', [UserController::class, 'Mudar Pass']);
+            Route::post('/perfil_update/', [UserController::class, 'EditarPerfil']);
+            Route::post('/apagar_conta', [UserController::class, 'ApagarConta']);
 
+            //Pedidos Noticia
+            Route::patch('/pedidos/noticias/{id}/aceitar', [PedidoController::class, 'aprovadoN']);
+            Route::patch('/pedidos/noticias/{id}/rejeitar', [PedidoController::class, 'rejeitadoN']);
+
+            //Pedidos Comentario
+            Route::patch('pedidos/comentario/{id}/aceitar', [PedidoController::class, 'aprovadoC']);
+            Route::patch('pedidos/comentario/{id}/rejeitar', [PedidoController::class, 'rejeitadoC']);
+
+            //Pedidos Utilizador
+            Route::patch('pedidos/utilizador/{id}/aceitar', [PedidoController::class, 'aprovadoU']);
+            Route::patch('pedidos/utilizador/{id}/rejeitar', [PedidoController::class, 'rejeitadoU']);
+            
         });
 
     });
 
-});
+
