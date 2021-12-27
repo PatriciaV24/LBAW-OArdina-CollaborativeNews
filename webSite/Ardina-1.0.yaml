@@ -4,9 +4,6 @@ info:
   title: LBAW O Ardina Web API
   description: Especificação de Recursos Web (A7) para "O Ardina"
 servers:
-  # Added by API Auto Mocking Plugin
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/edgarlourenco/Ardina/1.0.0
   - description: 'Production Server'
     url: http://lbaw2163.lbaw.fe.up.pt/
 
@@ -98,7 +95,7 @@ paths:
                   description: 'Logout Falhado. Tente novamente'
                   value: '/'
                 
-  /recuperacao-password/:
+  /recuperacao_password/:
     post:
       operationId: R104
       summary: 'R104: Recuperação de Password'
@@ -883,8 +880,9 @@ paths:
           description: 'Notificacao apagada'
         '404':
           description: 'Notificacao expirada'
-      
-   # -------------------- M06 -------------------- 
+
+ # -------------------- M06 -------------------- 
+
   /comentario/report/:
     post:
       operationId: R601
@@ -917,7 +915,6 @@ paths:
           description: 'Report criado'
         '401':
           description: 'Login para reportar'
-  
   
   /noticia/{id}/report/:
     post:
