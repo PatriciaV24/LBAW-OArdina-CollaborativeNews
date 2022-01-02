@@ -13,8 +13,10 @@
 - [ ] Alguns ""data types"" estranhos
 
 # A5
-- [ ] Faltou uso do lowercase ou snake_case
-    ALTERAR O NOME DAS TABELAS COLOCAR SNAKECASE
+- [X] Faltou uso do lowercase ou snake_case
+ALTEREI O NOME DAS TABELAS (SNAKECASE)
+RETIREI OS DOMINIOS NAo UTILIZADOS
+
 - [ ] Dates must be greater than currdate
 - [ ] Falta o SQL script no git
 - [ ] Verificar Checklist
