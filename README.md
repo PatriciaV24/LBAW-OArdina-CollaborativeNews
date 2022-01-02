@@ -14,6 +14,7 @@
 
 # A5
 - [ ] Faltou uso do lowercase ou snake_case
+    ALTERAR O NOME DAS TABELAS COLOCAR SNAKECASE
 - [ ] Dates must be greater than currdate
 - [ ] Falta o SQL script no git
 - [ ] Verificar Checklist
