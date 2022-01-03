@@ -149,7 +149,7 @@ CREATE TABLE info_seguidor (
     PRIMARY KEY(followed_id, infos_id)
 );
 
-/* T: Notificações Novos Seguidores (-> info_seguidor)*/
+/* T: Notificações Novos Seguidores (-> Utilizador)*/
 CREATE TABLE n_seguidor (
     followed_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
     infos_id INTEGER NOT NULL REFERENCES utilizador(id)  ON DELETE CASCADE,
@@ -186,7 +186,7 @@ CREATE TABLE n_vot_com (
     PRIMARY KEY(autor_id, voto_id)
 );
 
-/* T: Notificações Utilizador Bloqueado (UreportU)*/
+/* T: Notificações Utilizador Bloqueado (->report_u)*/
 CREATE TABLE n_uti_bloq (
     id SERIAL PRIMARY KEY,
     bloq_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
