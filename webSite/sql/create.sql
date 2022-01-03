@@ -1,11 +1,11 @@
-/*  SCHEMA - Elimina tudo dentro do SCHEMA
+/*  SCHEMA - Elimina tudo dentro do SCHEMA */
 DROP SCHEMA IF EXISTS lbaw2163 CASCADE;
 CREATE SCHEMA lbaw2163;
 SET search_path TO "lbaw2163";
-*/
+
 
 /*------------------------------------------------------------*/
-/*Caso nao esteja dentro do lbaw2163*/
+/*Caso nao esteja dentro do lbaw2163
 DROP TABLE IF EXISTS publicidade CASCADE;
 DROP TABLE IF EXISTS report_c CASCADE;
 DROP TABLE IF EXISTS report_n CASCADE;
@@ -39,7 +39,7 @@ DROP INDEX IF EXISTS autor_not_idx;
 DROP INDEX IF EXISTS comentario_idx;
 DROP INDEX IF EXISTS search_not_idx;
 DROP INDEX IF EXISTS search_uti_idx;
-
+*/
 ----------------------------------------------------
 
 /* TIPOS */
