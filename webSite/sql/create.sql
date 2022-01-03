@@ -1,19 +1,19 @@
 DROP TABLE IF EXISTS publicidade CASCADE;
-DROP TABLE IF EXISTS reportC CASCADE;
-DROP TABLE IF EXISTS reportN CASCADE;
-DROP TABLE IF EXISTS reportU CASCADE;
-DROP TABLE IF EXISTS textoReport CASCADE;
-DROP TABLE IF EXISTS nUtiBloq CASCADE;
-DROP TABLE IF EXISTS nVotCom CASCADE;
-DROP TABLE IF EXISTS nVotNot CASCADE;
-DROP TABLE IF EXISTS nComentario CASCADE;
-DROP TABLE IF EXISTS nSeguidor CASCADE;
-DROP TABLE IF EXISTS infoSeguidor CASCADE;
-DROP TABLE IF EXISTS favTag CASCADE;
-DROP TABLE IF EXISTS favCom CASCADE;
-DROP TABLE IF EXISTS favNot CASCADE;
-DROP TABLE IF EXISTS votNot CASCADE;
-DROP TABLE IF EXISTS votCom CASCADE;
+DROP TABLE IF EXISTS report_c CASCADE;
+DROP TABLE IF EXISTS report_n CASCADE;
+DROP TABLE IF EXISTS report_u CASCADE;
+DROP TABLE IF EXISTS texto_report CASCADE;
+DROP TABLE IF EXISTS n_uti_bloq CASCADE;
+DROP TABLE IF EXISTS n_vot_com CASCADE;
+DROP TABLE IF EXISTS n_vot_not CASCADE;
+DROP TABLE IF EXISTS n_comentario CASCADE;
+DROP TABLE IF EXISTS n_seguidor CASCADE;
+DROP TABLE IF EXISTS info_seguidor CASCADE;
+DROP TABLE IF EXISTS fav_tag CASCADE;
+DROP TABLE IF EXISTS fav_com CASCADE;
+DROP TABLE IF EXISTS fav_not CASCADE;
+DROP TABLE IF EXISTS vot_not CASCADE;
+DROP TABLE IF EXISTS vot_com CASCADE;
 DROP TABLE IF EXISTS imagem CASCADE;
 DROP TABLE IF EXISTS faq CASCADE;
 DROP TABLE IF EXISTS categoria CASCADE;
@@ -37,7 +37,6 @@ DROP INDEX IF EXISTS search_uti_idx;
 
 /* TIPOS */
 CREATE TYPE USER_TYPE AS ENUM('a','u','b'); /* a - Administrador, u - User Autenticado, b - User Banido*/
-CREATE TYPE PRIORIDADE AS ENUM('0', '1', '2');
 CREATE TYPE GOSTO AS ENUM('like', 'dislike');
 
 -------------------------------------------
@@ -68,119 +67,120 @@ CREATE TABLE noticia (
 CREATE TABLE tag (
     id SERIAL PRIMARY KEY,
     nome VARCHAR(40) NOT NULL UNIQUE,
-    prioridade PRIORIDADE NOT NULL    
+    prioridade INTEGER NOT NULL DEFAULT 0   
 );
 /* T: dos Comentários (Utilizador <-> Noticia)*/
 CREATE TABLE comentario (
     id SERIAL PRIMARY KEY,
     autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
-    not_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE,
+    not_id INTEGER REFERENCES noticia(id) ON DELETE CASCADE,
     texto TEXT NOT NULL,
     data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 /* T: dos Categoria (Noticia <-> Tag)*/
 CREATE TABLE categoria (
-    not_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE,
-    tag_id INTEGER NOT NULL REFERENCES tag(id) ON DELETE CASCADE,
+    not_id INTEGER REFERENCES noticia(id) ON DELETE CASCADE,
+    tag_id INTEGER REFERENCES tag(id) ON DELETE CASCADE,
     PRIMARY KEY (not_id, tag_id)
 );
 /* T: dos FAQ (-> Utilizador)*/
 CREATE TABLE faq (
     id SERIAL PRIMARY KEY,
     autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL, /*O administrador que realizou ou alterou o faq*/
-    questao TEXT NOT NULL UNIQUE,
+    questao TEXT NOT NULL,
     resposta TEXT NOT NULL
 );
 /* T: das Imagens (-> Noticia)*/
 CREATE TABLE imagem (
     id SERIAL PRIMARY KEY,
     legenda VARCHAR(30) NOT NULL,
-    path TEXT NOT NULL,
-    not_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE
+    imag_path TEXT NOT NULL UNIQUE,
+    not_id INTEGER REFERENCES noticia(id) ON DELETE CASCADE
 );
 
 /* T: Votaçao nos Comentários (Utilizador <-> Comentario)*/
-CREATE TABLE votCom (
+CREATE TABLE vot_com (
     id SERIAL PRIMARY KEY,
-    com_id INTEGER NOT NULL REFERENCES comentario(id) ON DELETE CASCADE,
+    com_id INTEGER REFERENCES comentario(id) ON DELETE CASCADE,
     autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
     tipo GOSTO NOT NULL
 );
 
 /* T: Votaçao nas Noticias (Utilizador <-> Noticia)*/
-CREATE TABLE votNot (
+CREATE TABLE vot_not (
     id SERIAL PRIMARY KEY,
-    not_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE,
+    not_id INTEGER REFERENCES noticia(id) ON DELETE CASCADE,
     autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
     tipo GOSTO NOT NULL
 );
 
 /* T: Favoritos Noticias (Utilizador <-> Noticia)*/
-CREATE TABLE favNot (
+CREATE TABLE fav_not (
     autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
-    not_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE,
+    not_id INTEGER REFERENCES noticia(id) ON DELETE CASCADE,
     PRIMARY KEY(autor_id, not_id)
 );
 
 /* T: Favoritos Comentários (Utilizador <-> Comentario)*/
-CREATE TABLE favCom (
+CREATE TABLE fav_com (
     autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
-    com_id INTEGER NOT NULL REFERENCES comentario(id) ON DELETE CASCADE,
-    PRIMARY KEY(autor_id, com_id)
+    comentario_id INTEGER REFERENCES comentario(id) ON DELETE CASCADE,
+    PRIMARY KEY(autor_id, comentario_id)
 );
 
 /* T: Favoritos Tags (Utilizador <-> Tag)*/
-CREATE TABLE favTag (
+CREATE TABLE fav_tag (
     autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
-    tag_id INTEGER NOT NULL REFERENCES tag(id) ON DELETE CASCADE,
+    tag_id INTEGER REFERENCES tag(id) ON DELETE CASCADE,
     PRIMARY KEY(autor_id, tag_id)
 );
 
 /* T: Seguidores (Utilizador <-> Utilizador)*/
-CREATE TABLE infoSeguidor (
-    id SERIAL PRIMARY KEY,
-    autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
-    followed_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL
+CREATE TABLE info_seguidor (
+    followed_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
+    infos_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
+    PRIMARY KEY(followed_id, infos_id)
 );
 
-/* T: Notificações Novos Seguidores (-> infoSeguidor)*/
-CREATE TABLE nSeguidor (
-    id SERIAL PRIMARY KEY,
+/* T: Notificações Novos Seguidores (-> info_seguidor)*/
+CREATE TABLE n_seguidor (
     followed_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
-    infos_id INTEGER REFERENCES infoSeguidor(id)  ON DELETE SET NULL,
+    infos_id INTEGER REFERENCES info_seguidor(id)  ON DELETE SET NULL,
     lido BOOLEAN NOT NULL DEFAULT FALSE,
-    data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    PRIMARY KEY(followed_id, infos_id)
 );
 
 /* T: Notificações Novos Comentários (-> Comentario)*/
-CREATE TABLE nComentario (
-    id SERIAL PRIMARY KEY,
-    authornot_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
+CREATE TABLE n_comentario (
+    autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
     com_id INTEGER NOT NULL REFERENCES comentario(id) ON DELETE CASCADE,
     lido BOOLEAN NOT NULL DEFAULT FALSE,
     data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    PRIMARY KEY(autor_id, com_id)
+
 );
 
-/* T: Notificações Votos Noticia (-> votNot)*/
-CREATE TABLE nVotNot (
-    id SERIAL PRIMARY KEY,
-    uti_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
+/* T: Notificações Votos Noticia (-> vot_not)*/
+CREATE TABLE n_vot_not (
+    autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
     voto_id INTEGER NOT NULL REFERENCES vot_not(id) ON DELETE CASCADE,
     lido BOOLEAN NOT NULL DEFAULT FALSE,
     data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    PRIMARY KEY(autor_id, voto_id)
 );
 
-/* T: Notificações Votos Comentario (-> votCom)*/
-CREATE TABLE nVotCom (
-    id SERIAL PRIMARY KEY,
-    uti_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
-    votoc_id INTEGER NOT NULL REFERENCES vot_com(id) ON DELETE CASCADE,
+/* T: Notificações Votos Comentario (-> vot_com)*/
+CREATE TABLE n_vot_com (
+    autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
+    voto_id INTEGER NOT NULL REFERENCES vot_com(id) ON DELETE CASCADE,
     lido BOOLEAN NOT NULL DEFAULT FALSE,
     data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    PRIMARY KEY(autor_id, voto_id)
 );
 
 /* T: Notificações Utilizador Bloqueado (UreportU)*/
-CREATE TABLE nUtiBloq (
+CREATE TABLE n_uti_bloq (
     id SERIAL PRIMARY KEY,
     bloq_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
     motivo TEXT NOT NULL,
@@ -189,40 +189,40 @@ CREATE TABLE nUtiBloq (
 );
 
 /* T: Possiveis Reports */
-CREATE TABLE textoReport (
+CREATE TABLE texto_report (
     id SERIAL PRIMARY KEY,
     report TEXT NOT NULL
 );
-/* T: Report Utilizador (Utilizador-> textoReport)*/
-CREATE TABLE reportU (
+/* T: Report Utilizador (Utilizador-> texto_report)*/
+CREATE TABLE report_u (
     id SERIAL PRIMARY KEY,
     autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL, 
     uti_id INTEGER REFERENCES utilizador(id)  ON DELETE SET NULL,
-    tiporesp_id INTEGER NOT NULL REFERENCES textoReport(id)  ON DELETE CASCADE,
+    tiporesp_id INTEGER REFERENCES texto_report(id)  ON DELETE CASCADE,
     resolvido BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-/* T: Report Noticia (Utilizador-> textoReport <-> Noticia)*/
-CREATE TABLE reportN (
+/* T: Report Noticia (Utilizador-> texto_report <-> Noticia)*/
+CREATE TABLE report_n (
     id SERIAL PRIMARY KEY,
     autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
-    not_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE,
-    tiporesp_id INTEGER NOT NULL REFERENCES textoReport(id) ON DELETE CASCADE,
+    not_id INTEGER REFERENCES noticia(id) ON DELETE CASCADE,
+    tiporesp_id INTEGER REFERENCES texto_report(id) ON DELETE CASCADE,
     resolvido BOOLEAN NOT NULL DEFAULT FALSE
 );
-/* T: Report Comentario (Utilizador-> textoReport <-> Comentario)*/
-CREATE TABLE reportC (
+/* T: Report Comentario (Utilizador-> texto_report <-> Comentario)*/
+CREATE TABLE report_c (
     id SERIAL PRIMARY KEY,
     autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
-    comentario_id INTEGER NOT NULL REFERENCES comentario(id) ON DELETE CASCADE,
-    tiporesp_id INTEGER NOT NULL REFERENCES textoReport(id) ON DELETE CASCADE,
+    comentario_id INTEGER REFERENCES comentario(id) ON DELETE CASCADE,
+    tiporesp_id INTEGER REFERENCES texto_report(id) ON DELETE CASCADE,
     resolvido BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 /* T: Publicidade*/
 CREATE TABLE publicidade (
     id SERIAL PRIMARY KEY,
-    imagem TEXT NOT NULL
+    imagem TEXT NOT NULL UNIQUE
 );
 
 -------------------------------------------
