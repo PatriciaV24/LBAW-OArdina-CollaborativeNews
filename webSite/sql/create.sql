@@ -23,7 +23,6 @@ DROP TABLE IF EXISTS noticia CASCADE;
 DROP TABLE IF EXISTS utilizador CASCADE;
 
 DROP TYPE IF EXISTS USER_TYPE;
-DROP TYPE IF EXISTS PRIORIDADE;
 DROP TYPE IF EXISTS GOSTO;
 
 DROP INDEX IF EXISTS nome_uti_idx;
@@ -145,7 +144,7 @@ CREATE TABLE info_seguidor (
 /* T: Notificações Novos Seguidores (-> info_seguidor)*/
 CREATE TABLE n_seguidor (
     followed_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
-    infos_id INTEGER REFERENCES info_seguidor(id)  ON DELETE SET NULL,
+    infos_id INTEGER REFERENCES utilizador(id)  ON DELETE SET NULL,
     lido BOOLEAN NOT NULL DEFAULT FALSE,
     data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     PRIMARY KEY(followed_id, infos_id)
@@ -156,7 +155,7 @@ CREATE TABLE n_comentario (
     autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
     com_id INTEGER NOT NULL REFERENCES comentario(id) ON DELETE CASCADE,
     lido BOOLEAN NOT NULL DEFAULT FALSE,
-    data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     PRIMARY KEY(autor_id, com_id)
 
 );
@@ -166,7 +165,7 @@ CREATE TABLE n_vot_not (
     autor_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
     voto_id INTEGER NOT NULL REFERENCES vot_not(id) ON DELETE CASCADE,
     lido BOOLEAN NOT NULL DEFAULT FALSE,
-    data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+    data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
     PRIMARY KEY(autor_id, voto_id)
 );
 
@@ -184,7 +183,7 @@ CREATE TABLE n_uti_bloq (
     id SERIAL PRIMARY KEY,
     bloq_id INTEGER REFERENCES utilizador(id) ON DELETE SET NULL,
     motivo TEXT NOT NULL,
-    lido BOOLEAN NOT NULL DEFAULT FALSE
+    lido BOOLEAN NOT NULL DEFAULT FALSE,
     data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
