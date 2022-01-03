@@ -1,4 +1,4 @@
-INSERT INTO users (username,email,password,foto,contacto)
+INSERT INTO utilizador (nome,email,password,foto,contacto)
 VALUES
   ('nec,','diam.nunc@hotmail.couk','semper','/src/photos/test.jpg','722325481'),
   ('Nunc','lacinia@icloud.edu','Lorem','/src/photos/test.jpg','303987142'),
@@ -7,11 +7,11 @@ VALUES
   ('mauris','ligula@protonmail.org','nunc','/src/photos/test.jpg','667894517');
 
 
-UPDATE users /*Criar um administrador*/
+UPDATE utilizador /*Criar um administrador*/
 SET usertype = 'a'
 WHERE users_id = 2;
 
-UPDATE users /*Criar um user banido*/
+UPDATE utilizador /*Criar um user banido*/
 SET usertype = 'b';
 WHERE users_id = 5;
 
