@@ -1,10 +1,10 @@
 INSERT INTO utilizador (nome,email,password,foto,contacto)
 VALUES
-  ('nec,','diam.nunc@hotmail.couk','semper','/src/photos/test.jpg','722325481'),
-  ('Nunc','lacinia@icloud.edu','Lorem','/src/photos/test.jpg','303987142'),
-  ('tortor,','lacus.ut.nec@aol.org','Nullam','/src/photos/test.jpg','550016487'),
-  ('fringilla','aptent.taciti@outlook.net','senectus','/src/photos/test.jpg','817282354'),
-  ('mauris','ligula@protonmail.org','nunc','/src/photos/test.jpg','667894517');
+  ('Ricardo Gomes','rgomes@hotmail.com','legionario','/src/photos/test.jpg',935978945),
+  ('Nuno Gaspar','gaspa2000.nuno@icloud.edu','password123','/src/photos/test1.jpg',963390475),
+  ('Sara Cardoso','sc5298@aol.org','ricardo','/src/photos/test2.jpg',915684578),
+  ('Francisco Ribero','ribs.chics@outlook.net','19990502','/src/photos/test3.jpg',925567441),
+  ('Carolina Antunes','carolina.antunes.official@protonmail.org','superstar','/src/photos/test4.jpg',911156632);
 
 /*Criar um administrador*/
 UPDATE utilizador 
@@ -13,20 +13,20 @@ WHERE id = 2;
 
 /*Criar um user banido*/
 UPDATE utilizador 
-SET permissao = 'b'; 
+SET permissao = 'b'
 WHERE id = 5;
 
 INSERT INTO noticia(autor_id,titulo,descricao)
 VALUES
-  (3,'a felis','Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Curabitur sed tortor. Integer aliquam adipiscing lacus. Ut nec urna et arcu imperdiet ullamcorper. Duis at lacus. Quisque purus sapien, gravida non, sollicitudin a, malesuada id, erat. Etiam vestibulum massa rutrum magna. Cras convallis convallis dolor. Quisque tincidunt pede ac urna. Ut tincidunt vehicula risus. Nulla eget metus eu erat semper rutrum. Fusce dolor quam, elementum at, egestas a, scelerisque sed, sapien. Nunc pulvinar arcu et pede. Nunc sed orci lobortis augue scelerisque mollis. Phasellus libero mauris, aliquam eu, accumsan sed, facilisis'),
-  (3,'pretium neque. Morbi','Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Curabitur sed tortor. Integer aliquam adipiscing lacus. Ut nec urna et arcu imperdiet ullamcorper. Duis at lacus. Quisque purus sapien, gravida non, sollicitudin a, malesuada id, erat. Etiam vestibulum massa rutrum magna. Cras convallis convallis dolor. Quisque tincidunt pede ac urna. Ut tincidunt vehicula risus. Nulla eget metus eu erat semper rutrum. Fusce dolor quam, elementum at, egestas a, scelerisque sed, sapien. Nunc pulvinar'),
-  (2,'egestas blandit. Nam nulla','Lorem ipsum dolor sit'),
-  (4,'Class aptent taciti sociosqu','Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Curabitur sed tortor. Integer aliquam adipiscing lacus. Ut nec urna et arcu imperdiet ullamcorper. Duis at lacus. Quisque purus sapien, gravida non, sollicitudin a, malesuada id, erat. Etiam vestibulum massa rutrum magna. Cras convallis convallis dolor. Quisque tincidunt pede ac urna. Ut tincidunt vehicula risus. Nulla eget metus eu erat semper rutrum. Fusce dolor quam, elementum at, egestas a, scelerisque'),
-  (2,'massa. Mauris','Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Curabitur sed tortor. Integer aliquam adipiscing lacus. Ut nec urna et arcu imperdiet ullamcorper. Duis at lacus. Quisque purus sapien, gravida non, sollicitudin a, malesuada id, erat. Etiam vestibulum massa rutrum magna. Cras convallis convallis dolor. Quisque tincidunt pede ac urna. Ut tincidunt vehicula risus. Nulla eget metus eu erat semper rutrum. Fusce dolor quam, elementum at, egestas a, scelerisque sed, sapien. Nunc pulvinar arcu et pede. Nunc sed');
+  (3,'Mulher perde cão em Lisboa','Luía Ferreira, separa-se de Bolinhas em pleno Rossio, na manhã desta quarta feira. A policia já tomou conta do caso.'),
+  (3,'Joaquim Messias vai treinar o Oliveirense','O treinador Alentejano assina por dois anos com o atual décimo classificado'),
+  (2,'Os preços dos combustíveis sobem mais uma vez','É já o quinto aumento desde o início do ano. Espera-se uma redução da gasolina no próximo trimestre. '),
+  (4,'Faculdade de Ciências considerada a melhor de Portugal','Pelo quarto ano consecutivo, a Faculdade de Ciências é eleita a facudade de maior sucesso no país.'),
+  (2,'Ataques Russos em Miami','João Bidão condena a destruição massiva e promete retaliação muito brevemente.');
 
 UPDATE noticia 
 SET titulo = 'Porto é campeão nacional!'
-WHERE noticia_id = 3;
+WHERE id = 3;
 
 INSERT INTO tag(nome)
 VALUES
@@ -36,68 +36,111 @@ VALUES
     ('Mundo');
 
 UPDATE tag 
-SET prioridade=1;
+SET prioridade=1
 WHERE nome = 'Nacional'; 
 
-DELETE FROM tags
-WHERE tag_id = 2;
+DELETE FROM tag
+WHERE id = 2;
 
 INSERT INTO comentario(autor_id,not_id,texto)
 VALUES
-  (3,3,'mi felis, adipiscing fringilla, porttitor'),
-  (3,4,'Nulla tempor augue ac ipsum. Phasellus vitae mauris'),
-  (1,4,'nibh. Phasellus nulla. Integer vulputate,'),
-  (1,1,'Morbi non sapien molestie orci'),
-  (1,3,'turpis vitae');
+  (3,3,'Isto está uma vergonha. Mas eu como meto sempre 20€ não me faz muita diferença.'),
+  (3,4,'Cá para mim isso foi minado...'),
+  (1,4,'Parabéns aos nossos cientistas portugueses!!!'),
+  (1,1,'Espero que o encontrem depressa.'),
+  (4,5,'Ouvi dizer que els estão a prepar 4 bombas atómicas.');
 
 /*VALUES TEM DE SER IGUAIS AOS VALUES DA TABELA comentario*/
 /*autor_id -> é o autor da noticia da not_id (QUE RECEBE A NOTIFICAÇAO)*/
 INSERT INTO n_comentario(autor_id,com_id)
 VALUES
+    (3,1),
+    (3,2),
+    (1,3),
+    (1,4),
+    (4,5);
 
 
 INSERT INTO categoria(not_id, tag_id)
 VALUES
-    (1,2),
+    (1,3),
     (2,1),
-    (3,1),
+    (3,3),
     (4,3),
     (5,4);
 
 INSERT INTO faq(autor_id, questao, resposta)
 VALUES 
-    (2, 'Como inserir uma notícia ?', 'Nulla tempor augue ac ipsum. Phasellus vitae mauris');
+    (2, 'Como inserir uma notícia ?', 'Na pagina inicial clique no botão + e de seguida escreva o titulo e a noticia nas caixas que vao aparecer. De seguida selecione a categoria da noticia e clique publicar.');
 
 
 INSERT INTO imagem(legenda,imag_path,not_id)
 VALUES
+    ('Bolinhas com a dona','/src/photos/test5.jpg',1),
+    ('Joaquim Messias com o Presidente do Oliveirense','/src/photos/test6.jpg',2),
+    ('Fila de carros na bomba para abastecer antes da subida de preços','/src/photos/test7.jpg',3),
+    ('Departamento de ciências dos computadores da Faculdade de Ciências da UP','/src/photos/test8.jpg',4),
+    ('Exibição de equipamento bélico americano','/src/photos/test9.jpg',5);
+    
 
 INSERT INTO vot_com(com_id,autor_id,tipo)
-VALUES
+VALUES 
+    (1,1,'dislike'),
+    (1,2,'dislike'),
+    (3,2,'like'),
+    (3,4,'like'),
+    (2,1,'dislike'),
+    (5,3,'like');
 
+        
 /*VALUES TEM DE SER IGUAIS AOS VALUES DA TABELA vot_com*/
 /*autor_id -> é o autor do comentário da com_id (QUE RECEBE A NOTIFICAÇAO)*/
 INSERT INTO n_vot_com(autor_id,voto_id)
-VALUES
+VALUES 
+    (3,1),
+    (3,2),
+    (1,3),
+    (1,4),
+    (3,5),
+    (4,6);
 
 INSERT INTO vot_not(not_id,autor_id,tipo)
 VALUES
+    (3,3,'dislike'),
+    (4,3,'dislike'),
+    (2,4,'like'),
+    (4,5,'like'),
+    (2,1,'dislike'),
+    (5,3,'like');
 
 
 /*VALUES TEM DE SER IGUAIS AOS VALUES DA TABELA vot_not*/
 /*autor_id -> é o autor da noticia da not_id (QUE RECEBE A NOTIFICAÇAO)*/
 INSERT INTO n_vot_not(autor_id,voto_id)
 VALUES
+    (2,1),
+    (4,2),
+    (3,3),
+    (4,4),
+    (3,5),
+    (2,6);
 
 INSERT INTO fav_not(autor_id,not_id)
-VALUES
+VALUES  
+    (5,4),
+    (3,4);
+     
 
 INSERT INTO fav_com(autor_id,comentario_id)
 VALUES
+    (3,4),
+    (5,3);
+
 
 INSERT INTO fav_tag(autor_id,tag_id)
 VALUES
-
+    (1,1),
+    (3,4);
 INSERT INTO info_seguidor(followed_id, infos_id)
 VALUES
     (1,3),
@@ -108,7 +151,11 @@ VALUES
 /*VALUES TEM DE SER IGUAIS AOS VALUES DA TABELA info_seguidor*/
 INSERT INTO n_seguidor(followed_id,infos_id)
 VALUES 
-
+    (1,3),
+    (3,2),
+    (4,1),
+    (3,1);
+    
 INSERT INTO texto_report(report)
 VALUES
     ('O utilizador foi agressivo com outro e além de ser agressivo tentou ameaçar diversos utilizadores');
@@ -119,11 +166,11 @@ VALUES
 
 INSERT INTO report_u(autor_id, uti_id, tiporesp_id, resolvido)
 VALUES
-    (,,,TRUE);
+    (3,2,1,TRUE);
 
 /*VALUES TEM DE SER IGUAIS AOS VALUES DA TABELA report_u MAS com resolvido a TRUE*/
 INSERT INTO n_uti_bloq (bloq_id, motivo)
-VALUES 
+VALUES (2,'Agressividade nos comentarios.');
 
 INSERT INTO report_n(autor_id, not_id, tiporesp_id)
 VALUES
@@ -135,5 +182,7 @@ VALUES
 
 INSERT INTO publicidade(imagem)
 VALUES 
-
+    ('/src/photos/test10.jpg'),
+    ('/src/photos/test11.jpg'),
+    ('/src/photos/test12.jpg');
 

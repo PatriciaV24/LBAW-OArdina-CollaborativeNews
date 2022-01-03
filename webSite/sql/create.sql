@@ -54,10 +54,10 @@ CREATE TYPE GOSTO AS ENUM('like', 'dislike');
 CREATE TABLE utilizador(
     id SERIAL PRIMARY KEY,
     nome VARCHAR(20) NOT NULL UNIQUE,
-    email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    foto TEXT, /*url to text*/
-    permissao USER_TYPE NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(200) NOT NULL,
+    foto VARCHAR(300), /*url to text*/
+    permissao USER_TYPE NOT NULL DEFAULT 'u',
     contacto INTEGER NOT NULL,
     CONSTRAINT contacto_limites CHECK (contacto > 99999999 AND contacto < 1000000000)
 );
@@ -66,7 +66,7 @@ CREATE TABLE noticia (
     id SERIAL PRIMARY KEY,
     autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
     titulo VARCHAR(90) NOT NULL,
-    descricao TEXT NOT NULL,
+    descricao VARCHAR(500) NOT NULL,
     data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
@@ -81,7 +81,7 @@ CREATE TABLE comentario (
     id SERIAL PRIMARY KEY,
     autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
     not_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE,
-    texto TEXT NOT NULL,
+    texto VARCHAR(200) NOT NULL,
     data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 /* T: dos Categoria (Noticia <-> Tag)*/
@@ -94,14 +94,14 @@ CREATE TABLE categoria (
 CREATE TABLE faq (
     id SERIAL PRIMARY KEY,
     autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE, /*O administrador que realizou ou alterou o faq*/
-    questao TEXT NOT NULL,
-    resposta TEXT NOT NULL
+    questao VARCHAR(200) NOT NULL,
+    resposta VARCHAR(200) NOT NULL
 );
 /* T: das Imagens (-> Noticia)*/
 CREATE TABLE imagem (
     id SERIAL PRIMARY KEY,
-    legenda VARCHAR(30) NOT NULL,
-    imag_path TEXT NOT NULL UNIQUE,
+    legenda VARCHAR(300) NOT NULL,
+    imag_path VARCHAR(300) NOT NULL UNIQUE,
     not_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE
 );
 
@@ -190,7 +190,7 @@ CREATE TABLE n_vot_com (
 CREATE TABLE n_uti_bloq (
     id SERIAL PRIMARY KEY,
     bloq_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    motivo TEXT NOT NULL,
+    motivo VARCHAR(200) NOT NULL,
     lido BOOLEAN NOT NULL DEFAULT FALSE,
     data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
@@ -198,7 +198,7 @@ CREATE TABLE n_uti_bloq (
 /* T: Possiveis Reports */
 CREATE TABLE texto_report (
     id SERIAL PRIMARY KEY,
-    report TEXT NOT NULL
+    report VARCHAR(200) NOT NULL
 );
 /* T: Report Utilizador (Utilizador-> texto_report)*/
 CREATE TABLE report_u (
@@ -229,7 +229,7 @@ CREATE TABLE report_c (
 /* T: Publicidade*/
 CREATE TABLE publicidade (
     id SERIAL PRIMARY KEY,
-    imagem TEXT NOT NULL UNIQUE
+    imagem VARCHAR(300) NOT NULL UNIQUE
 );
 
 -------------------------------------------
