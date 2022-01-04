@@ -7,10 +7,6 @@ servers:
   - description: 'Production Server'
     url: http://lbaw2163.lbaw.fe.up.pt/
 
-externalDocs:
-  description: Descubra sobre o API aqui.
-  url: https://git.fe.up.pt/lbaw/lbaw2122/lbaw2163/-/blob/main/A8.md
-
 tags:
   - name: 'M01: Autenticação e Perfil Individual'
   - name: 'M02: Criar e Editar Noticia/Comentário'
@@ -552,8 +548,8 @@ paths:
                   description: 'Erro. Redirecionar para noticia'
                   value: '/noticia/{id}'
                   
-    # -------------------- M03 -------------------- 
-    
+# -------------------- M03 -------------------- 
+
   /:
     get:
       operationId: R301

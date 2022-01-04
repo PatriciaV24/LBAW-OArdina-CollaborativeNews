@@ -27,11 +27,7 @@ class Utilizador extends Authenticable {
     ];
 
     public function noticias() {
-        return Noticia::whereIn('id', function($query) {
-            $query -> select('id')
-                ->from('noticia')
-                ->where('autor_id', $this->id);
-        });
+        return $this -> hasMany('\App\Models\Noticia');
     }
 
     public static function getUser($nome) {

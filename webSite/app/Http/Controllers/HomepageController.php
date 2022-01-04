@@ -19,13 +19,14 @@ class HomepageController extends Controller {
      */
 
     public function show(Request $request) {
-        $posts = Noticia::getNoticia();
-
-        foreach($posts as $post) {
-            $post->content = $post->content;
+        if(!Auth::check()) {
+            return redirect('/login');
         }
 
-        $recentPosts = $posts->sortByDesc('data');
+        $this->authorize('show', Noticia::class);
+        $noticias = Auth::user()->content()->orderBy('id')->get();
+
+        $recentPosts = $noticias->sortByDesc('data');
 
         return view('pages.homepage', [
             'recentPosts' => $recentPosts]);

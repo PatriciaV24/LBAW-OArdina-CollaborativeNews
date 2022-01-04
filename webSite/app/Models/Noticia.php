@@ -53,20 +53,7 @@ class Noticia extends Model {
                 break;
         }
     }
-
-    public static function getNoticia() {
-        return Noticia::whereIn('id', function($query) {
-            $query->select('id')
-                ->from('noticia')
-                ->whereIn('autor_id', function($query) {
-                    $query->select('id')
-                        ->from('utilizador')
-                        ->where('permissao', 'u')
-                        ->where('permissao', 'a');
-                });
-        })->get();
-    }
-
+    
     public function formatDate($full = false) {
         $now = new DateTime();
         $ago = new DateTime($this->date);
