@@ -1,0 +1,2039 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>EAP - Especificação de Arquitetura e Protótipo.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="eap---especifica%C3%A7%C3%A3o-de-arquitetura-e-prot%C3%B3tipo"><strong>EAP - Especificação de Arquitetura e Protótipo</strong></h1>
+<p>Neste terceiro componente queremos apresentar a especificação da arquitetura do nosso website, ou seja, a esquematização de como irá funcionar o website em termos de respostas e pedidos. Vamos construir um protótipo com algumas user stories para perceber como irá ser construído a versão final do Ardina.</p>
+<h1 id="a7-especifica%C3%A7%C3%A3o-dos-recursos-web"><strong>A7: Especificação dos Recursos Web</strong></h1>
+<p>Neste artefacto iremos documentar a arquitetura da aplicação web a desenvolver, indicando o catalógo de recursos e propriedades de cada recurso, incluindo:
+*Referências a interfaces gráficas;
+*O formato das resposta JSON. Em adição a isso, este artefacto irá apresentar a documentação para o Ardina, incluindo as seguintes operações : criar, ler, atualizar ou apagar.</p>
+<h2 id="1vis%C3%A3o-geral"><strong>1.Visão geral</strong></h2>
+<p>A visão geral da aplicação web para implementar será apresentada nesta secção. Os módulos serão identificados e resumidamente descritos. Os recursos web serão associados a cada módulo e serão descritos na documentação individual de cada módulo.</p>
+<table>
+<thead>
+<tr>
+<th><strong>Módulo</strong></th>
+<th><strong>Descrição</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M01:Autenticação e Perfil Individual</td>
+<td>Recursos Web associados com a autenticação do utilizador e gestão do perfil: login, logout, registo, recuperação de password, ver e editar informação pessoal.</td>
+</tr>
+<tr>
+<td>M02: Criar e Editar Noticia/Comentário</td>
+<td>Recursos Web associados a criação e edição de conteúdo</td>
+</tr>
+<tr>
+<td>M03: Ver utilizadores/Conteúdo</td>
+<td>Recursos Web associados a ver notícias, comentários ou utilizadores</td>
+</tr>
+<tr>
+<td>M04: Procura utilizadores/Conteúdo</td>
+<td>Recursos Web associados a pesquisa de notícias, comentários ou utilizadores</td>
+</tr>
+<tr>
+<td>M05: Notificações</td>
+<td>Recursos Web associados com notificações, inclusivo visualização e eliminar</td>
+</tr>
+<tr>
+<td>M06: Admistração de &quot;<em>Admin</em>&quot;</td>
+<td>Recursos Web associados a gestão do administrador, como gestão de bans e de notícias, comentários dos utilizadores</td>
+</tr>
+<tr>
+<td>M07: Páginas Estáticas</td>
+<td>Recursos Web associados a conteúdo estático associados a este módulo: Sobre Nós e FAQ</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2permiss%C3%B5es"><strong>2.Permissões</strong></h2>
+<p>Esta secção define as permissões usadas nos módulos acimas para estabelecer as condições de acesso aos conteúdos.</p>
+<table>
+<thead>
+<tr>
+<th><strong>ID</strong></th>
+<th><strong>Nome</strong></th>
+<th><strong>Descrição</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PUB</td>
+<td>Public</td>
+<td>Utilizadores não registados e sem privilégios</td>
+</tr>
+<tr>
+<td>USR</td>
+<td>Utilizador</td>
+<td>Utilizador Autenticado</td>
+</tr>
+<tr>
+<td>AUT</td>
+<td>Autor</td>
+<td>Autores do Conteúdo</td>
+</tr>
+<tr>
+<td>BAN</td>
+<td>Banido</td>
+<td>Utilizador Banido</td>
+</tr>
+<tr>
+<td>ADM</td>
+<td>Administrador</td>
+<td>Utilizador Administrador</td>
+</tr>
+</tbody>
+</table>
+<pre class="hljs"><code><div><span class="hljs-attr">openapi:</span> <span class="hljs-number">3.0</span><span class="hljs-number">.0</span>
+<span class="hljs-attr">info:</span>
+  <span class="hljs-attr">version:</span> <span class="hljs-number">1.0</span><span class="hljs-number">.0</span>
+  <span class="hljs-attr">title:</span> <span class="hljs-string">LBAW</span> <span class="hljs-string">O</span> <span class="hljs-string">Ardina</span> <span class="hljs-string">Web</span> <span class="hljs-string">API</span>
+  <span class="hljs-attr">description:</span> <span class="hljs-string">Especificação</span> <span class="hljs-string">de</span> <span class="hljs-string">Recursos</span> <span class="hljs-string">Web</span> <span class="hljs-string">(A7)</span> <span class="hljs-string">para</span> <span class="hljs-string">"O Ardina"</span>
+<span class="hljs-attr">servers:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">description:</span> <span class="hljs-string">'Production Server'</span>
+    <span class="hljs-attr">url:</span> <span class="hljs-string">http://lbaw2163.lbaw.fe.up.pt/</span>
+
+<span class="hljs-attr">tags:</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">'M01: Autenticação e Perfil Individual'</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">'M02: Criar e Editar Noticia/Comentário'</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">'M03: Ver utilizadores/Conteúdo'</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">'M04: Procura utilizadores/Conteúdo'</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">'M05: Notificações'</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">'M06: Pedidos Administracao'</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">'M07: Adminstração do Admin'</span>
+  <span class="hljs-bullet">-</span> <span class="hljs-attr">name:</span> <span class="hljs-string">'M08: Páginas Estáticas'</span>
+  
+  
+  
+<span class="hljs-attr">paths:</span> 
+  <span class="hljs-comment"># -------------------- M01 --------------------  </span>
+  <span class="hljs-string">/login/:</span>
+    <span class="hljs-attr">get:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R101</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R101: Formulário de Login'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Providenciar Formulário de Login. Acesso: PUB'</span>
+      <span class="hljs-attr">tags:</span> 
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M01: Autenticação e Perfil Individual'</span>
+      <span class="hljs-attr">responses:</span>
+       <span class="hljs-attr">'200':</span>
+        <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Mostrar US09'</span>
+    <span class="hljs-attr">post:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R102</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R102: Ação de Login'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Processa o pedido de Login. Acesso: PUB'</span>
+      <span class="hljs-attr">tags:</span>
+      <span class="hljs-bullet">-</span> <span class="hljs-string">'M01: Autenticação e Perfil Individual'</span>
+      
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">application/x-www-form-urlencoded:</span>
+            <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+              <span class="hljs-attr">properties:</span>
+                <span class="hljs-attr">Username:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                <span class="hljs-attr">Password:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">required:</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">Username</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">Password</span>
+                
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar depois de login'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'OK. Redirect to US12 - Homepage'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Autenticação Falhada.Redirecionar para Formulário de Login'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/login/'</span>
+  
+  <span class="hljs-string">/logout/:</span>
+    <span class="hljs-attr">post:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R103</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R103: Ação de Logout'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Logout do Utilizador Autenticado. Acesso: USR,ADM, BAN'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M01: Autenticação e Perfil Individual'</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar depois de processar logout'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para Formulário de Login'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/login/'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Logout Falhado. Tente novamente'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/'</span>
+                
+  <span class="hljs-string">/recuperacao_password/:</span>
+    <span class="hljs-attr">post:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R104</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R104: Recuperação de Password'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Ação de recuperação de Password. Access: PUB'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M01: Autenticação e Perfil Individual'</span>
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">application/x-www-form-urlencoded:</span>
+            <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+              <span class="hljs-attr">properties:</span>
+                <span class="hljs-attr">Username:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">required:</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">Username</span>
+  
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Pedido de recuperação de password efetuado. Redirecionar para Login'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para US09'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/login/'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Recuperação de password falhada.'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/login/'</span>
+
+  <span class="hljs-string">/signup/:</span>
+    <span class="hljs-attr">get:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R105</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R105: Ver Formulário de Registo'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Providenciar formulário para novo registo'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M01: Autenticação e Perfil Individual'</span>
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'200':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Mostrar US10'</span>
+          
+    <span class="hljs-attr">post:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R106</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R106: Ação de Registo'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Processa a informação de registo para submissão. Acesso: PUB'</span>
+      <span class="hljs-attr">tags:</span> 
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M01: Autenticação e Perfil Individual'</span>
+      
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">application/x-www-form-urlencoded:</span>
+            <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+              <span class="hljs-attr">properties:</span>
+                <span class="hljs-attr">Username:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                <span class="hljs-attr">Email:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                <span class="hljs-attr">Password:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                <span class="hljs-attr">Foto:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                <span class="hljs-attr">Contato:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+              <span class="hljs-attr">required:</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">Username</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">Email</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">Password</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">Contato</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar após registo'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok Redirecionar para Login'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/login/'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Erro. Tente novamente'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/signup/'</span>
+                  
+  <span class="hljs-string">/utilizador/{nome}/edit/:</span>
+    <span class="hljs-attr">get:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R107</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R107: Editar Formulário de Perfil de Utilizador'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Formulário para Editar Perfil. Acesso: USR'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M01: Autenticação e Perfil Individual'</span>
+      <span class="hljs-attr">parameters:</span> 
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">nome</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+          
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'200':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Mostrar US21'</span>
+          <span class="hljs-attr">content:</span>
+            <span class="hljs-attr">application/json:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/EditarUser'</span>
+      
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R108</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R108: Editar Perfil de Utilizador'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Processa a Edição editada pelo utilizador. Acesso:USR'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M01: Autenticação e Perfil Individual'</span>
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">nome</span>
+          <span class="hljs-attr">schema:</span> 
+            <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+     
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">application/x-www-form-urlencoded:</span>
+            <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+              <span class="hljs-attr">properties:</span>
+                <span class="hljs-attr">nome:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                <span class="hljs-attr">email:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                <span class="hljs-attr">contacto:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+              <span class="hljs-attr">required:</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">nome</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">email</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">contacto</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar após edição de utilizador'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para US21'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/utilizador/{nome}/edit'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Edição falhada. Redirecionar para US21'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/utilizador/{nome}/edit'</span>
+
+  <span class="hljs-string">/utilizador/{nome}/edit/mudanca-password/:</span>
+    
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R109</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R109: Alteracao de password'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Processa o formulário de mudança de palavra-passe'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M01: Autenticação e Perfil Individual'</span>
+      
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">nome</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+      
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">True</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">application/x-www-form-urlencoded:</span>
+            <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+              <span class="hljs-attr">properties:</span>
+                <span class="hljs-attr">pass_antiga:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                  <span class="hljs-attr">format:</span> <span class="hljs-string">password</span>
+                <span class="hljs-attr">pass_nova:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                  <span class="hljs-attr">format:</span> <span class="hljs-string">password</span>
+              <span class="hljs-attr">required:</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">pass_antiga</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">pass_nova</span>
+        
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar após mudança de password'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para US21'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'utilizador/{nome}/edit/'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Erro a mudar password. Redirecionar para US21'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'utilizador/{nome}/edit/'</span>
+                    
+  <span class="hljs-string">/utilizador/{nome}/apagar_conta/:</span>
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R111</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R110: Apagar utilizador'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Apagar conta. Acesso: USR'</span>
+      <span class="hljs-attr">tags:</span> 
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M01: Autenticação e Perfil Individual'</span>
+      
+      <span class="hljs-attr">parameters:</span> 
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">nome</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+          
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar após eliminação de conta.'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para US09'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Erro a eliminar conta. Tente novamente'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/username/{nome}/edit/'</span>
+                  
+                  
+<span class="hljs-comment"># -------------------- M02 --------------------</span>
+
+  <span class="hljs-string">/noticia/criar/:</span>
+  
+    <span class="hljs-attr">post:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R201</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R201: Criar noticia'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Criar notícia nova. Acesso: USR'</span>
+      <span class="hljs-attr">tags:</span> 
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M02: Criar e Editar Noticia/Comentário'</span>
+      
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">multipart/form-data:</span>
+            <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+                <span class="hljs-attr">properties:</span>
+                  <span class="hljs-attr">titulo:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                  <span class="hljs-attr">descricao:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                  <span class="hljs-attr">image:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                    <span class="hljs-attr">format:</span> <span class="hljs-string">binary</span>
+                <span class="hljs-attr">required:</span>
+                  <span class="hljs-bullet">-</span> <span class="hljs-string">titulo</span>
+                  <span class="hljs-bullet">-</span> <span class="hljs-string">descricao</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar após criação de noticia'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para noticia criada.'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'noticia/{id}⁄'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Falha ao criar notícia. Tentar novamente'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/noticia/criar/'</span>
+  
+  <span class="hljs-string">/comentarios/criar/:</span>
+    <span class="hljs-attr">post:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R202</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R202: Criar comentário'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Criar comentário. Acesso: USR'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M02: Criar e Editar Noticia/Comentário'</span>
+      
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">application/x-www-form-urlencoded:</span>
+            <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">properties:</span>
+                <span class="hljs-attr">texto:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">required:</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">texto</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar após comentário'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span> 
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span> 
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para noticia'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/noticia/{id}/'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Falha ao criar comentário. Redirecionar noticia'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/noticia/{id}/'</span>
+  
+  <span class="hljs-string">/noticia/{id}/:</span>
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R203</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R203: Editar noticia'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Editar conteúdo de noticia. Acesso: AUT'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M02: Criar e Editar Noticia/Comentário'</span>
+        
+      <span class="hljs-attr">parameters:</span> 
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">application/x-www-form-urlencoded:</span>
+            <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+              <span class="hljs-attr">properties:</span>
+                <span class="hljs-attr">titulo:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                <span class="hljs-attr">descricao:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                <span class="hljs-attr">imagem:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">required:</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">descricao</span>
+                
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar após editar noticia'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para a noticia editada.'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/noticia/{id}/'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Falha ao criar noticia. Redirecionar para a noticia'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/noticia/{id}/'</span>
+                    
+    <span class="hljs-attr">delete:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R204</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R204: Apagar notícia'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Apagar noticia. Acesso: AUT'</span>
+      <span class="hljs-attr">tags:</span> 
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M02: Criar e Editar Noticia/Comentário'</span>
+      
+      <span class="hljs-attr">parameters:</span> 
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+          
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar após eliminar noticia'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para página inicial'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para noticia'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/noticia/{id}'</span>
+                  
+  <span class="hljs-string">/comentarios/:</span>
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R205</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R205: Editar comentario'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Editar comentario. Acesso: AUT'</span>
+      <span class="hljs-attr">tags:</span> 
+      <span class="hljs-bullet">-</span> <span class="hljs-string">'M02: Criar e Editar Noticia/Comentário'</span>
+      
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">application/x-www-form-urlencoded:</span>
+            <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+              <span class="hljs-attr">properties:</span>
+                <span class="hljs-attr">id:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+                <span class="hljs-attr">texto:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">required:</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">texto</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar após editar comentário'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para noticia comentada'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/noticia/{id}'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Erro ao editar comentario. Redirecionar para noticia'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/noticia/{id}'</span>
+  
+    <span class="hljs-attr">delete:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R206</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R206: Apagar comentário'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Apagar comentário em noticia. Acesso: AUT'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M02: Criar e Editar Noticia/Comentário'</span>
+        
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">header</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar após eliminar comentario'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para noticia'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/noticia/{id}'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Erro. Redirecionar para noticia'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/noticia/{id}'</span>
+                  
+    <span class="hljs-comment"># -------------------- M03 -------------------- </span>
+    
+  <span class="hljs-string">/:</span>
+    <span class="hljs-attr">get:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R301</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R301: Pagina Inicial'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Mostrar Pagina Inicial. Acesso: PUB, USR, ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M03: Ver utilizadores/Conteúdo'</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'200':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. IF PUB: Mostrar página inicial sem log-in; ELSE: Mostrar página inical logado com o perfil no topo direito'</span>
+          <span class="hljs-attr">content:</span>
+            <span class="hljs-attr">application/json:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+                <span class="hljs-attr">properties:</span>
+                  <span class="hljs-attr">ultimas_noticias:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+                    <span class="hljs-attr">items:</span>
+                      <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/Noticia'</span>
+                  <span class="hljs-attr">pesquisa:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+                    <span class="hljs-attr">items:</span>
+                      <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+  
+  <span class="hljs-string">/noticia/{id}:</span>
+    <span class="hljs-attr">get:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R302</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R302: Ver uma noticia especifica'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Ver uma noticia especifica. Acesso: PUB, USR, ADM, AUT'</span>
+      <span class="hljs-attr">tags:</span>
+       <span class="hljs-bullet">-</span> <span class="hljs-string">'M03: Ver utilizadores/Conteúdo'</span>
+       
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'200':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Mostrar a noticia escolhida'</span>
+          <span class="hljs-attr">content:</span>
+            <span class="hljs-attr">application/json:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/Noticia'</span>
+        <span class="hljs-attr">'404':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Noticia não encontrada'</span>
+          
+  <span class="hljs-string">/utilizador/{nome}:</span>
+    <span class="hljs-attr">get:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R303</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R303: Ver perfil de utilizador'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Ver perfil de utilizador. Acesso: PUB, USR, ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M03: Ver utilizadores/Conteúdo'</span>
+        
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">nome</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'200':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Mostrar perfil do utilizador pretendido'</span>
+          <span class="hljs-attr">content:</span>
+            <span class="hljs-attr">application/json:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+                <span class="hljs-attr">properties:</span>
+                  <span class="hljs-attr">utilizador:</span>
+                    <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/Utilizador'</span>
+                  <span class="hljs-attr">publicacoes:</span>
+                    <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/Noticia'</span>
+                  <span class="hljs-attr">a_seguir:</span>
+                    <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/Seguir'</span>
+        <span class="hljs-attr">'404':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Utilizador não encontrado'</span>
+          
+  <span class="hljs-string">/api/carregar-noticias:</span>
+    <span class="hljs-attr">get:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R304</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R304: Carregar mais noticias'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Carregar mais noticias. Acesso: PUB, USR, ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M03: Ver utilizadores/Conteúdo'</span>
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">query</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">paginacao</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">false</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">query</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">pagina</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">false</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">query</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">sortBy</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">false</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'200':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Retorna noticias para paginacao'</span>
+          <span class="hljs-attr">content:</span>
+            <span class="hljs-attr">application/json:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+                <span class="hljs-attr">properties:</span>
+                  <span class="hljs-attr">noticias:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+                    <span class="hljs-attr">items:</span>
+                      <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/Noticia'</span>
+        <span class="hljs-attr">'400':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Erro nos parametros'</span>
+          
+  <span class="hljs-string">/api/carregar-utilizadores:</span>
+    <span class="hljs-attr">get:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R305</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R305: Carregar mais utilizadores'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Carregar mais utilizadores. Acesso: PUB, USR'</span>
+      <span class="hljs-attr">tags:</span> 
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M03: Ver utilizadores/Conteúdo'</span>
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">query</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">paginacao</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">false</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">query</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">pagina</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">false</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">query</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">sortBy</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">false</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'200':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Retorna utilizadores para paginacao'</span>
+          <span class="hljs-attr">content:</span>
+            <span class="hljs-attr">application/json:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+                <span class="hljs-attr">properties:</span>
+                  <span class="hljs-attr">utilizadores:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+                    <span class="hljs-attr">items:</span>
+                      <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/Utilizador'</span>
+  
+  <span class="hljs-string">/api/carregar-comentarios:</span>
+    <span class="hljs-attr">get:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R306</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R306: Carregar mais comentários'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Carregar mais comentários da noticia. Acesso: PUB, USR'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M03: Ver utilizadores/Conteúdo'</span>
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">query</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">paginacao</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">false</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">query</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">pagina</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">false</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">query</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">false</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'200':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Retorna comentários da noticia para paginacao'</span>
+          <span class="hljs-attr">content:</span>
+            <span class="hljs-attr">application/json:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+                <span class="hljs-attr">properties:</span>
+                  <span class="hljs-attr">comentarios:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+                    <span class="hljs-attr">items:</span>
+                      <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/Comentario'</span>
+        <span class="hljs-attr">'400':</span> 
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Erro nos parametros'</span>
+      
+  <span class="hljs-comment"># -------------------- M04 -------------------- </span>
+  <span class="hljs-string">/pesquisa/:</span>
+    <span class="hljs-attr">get:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R401</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R401: Pesquisa de utilizadores/conteudo'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Providencia conteudo ou utilizadores pesquisados. Acesso: PUB, USR, ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M04: Procura utilizadores/Conteúdo'</span>
+      
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">query</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">pesquisa</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">false</span>
+          <span class="hljs-attr">allowReserved:</span> <span class="hljs-literal">true</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'200':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Mostrar resultado da pesquisa'</span>
+          <span class="hljs-attr">content:</span>
+            <span class="hljs-attr">application/json:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+                <span class="hljs-attr">properties:</span>
+                  <span class="hljs-attr">noticias:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+                    <span class="hljs-attr">items:</span>
+                      <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/Noticia'</span>
+                  <span class="hljs-attr">comentarios:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+                    <span class="hljs-attr">items:</span>
+                      <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/Comentario'</span>
+                  <span class="hljs-attr">utilizadores:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+                    <span class="hljs-attr">items:</span>
+                      <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/Utilizador'</span>
+                      
+  <span class="hljs-comment"># -------------------- M05 -------------------- </span>
+  <span class="hljs-string">/notificacoes/:</span>
+    <span class="hljs-attr">get:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R501</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R501: Ver Notificacoes do Utilizador'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Providenciar Notifacoes ao Utilizador. Access: USR, ADM'</span>
+      <span class="hljs-attr">tags:</span> 
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M05: Notificações'</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'200':</span> 
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Mostrar Notifacoes'</span>
+          <span class="hljs-attr">content:</span>
+            <span class="hljs-attr">application/json:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+                <span class="hljs-attr">properties:</span>
+                  <span class="hljs-attr">seguidor:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+                    <span class="hljs-attr">items:</span>
+                      <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/NSeguidor'</span>
+                  <span class="hljs-attr">votos:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+                    <span class="hljs-attr">items:</span>
+                      <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/NVotos'</span>
+                  <span class="hljs-attr">comentarios:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+                    <span class="hljs-attr">items:</span>
+                      <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/NComentario'</span>
+                  <span class="hljs-attr">bloqueado:</span>
+                    <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+                    <span class="hljs-attr">items:</span>
+                      <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/NBloqueado'</span>
+        <span class="hljs-attr">'401':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Login para ver notificacoes'</span>
+          
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R502</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R502: Marcar notificacoes como lidas'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'R502: Marcar as notificacoes do utilizador como lidas. Acesso: USR, ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M05: Notificações'</span>
+        
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">header</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">notificacao</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+            <span class="hljs-attr">properties:</span>
+              <span class="hljs-attr">tipo_notificacao:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">id_notificacao:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+            <span class="hljs-attr">required:</span>
+              <span class="hljs-bullet">-</span> <span class="hljs-string">tipo_notificacao</span>
+              <span class="hljs-bullet">-</span> <span class="hljs-string">id_notificacao</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'201':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Notificacao lida'</span>
+        <span class="hljs-attr">'404':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Notificacao nao lida'</span>
+    
+    <span class="hljs-attr">delete:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R503</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R503: Apagar notificacao'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Apagar notificacao do utilizador'</span>
+      <span class="hljs-attr">tags:</span> 
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M05: Notificações'</span>
+      
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">header</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">notificacao</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+            <span class="hljs-attr">properties:</span>
+              <span class="hljs-attr">tipo_notificacao:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">id_notificacao:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+            <span class="hljs-attr">required:</span>
+              <span class="hljs-bullet">-</span> <span class="hljs-string">tipo_notificacao</span>
+              <span class="hljs-bullet">-</span> <span class="hljs-string">id_notificacao</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'201':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Notificacao apagada'</span>
+        <span class="hljs-attr">'404':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Notificacao expirada'</span>
+
+ <span class="hljs-comment"># -------------------- M06 -------------------- </span>
+
+  <span class="hljs-string">/comentario/report/:</span>
+    <span class="hljs-attr">post:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R601</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R601: Reportar Comentario'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'R601: Reportar comentario de utilizador. Acesso: USR'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M06: Pedidos Administracao'</span>
+      
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">header</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+      
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">application/x-www-form-urlencoded:</span>
+            <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+              <span class="hljs-attr">properties:</span>
+                <span class="hljs-attr">descricao:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">required:</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">descricao</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'201':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Report criado'</span>
+        <span class="hljs-attr">'401':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Login para reportar'</span>
+  
+  <span class="hljs-string">/noticia/{id}/report/:</span>
+    <span class="hljs-attr">post:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R602</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R602: Reportar noticia'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'R602: Reportar noticia de utilizador. Acesso: USR'</span>
+      <span class="hljs-attr">tags:</span> 
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M06: Pedidos Administracao'</span>
+      
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+      
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">application/x-www-form-urlencoded:</span>
+            <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+              <span class="hljs-attr">properties:</span>
+                <span class="hljs-attr">descricao:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">required:</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">descricao</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'201':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Report criado'</span>
+        <span class="hljs-attr">'401':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Login para reportar'</span>
+          
+  <span class="hljs-string">/utilizador/{nome}/report/:</span>
+    <span class="hljs-attr">post:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R603</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R603: Reportar utilizador'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Reportar utilizador. Acesso: USR'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M06: Pedidos Administracao'</span>
+      
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">nome</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+      
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">application/x-www-form-urlencoded:</span>
+            <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+              <span class="hljs-attr">properties:</span>
+                <span class="hljs-attr">descricao:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">required:</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">descricao</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'201':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Report criado'</span>
+        <span class="hljs-attr">'401':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Login para reportar'</span>
+  
+
+  <span class="hljs-comment"># -------------------- M07 --------------------         </span>
+  <span class="hljs-string">/pedidos/noticia/{id}/aceitar/:</span>
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R701</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R701: Aceitar report'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Aceitar report. Acesso: ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M07: Adminstração do Admin'</span>
+      
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">header</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">tempo_ban</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">false</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'201':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Report aceite'</span>
+        <span class="hljs-attr">'401':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Só pode ser aceite por um moderador'</span>
+  
+  <span class="hljs-string">/pedidos/comentario/{id}/aceitar/:</span>
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R702</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R702: Aceitar report'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Aceitar report. Acesso: ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M07: Adminstração do Admin'</span>
+      
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">header</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">tempo_ban</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">false</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'201':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Report aceite'</span>
+        <span class="hljs-attr">'401':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Só pode ser aceite por um moderador'</span>
+          
+  <span class="hljs-string">/pedidos/utilizador/{id}/aceitar/:</span>
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R703</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R703: Aceitar report'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Aceitar report. Acesso: ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M07: Adminstração do Admin'</span>
+      
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">header</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">tempo_ban</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">false</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'201':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Report aceite'</span>
+        <span class="hljs-attr">'401':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Só pode ser aceite por um moderador'</span>
+  
+  <span class="hljs-string">/pedidos/noticia/{id}/rejeitar/:</span>
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R704</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R704: Rejeitar report'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Rejeitar report. Acesso: ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M07: Adminstração do Admin'</span>
+      
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+          
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'201':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Report rejeitado'</span>
+        <span class="hljs-attr">'401':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Só pode ser rejeitado por um moderador'</span>
+
+  <span class="hljs-string">/pedidos/comentario/{id}/rejeitar/:</span>
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R705</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R705: Rejeitar report'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Rejeitar report. Acesso: ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M07: Adminstração do Admin'</span>
+      
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+          
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'201':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Report rejeitado'</span>
+        <span class="hljs-attr">'401':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Só pode ser rejeitado por um moderador'</span>
+
+  <span class="hljs-string">/pedidos/utilizador/{id}/rejeitar/:</span>
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R706</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R706: Rejeitar report'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Rejeitar report. Acesso: ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M07: Adminstração do Admin'</span>
+      
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">path</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+          
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'201':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Report rejeitado'</span>
+        <span class="hljs-attr">'401':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Só pode ser rejeitado por um moderador'</span>
+  
+  <span class="hljs-comment"># -------------------- M08 --------------------</span>
+  <span class="hljs-string">/faq/:</span>
+    <span class="hljs-attr">get:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R801</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R801: Ver FAQ'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Pagina de Perguntas Frequentes. Acesso: PUB, USR, ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M08: Páginas Estáticas'</span>
+
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'200':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. IF PUB, USR Mostrar Pergunta e Resposta
+                            IF ADM Mostrar edição da pergunta e resposta'</span>
+          <span class="hljs-attr">content:</span> 
+            <span class="hljs-attr">application/json:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+                <span class="hljs-attr">items:</span>
+                  <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/Faq'</span>
+                      
+    <span class="hljs-attr">post:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R802</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R802: Criar FAQ'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Criar pergunta e resposta frequente. Access: ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M08: Páginas Estáticas'</span>
+      
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">application/json:</span>
+            <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+              <span class="hljs-attr">required:</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">id</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">pergunta</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">resposta</span>
+              <span class="hljs-attr">properties:</span>
+                <span class="hljs-attr">id:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+                <span class="hljs-attr">autor_id:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+                <span class="hljs-attr">pergunta:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                <span class="hljs-attr">resposta:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                  
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar após criar faq.'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para FAQ'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/faq/'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Falha ao criar FAQ. Redirecionar para FAQ'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/faq/'</span>
+          
+    <span class="hljs-attr">patch:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R803</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R803: Editar FAQ'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Editar pergunta e resposta frequente. Access: ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M08: Páginas Estáticas'</span>
+      
+      <span class="hljs-attr">requestBody:</span>
+        <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+        <span class="hljs-attr">content:</span>
+          <span class="hljs-attr">application/json:</span>
+            <span class="hljs-attr">schema:</span>
+              <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+              <span class="hljs-attr">required:</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">id</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">question</span>
+                <span class="hljs-bullet">-</span> <span class="hljs-string">answer</span>
+              <span class="hljs-attr">properties:</span>
+                <span class="hljs-attr">id:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+                <span class="hljs-attr">autor_id:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+                <span class="hljs-attr">question:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                <span class="hljs-attr">answer:</span>
+                  <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+                  
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar após editar FAQ.'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para FAQ'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/faq/'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Falha ao Editar FAQ. Redirecionar para FAQ'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/faq/'</span>
+                  
+    <span class="hljs-attr">delete:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R804</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R804: Apagar FAQ'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Apagar pergunta e resposta frequente. Access: ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M08: Páginas Estáticas'</span>
+          
+      <span class="hljs-attr">parameters:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-attr">in:</span> <span class="hljs-string">query</span>
+          <span class="hljs-attr">name:</span> <span class="hljs-string">id</span>
+          <span class="hljs-attr">schema:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+          <span class="hljs-attr">required:</span> <span class="hljs-literal">true</span>
+          
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'303':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Redirecionar após apagar FAQ.'</span>
+          <span class="hljs-attr">headers:</span>
+            <span class="hljs-attr">Location:</span>
+              <span class="hljs-attr">schema:</span>
+                <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+              <span class="hljs-attr">examples:</span>
+                <span class="hljs-attr">303Success:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Redirecionar para FAQ'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/faq/'</span>
+                <span class="hljs-attr">303Error:</span>
+                  <span class="hljs-attr">description:</span> <span class="hljs-string">'Falha ao criar FAQ. Redirecionar para FAQ'</span>
+                  <span class="hljs-attr">value:</span> <span class="hljs-string">'/faq/'</span>
+                  
+  <span class="hljs-string">/sobrenos/:</span>
+    <span class="hljs-attr">get:</span>
+      <span class="hljs-attr">operationId:</span> <span class="hljs-string">R805</span>
+      <span class="hljs-attr">summary:</span> <span class="hljs-string">'R805: Sobre nós'</span>
+      <span class="hljs-attr">description:</span> <span class="hljs-string">'Sobre nós. Acesso: PUB, USR, ADM'</span>
+      <span class="hljs-attr">tags:</span>
+        <span class="hljs-bullet">-</span> <span class="hljs-string">'M08: Páginas Estáticas'</span>
+      
+      <span class="hljs-attr">responses:</span>
+        <span class="hljs-attr">'200':</span>
+          <span class="hljs-attr">description:</span> <span class="hljs-string">'Ok. Mostrar página Sobre Nós'</span>
+  
+  
+<span class="hljs-attr">components:</span>
+  <span class="hljs-attr">schemas:</span>
+    <span class="hljs-attr">Faq:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+      <span class="hljs-attr">properties:</span>
+        <span class="hljs-attr">id:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">autor_id:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">pergunta:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">resposta:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+  
+  
+    <span class="hljs-attr">NBloqueado:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+      <span class="hljs-attr">properties:</span>
+        <span class="hljs-attr">id:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">bloq_id:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">motivo:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">lido:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">boolean</span>
+        <span class="hljs-attr">data:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        
+    <span class="hljs-attr">NComentario:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+      <span class="hljs-attr">properties:</span>
+        <span class="hljs-attr">comentario_id:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">lido:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">boolean</span>
+        <span class="hljs-attr">data:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+      
+    <span class="hljs-attr">NVotos:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+      <span class="hljs-attr">properties:</span>
+        <span class="hljs-attr">utilizadorvoto_id:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">noticia_id:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">lido:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">boolean</span>
+        <span class="hljs-attr">date:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        
+    <span class="hljs-attr">NSeguidor:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+      <span class="hljs-attr">properties:</span>
+        <span class="hljs-attr">follower_id:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">novo_seguidor:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">boolean</span>
+        <span class="hljs-attr">lido:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">boolean</span>
+        <span class="hljs-attr">date:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+      
+    <span class="hljs-attr">Utilizador:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+      <span class="hljs-attr">properties:</span>
+        <span class="hljs-attr">nome:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">email:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">photo:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">permissao:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+          
+    <span class="hljs-attr">EditarUser:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+      <span class="hljs-attr">properties:</span>
+        <span class="hljs-attr">nome:</span> 
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">email:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">password:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">foto:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">contacto:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+    
+    <span class="hljs-attr">Noticia:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+      <span class="hljs-attr">properties:</span>
+        <span class="hljs-attr">id:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">autor_id:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">titulo:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">descricao:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">data:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">tags:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+          <span class="hljs-attr">items:</span>
+            <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">comentario:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">array</span>
+          <span class="hljs-attr">items:</span>
+            <span class="hljs-string">$ref:</span> <span class="hljs-string">'#/components/schemas/Comentario'</span>
+          <span class="hljs-attr">default:</span> <span class="hljs-string">[]</span>
+    
+    <span class="hljs-attr">Comentario:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+      <span class="hljs-attr">properties:</span>
+        <span class="hljs-attr">id:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">autor_id:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">not_id:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">texto:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">data:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+    
+    <span class="hljs-attr">Seguir:</span>
+      <span class="hljs-attr">type:</span> <span class="hljs-string">object</span>
+      <span class="hljs-attr">properties:</span>
+        <span class="hljs-attr">id:</span> 
+          <span class="hljs-attr">type:</span> <span class="hljs-string">integer</span>
+        <span class="hljs-attr">nome:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+        <span class="hljs-attr">photo:</span>
+          <span class="hljs-attr">type:</span> <span class="hljs-string">string</span>
+
+</div></code></pre>
+<h1 id="a8-pr%C3%B3tipo-vertical"><strong>A8: Prótipo Vertical</strong></h1>
+<p>O artefacto A8, inclui a implementação de algumas user stories e com o objetivo de validar a arquitetura presente.</p>
+<h2 id="1-features-implementadas"><strong>1. Features Implementadas</strong></h2>
+<h3 id="11-user-stories-implementadas">**1.1. User Stories Implementadas</h3>
+<table>
+<thead>
+<tr>
+<th><strong>Referência a User Storie</strong></th>
+<th><strong>Nome</strong></th>
+<th><strong>Prioridade</strong></th>
+<th><strong>Descrição</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>US05</td>
+<td>Pesquisar por notícias e comentários</td>
+<td>Alta</td>
+<td>Como utilizador genérico, desejo pesquisar algumas notícias ou comentários de utilizadores</td>
+</tr>
+<tr>
+<td>US09</td>
+<td>Sign In</td>
+<td>alta</td>
+<td>Como utilizador não autenticado, quero autenticar-me no sistema para poder aceder a informações privilegiadas</td>
+</tr>
+<tr>
+<td>US10</td>
+<td>Sign Up</td>
+<td>alta</td>
+<td>Como utilizador não autenticado, quero registar no sistema para que possa me autenticar</td>
+</tr>
+<tr>
+<td>US15</td>
+<td>Criar Notícia</td>
+<td>alta</td>
+<td>Como utilizador autenticado, quero poder criar uma notícia para adicionar ao site</td>
+</tr>
+<tr>
+<td>US29</td>
+<td>Editar Notícia</td>
+<td>alta</td>
+<td>Como Autor da Notícia, quero poder editar a mesma para corrigir ou alterar certas informações</td>
+</tr>
+<tr>
+<td>US30</td>
+<td>Apagar Notícia</td>
+<td>alta</td>
+<td>Como Autor da Notícia, quero poder apagar a mesma de forma a elimina-la do site</td>
+</tr>
+<tr>
+<td>US13</td>
+<td>Ver notícia</td>
+<td>alta</td>
+<td>Como utilizador autenticado, quero ver uma noticia</td>
+</tr>
+<tr>
+<td>US25</td>
+<td>Sign Out</td>
+<td>alta</td>
+<td>Como utilizador, pretendo sair do sistema para poder encerrar a minha conta</td>
+</tr>
+</tbody>
+</table>
+<h3 id="12-web-resources-implementados">**1.2. Web Resources Implementados</h3>
+<h3 id="m01-autenticacao-e-perfil-indivual"><strong>M01: Autenticacao e Perfil Indivual</strong></h3>
+<table>
+<thead>
+<tr>
+<th><strong>Web Resource Referência</strong></th>
+<th><strong>URL</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R101: Formulário de Login</td>
+<td>GET /login/</td>
+</tr>
+<tr>
+<td>R102: Ação de Login</td>
+<td>POST /login/</td>
+</tr>
+<tr>
+<td>R103: Ação de Logout</td>
+<td>POST /logout/</td>
+</tr>
+<tr>
+<td>R105: Ver Formulário de Registo</td>
+<td>GET /register/</td>
+</tr>
+<tr>
+<td>R106: Ação de Registo</td>
+<td>POST /register/</td>
+</tr>
+</tbody>
+</table>
+<h3 id="m02-criar-e-editar-noticiacomentario"><strong>M02: Criar e Editar Noticia/Comentario</strong></h3>
+<table>
+<thead>
+<tr>
+<th><strong>Web Resource Referência</strong></th>
+<th><strong>URL</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R201: Criar noticia</td>
+<td>POST /noticia/criar</td>
+</tr>
+<tr>
+<td>R203: Editar noticia</td>
+<td>PATCH/noticia/{id}/</td>
+</tr>
+<tr>
+<td>R204: Apagar noticia</td>
+<td>DELETE /noticia/{id}/</td>
+</tr>
+</tbody>
+</table>
+<h3 id="m03-ver-utilizadoresconte%C3%BAdo"><strong>M03: Ver utilizadores/Conteúdo</strong></h3>
+<table>
+<thead>
+<tr>
+<th><strong>Web Resource Referência</strong></th>
+<th><strong>URL</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R302: Ver uma notícia especifica</td>
+<td>GET /noticia/{id}</td>
+</tr>
+<tr>
+<td>R303: Ver utilizador especifico</td>
+<td>GET /utilizador/{nome}</td>
+</tr>
+</tbody>
+</table>
+<h3 id="m04-procura-utilizadoresconte%C3%BAdo"><strong>M04: Procura utilizadores/Conteúdo</strong></h3>
+<table>
+<thead>
+<tr>
+<th><strong>Web Resource Referência</strong></th>
+<th><strong>URL</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R401: Pesquisa de utilizadores/conteudo</td>
+<td>GET /pesquisa/</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2prot%C3%B3tipo">2.Protótipo</h2>
+<p>O prótipo está disponível em <a href="http://lbaw2163.lbaw.fe.up.pt/">http://lbaw2163.lbaw.fe.up.pt/</a></p>
+<ul>
+<li>
+<p><strong>Administrador</strong></p>
+<ul>
+<li>Username : admin</li>
+<li>Passowrd: Admin1234</li>
+</ul>
+</li>
+<li>
+<p><strong>Utilizador Autenticado</strong></p>
+<ul>
+<li>Username: grupo63</li>
+<li>Password: Test1234</li>
+</ul>
+</li>
+</ul>
+<p>O código encontra-se disponível em: <a href="https://git.fe.up.pt/lbaw/lbaw2122/lbaw2163/-/tree/main/webSite">https://git.fe.up.pt/lbaw/lbaw2122/lbaw2163/-/tree/main/webSite</a></p>
+<p><strong><em>Grupo 63, Data :</em></strong> 30/11/2021</p>
+<ul>
+<li><span dir="">António Ferreira Cabral de Barbosa Campelo</span>, <a href="mailto:up201704987@fc.up.pt"><span dir="">up201704987@fc.up.pt</span></a></li>
+<li><span dir="">Edgar Miguel Pinto Lourenço</span>, <a href="mailto:up201604910@fc.up.pt"><span dir="">up201604910@fc.up.pt</span></a></li>
+<li><span dir="">Manuel da Silva Sá</span>, <a href="mailto:up201805273@fc.up.pt"><span dir="">up201805273@fc.up.pt</span></a></li>
+<li><span dir="">Patrícia Daniela Tavares Vieira</span>, <a href="mailto:up201805238@fc.up.pt">up201805238@fc.up.pt</a></li>
+</ul>
+
+</body>
+</html>

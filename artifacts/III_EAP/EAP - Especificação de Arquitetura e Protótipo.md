@@ -1,3 +1,7 @@
+# **EAP - Especificação de Arquitetura e Protótipo**
+
+Neste terceiro componente queremos apresentar a especificação da arquitetura do nosso website, ou seja, a esquematização de como irá funcionar o website em termos de respostas e pedidos. Vamos construir um protótipo com algumas user stories para perceber como irá ser construído a versão final do Ardina.
+
 # **A7: Especificação dos Recursos Web**
 
 Neste artefacto iremos documentar a arquitetura da aplicação web a desenvolver, indicando o catalógo de recursos e propriedades de cada recurso, incluindo:
@@ -29,6 +33,14 @@ Esta secção define as permissões usadas nos módulos acimas para estabelecer 
 |AUT|Autor|Autores do Conteúdo|
 |BAN|Banido|Utilizador Banido|
 |ADM|Administrador|Utilizador Administrador|
+
+## **3.Especificação da OpenAPI**
+
+Esta secção contém a especificação completa da API in OpenAPI(YAML).
+
+OpenAPI YAML: <https://git.fe.up.pt/lbaw/lbaw2122/lbaw2163/-/blob/main/webSite/Ardina-1.0.yaml>
+
+OpenAPI Swagger: <https://app.swaggerhub.com/apis/edgarlourenco/OArdina/1.0.0>
 
 ```yaml
 openapi: 3.0.0
@@ -1437,3 +1449,78 @@ components:
           type: string
 
 ```
+
+# **A8: Prótipo Vertical**
+
+O artefacto A8, inclui a implementação de algumas user stories e com o objetivo de validar a arquitetura presente.
+
+## **1. Features Implementadas**
+
+### **1.1. User Stories Implementadas**
+
+|**Referência a User Storie**|**Nome**|**Prioridade**|**Descrição**|
+|----------------------------|--------|--------------|-------------|
+| US05 |Pesquisar por notícias e comentários|Alta|Como utilizador genérico, desejo pesquisar algumas notícias ou comentários de utilizadores|
+| US09 | Sign In | alta | Como utilizador não autenticado, quero autenticar-me no sistema para poder aceder a informações privilegiadas |
+| US10 | Sign Up | alta | Como utilizador não autenticado, quero registar no sistema para que possa me autenticar |
+| US15 | Criar Notícia | alta | Como utilizador autenticado, quero poder criar uma notícia para adicionar ao site |
+| US29 | Editar Notícia | alta | Como Autor da Notícia, quero poder editar a mesma para corrigir ou alterar certas informações |
+| US30 | Apagar Notícia | alta | Como Autor da Notícia, quero poder apagar a mesma de forma a elimina-la do site |
+| US13 | Ver notícia | alta | Como utilizador autenticado, quero ver uma noticia |
+| US25 | Sign Out | alta | Como utilizador, pretendo sair do sistema para poder encerrar a minha conta |
+
+### **1.2. Web Resources Implementados**
+
+### **M01: Autenticacao e Perfil Indivual**
+
+|**Web Resource Referência**|**URL**|
+|---------------------------|-------|
+|R101: Formulário de Login| GET /login/|
+|R102: Ação de Login| POST /login/|
+|R103: Ação de Logout| POST /logout/|
+|R105: Ver Formulário de Registo| GET /register/|
+|R106: Ação de Registo|POST /register/|
+
+### **M02: Criar e Editar Noticia/Comentario**
+
+|**Web Resource Referência**|**URL**|
+|---------------------------|-------|
+|R201: Criar noticia| POST /noticia/criar|
+|R203: Editar noticia| PATCH/noticia/{id}/|
+|R204: Apagar noticia| DELETE /noticia/{id}/|
+
+### **M03: Ver utilizadores/Conteúdo**
+
+|**Web Resource Referência**|**URL**|
+|---------------------------|-------|
+|R302: Ver uma notícia especifica| GET /noticia/{id}|
+|R303: Ver utilizador especifico| GET /utilizador/{nome}|
+
+### **M04: Procura utilizadores/Conteúdo**
+
+|**Web Resource Referência**|**URL**|
+|---------------------------|-------|
+|R401: Pesquisa de utilizadores/conteudo| GET /pesquisa/|
+
+## 2.Protótipo
+
+O prótipo está disponível em <http://lbaw2163.lbaw.fe.up.pt/>
+
+* **Administrador**
+  * Username : admin
+  * Passowrd: Admin1234
+
+* **Utilizador Autenticado**
+  * Username: grupo63
+  * Password: Test1234
+
+O código encontra-se disponível em: <https://git.fe.up.pt/lbaw/lbaw2122/lbaw2163/-/tree/main/webSite>
+
+**_Grupo 63, Data :_** 4/01/2022
+
+* <span dir="">António Ferreira Cabral de Barbosa Campelo</span>, [<span dir="">up201704987@fc.up.pt</span>](mailto:up201704987@fc.up.pt)
+* <span dir="">Edgar Miguel Pinto Lourenço</span>, [<span dir="">up201604910@fc.up.pt</span>](mailto:up201604910@fc.up.pt)
+* <span dir="">Manuel da Silva Sá</span>, [<span dir="">up201805273@fc.up.pt</span>](mailto:up201805273@fc.up.pt)
+* <span dir="">Patrícia Daniela Tavares Vieira</span>, [up201805238@fc.up.pt](mailto:up201805238@fc.up.pt)
+
+**Em termos de edição, todos os elementos colaboraram, portantos consideramos que os 4 são editores do documento**
