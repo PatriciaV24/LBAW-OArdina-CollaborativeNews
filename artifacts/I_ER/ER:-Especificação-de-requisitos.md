@@ -240,7 +240,14 @@ Ao clicar em qualquer notícia é redirecionado para a página com os detalhes s
 **11-** _Tags_ secundárias correspondentes à notícia
 
 ---
+# Histórico de Revisão
+Alterações feitas no primeiro envio:
+* Acrescentamos a informação inicial relativa ao projeto;
+* Modificamos a representação do Administrador no esquema de atores, devido à evolução do projeto achamos mais correto;
+* Acrescentamos a descrição do Administrador que faltava;
+* Corrigimos um erro numa ligação no Sitemap.
 
+<br></br>
 **_Grupo 63, Data :_** 09/11/2021
 
 * <span dir="">António Ferreira Cabral de Barbosa Campelo</span>, [<span dir="">up201704987@fc.up.pt</span>](mailto:up201704987@fc.up.pt)
