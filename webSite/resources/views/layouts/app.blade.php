@@ -14,6 +14,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/milligram.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
     <script type="text/javascript">
         // Fix for Firefox autofocus CSS bug
         // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
@@ -21,6 +22,7 @@
     <script type="text/javascript" src={{ asset('js/app.js') }} defer>
 </script>
   </head>
+
   <body>
     <main>
       <header>
@@ -29,9 +31,15 @@
         <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
         @endif
       </header>
+
+      {{-- @include('partials.header') --}}
+
       <section id="content">
         @yield('content')
       </section>
+
+      {{-- @include('partials.footer') --}}
+
     </main>
   </body>
 </html>
