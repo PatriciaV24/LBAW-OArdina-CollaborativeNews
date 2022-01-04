@@ -103,6 +103,12 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'password' => [
+            'regex' => ':attribute tem de ter pelo menos uma letra minuscula, uma letra maiuscula e um caracter numerico.'
+        ],
+        'novaPassword' => [
+            'regex' => ':attribute tem de ter pelo menos uma letra minuscula, uma letra maiuscula e um caracter numerico.'
+        ]  
     ],
 
     /*

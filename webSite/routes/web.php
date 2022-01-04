@@ -1,5 +1,21 @@
 <?php
 
+
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Controllers\Content\ComentarioController;
+use App\Http\Controllers\Content\NoticiaController;
+use App\Http\Controllers\HomepageController;/*Feito*/
+use App\Http\Controllers\PedidoController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\FAQController; /*Feito*/
+use App\Http\Controllers\PesquisaController;
+use App\Http\Controllers\AboutController;/*Feito*/
+use App\Http\Controllers\NotificacoesController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\RegisterController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,7 +38,7 @@ Route::get('/signup/', [RegisterController::class, 'showRegistrationForm'])->nam
 
     
 //Sem precisar de autenticação
-    Route::middleware(['banido']) -> group(function() {
+    Route::middleware(['NaoBanido']) -> group(function() {
         
         //Ver noticia
         Route::get('/noticia/{id}/', [NoticiaController::class, 'show']) -> where(['id' => '[0-9]+']);
@@ -47,23 +63,23 @@ Route::get('/signup/', [RegisterController::class, 'showRegistrationForm'])->nam
     //Necessita de autenticação
     Route::middleware(['auth']) -> group(function() {
 
-        Route::middleware(['notbanned']) -> group(function() {
+        Route::middleware(['NaoBanido']) -> group(function() {
             
             //Noticias
-            Route::post('/noticia/criar/', [NoticiaController::class, 'criar']);
-            Route::patch('/noticia/{id}/', [NoticiaController::class, 'editar']) -> where(['id' => '[0-9]+']);
-            Route::delete('/noticia/{id}/', [NoticiaController::class, 'apagar']) -> where(['id' => '[0-9]+']);
+            Route::post('/noticia/create/', [NoticiaController::class, 'create']);
+            Route::patch('/noticia/{id}/', [NoticiaController::class, 'edit']) -> where(['id' => '[0-9]+']);
+            Route::delete('/noticia/{id}/', [NoticiaController::class, 'delete']) -> where(['id' => '[0-9]+']);
             Route::post('/noticia/{id}/report/', [NoticiaController::class, 'reportar']) -> where(['id' => '[0-9]+']);
 
             //Comentarios
-            Route::post('/comentarios/criar/', [ComentarioController::class, 'criar']);
-            Route::patch('/comentarios/{id}', [ComentarioController::class, 'editar']) -> where(['id' => '[0-9]+']);
-            Route::delete('/comentarios/{id}', [ComentarioController::class, 'apagar']) -> where(['id' => '[0-9]+']);
+            Route::post('/comentarios/criar/', [ComentarioController::class, 'create']);
+            Route::patch('/comentarios/{id}', [ComentarioController::class, 'edit']) -> where(['id' => '[0-9]+']);
+            Route::delete('/comentarios/{id}', [ComentarioController::class, 'delete']) -> where(['id' => '[0-9]+']);
             Route::post('/comentarios/{id}/report/', [ComentarioController::class, 'reportar']) -> where(['id' => '[0-9]+']);
             
             //Notificacoes
             Route::get('/notificacoes/', [NotificacoesController::class, 'mostrar']);
-            Route::delete('/notificacoes/', [NotificacoesController::class, 'apagar']);
+            Route::delete('/notificacoes/', [NotificacoesController::class, 'delete']);
             
             //FAQ
             Route::post('/faq/', [FAQController::class, 'create']);
@@ -75,9 +91,9 @@ Route::get('/signup/', [RegisterController::class, 'showRegistrationForm'])->nam
             Route::post('/utilizador/{nome}/ban/', [UserController::class, 'ban'])->middleware(['admin']);
 
             //Perfil
-            Route::post('/utilizador/{nome}/edit', [UserController::class, 'EditarUser']);
-            Route::post('/mudanca_password/', [UserController::class, 'Mudar Pass']);
-            Route::post('/perfil_update/', [UserController::class, 'EditarPerfil']);
+            Route::post('/utilizador/{nome}/edit', [UserController::class, 'edit']);
+            Route::post('/mudanca_password/', [UserController::class, 'updatePassword']);
+            Route::post('/perfil_update/', [UserController::class, 'updateUtilizador']);
             Route::post('/apagar_conta', [UserController::class, 'ApagarConta']);
 
             //Pedidos Noticia
@@ -96,4 +112,10 @@ Route::get('/signup/', [RegisterController::class, 'showRegistrationForm'])->nam
 
     });
 
-
+    Route::get('/clear-all-cache', function() {
+        Artisan::call('cache:clear');
+        Artisan::call('route:clear');
+        Artisan::call('view:clear');
+        Artisan::call('config:clear');
+        echo "Todas as caches limpas com sucesso.";
+    });

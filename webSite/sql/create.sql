@@ -1,8 +1,8 @@
-/*  SCHEMA - Elimina tudo dentro do SCHEMA
+
 DROP SCHEMA IF EXISTS lbaw2163 CASCADE;
 CREATE SCHEMA lbaw2163;
 SET search_path TO "lbaw2163";
-*/
+
 
 /*------------------------------------------------------------*/
 /*Caso nao esteja dentro do lbaw2163*/
