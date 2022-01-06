@@ -1,11 +1,21 @@
 body {
 	margin: 0;
 	font-family: Helvetica, sans-serif;
+	background-color: #ffffff;
 }
 
 hr {
 	margin: 0;
 	color: white;
+}
+
+#header {
+	top:0;
+	margin-top: 0%;
+	height: 85px;;
+	align-items: center;
+	width: 100%;
+	position: absolute;
 }
 
 #top_header {
@@ -86,18 +96,22 @@ hr {
 }
 
 #main_body {
-	height: 1000px;
-	background-color: white;
+	background-color: rgb(216, 20, 20);
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-top: 105px;
 }
 
 #footer {
 	height: 260px;
 	background-color: black;
 	color: #9c9c9c;
+	bottom: 0;
+	position: absolute;
+	width: 100%;
+	text-align: center;
 }
-#footer_nav {
-	
-}
+
 #footer_nav_sections {
 	padding: 20px 0 20px 0;
 	font-size: 15px;
@@ -127,6 +141,7 @@ hr {
 #footer_logo svg {
 	height: 100%;
 	color: white;
+	
 }
 #copyright {
 	display: flex;

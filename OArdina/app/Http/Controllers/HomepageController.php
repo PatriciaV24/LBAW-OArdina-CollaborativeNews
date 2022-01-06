@@ -20,7 +20,8 @@ class HomepageController extends Controller {
 
     public function show(Request $request) {
         if(!Auth::check()) {
-            return redirect('/login');
+           return redirect('/OArdina');
+            //return redirect('/login');
         }
 
         $this->authorize('show', Noticia::class);

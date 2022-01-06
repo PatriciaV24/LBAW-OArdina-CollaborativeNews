@@ -2,7 +2,7 @@ body {
   background-color: #ffffff;
   color: #9b4dca;
 }
-main > header {
+/*main > header {
   display: grid;
   grid-template-columns: 1fr auto auto;
   align-items: center;
@@ -20,7 +20,7 @@ main > header a.button {
 main > header span {
   margin: 1em;
   justify-self: center;
-}
+}*/
 #cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -82,11 +82,13 @@ main > header span {
 #content label {
   font-weight: normal;
 }
+
 #content > form {
-  margin: 0 auto;
-  padding: 1em;
-  max-width: 20em;
-  border: 1px solid #d2afe7;
+  margin-left: 30%;
+  margin-right: 35%;
+  margin-top: 105px;
+  align:center;
+  border: 1px solid #a30909;
 }
 #content > form .error {
   font-weight: bold;
@@ -94,7 +96,12 @@ main > header span {
 }
 #content > form input {
   background-color: white;
+  width: 100%;
+  margin-bottom: 15%;
+  margin-top: 5%;
 }
+
+
 @media (max-width: 70em) {
   #cards {
     grid-template-columns: repeat(2, 1fr);

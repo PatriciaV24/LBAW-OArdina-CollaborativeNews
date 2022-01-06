@@ -11,9 +11,9 @@
 		<hr>
 	</div>
 	<div id="footer_logo">
-		
-		@include('partials.svg.logomin')
-
+		<a href="{{ url('/OArdina') }}">
+			@include('partials.svg.logomin')
+		</a>
 	</div>
 	<div id="copyright"><span>&copy; Copyright 2022 Portugal. All rights reserved.</span></div>
 </div>

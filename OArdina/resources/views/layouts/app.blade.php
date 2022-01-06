@@ -13,7 +13,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/milligram.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
     <script type="text/javascript">
         // Fix for Firefox autofocus CSS bug
@@ -25,14 +25,11 @@
 
   <body>
     <main>
-      <header>
-        <h1><a href="{{ url('/cards') }}">Thingy!</a></h1>
-        @if (Auth::check())
-        <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
-        @endif
+      <header> 
+        @extends('partials.header')
       </header>
+      
 
-      {{-- @include('partials.header') --}}
 
       <section id="content">
         @yield('content')
