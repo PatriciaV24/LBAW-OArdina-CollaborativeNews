@@ -68,17 +68,17 @@
     - [ ] report
     
 # PESQUISA
-    ## S/CONTA
-    - [ ] titulo da noticia
-    - [ ] conteudo da noticia
-    - [ ] conteudo de comentario
+## S/CONTA
+- [ ] titulo da noticia
+- [ ] conteudo da noticia
+- [ ] conteudo de comentario
 
-    ## C/CONTA
-    - [ ] **AS ANTERIORES** 
-    - [ ] username (-> ver perfil se existir) 
-    - [ ] tags
-    - [ ] noticia de um username
-    - [ ] comentarios de um user name
+## C/CONTA
+- [ ] **AS ANTERIORES** 
+- [ ] username (-> ver perfil se existir) 
+- [ ] tags
+- [ ] noticia de um username
+- [ ] comentarios de um user name
  
 
 # NOVA NOTICIA
@@ -105,32 +105,32 @@
 - [ ] contacto
 
 # PERFIL DO UTILIZADOR
-    ## EDITAR PERFIL
-    ## SUAS NOTICIAS
-    - [ ]
+## EDITAR PERFIL
+## SUAS NOTICIAS
+- [ ]
 
-    ## SEUS COMENTARIOS
+## SEUS COMENTARIOS
+- [ ]
+## SEUS FAVORITOS
+- [ ]
+    ### NOTICIAS
     - [ ]
-    ## SEUS FAVORITOS
+    ### COMENTARIOS
     - [ ]
-        ### NOTICIAS
-        - [ ]
-        ### COMENTARIOS
-        - [ ]
-        ### TAGS
-        - [ ]
-    ## USERS A SEGUIR
+    ### TAGS
     - [ ]
-    ## SEGUIDORES
+## USERS A SEGUIR
+- [ ]
+## SEGUIDORES
+- [ ]
+## NOTIFICAÇÕES
+- [ ]
+    ### VOTOS
     - [ ]
-    ## NOTIFICAÇÕES
+    ### COMENTARIOS
     - [ ]
-        ### VOTOS
-        - [ ]
-        ### COMENTARIOS
-        - [ ]
-        ### NOVOS SEGUIDORES
-        - [ ]
+    ### NOVOS SEGUIDORES
+    - [ ]
 
 # PERFIL DO UTILIZADOR BLOQUEADO
 - [ ]
