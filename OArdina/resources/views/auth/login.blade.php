@@ -30,5 +30,4 @@
         <a class="button button-outline" href="{{ route('signup') }}">Register</a>
     </form>
 @endsection
-@extends('partials.footer')
 

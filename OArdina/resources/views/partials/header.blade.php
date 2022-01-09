@@ -1,9 +1,10 @@
 <div id="header">
 	<div id="top_header">
 		<div id="logo">
-		<a href="{{ url('/OArdina') }}">
+		{{-- <a href="{{ url('/OArdina') }}">
 			@include('partials.svg.logo')
-		</a>
+		</a> --}}
+		@include('partials.svg.logo')
 		</div>
 		<div id="user_container">
 			<div id="search">

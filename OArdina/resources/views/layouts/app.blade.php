@@ -15,28 +15,24 @@
     <link href="{{ asset('css/milligram.min.css') }}" rel="stylesheet">
      <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
-    <script type="text/javascript">
-        // Fix for Firefox autofocus CSS bug
-        // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
-    </script>
-    <script type="text/javascript" src={{ asset('js/app.js') }} defer>
-</script>
   </head>
 
   <body>
-    <main>
-      <header> 
-        @extends('partials.header')
-      </header>
-      
 
+    <div id="page_container">
+      @include('partials.header')
 
       <section id="content">
         @yield('content')
       </section>
 
-      {{-- @include('partials.footer') --}}
+      @include('partials.footer')
+    </div>
 
-    </main>
+    <script type="text/javascript">
+        // Fix for Firefox autofocus CSS bug
+        // See: http://stackoverflow.com/questions/18943276/html-5-autofocus-messes-up-css-loading/18945951#18945951
+    </script>
+    <script type="text/javascript" src={{ asset('js/app.js') }} defer></script>
   </body>
 </html>

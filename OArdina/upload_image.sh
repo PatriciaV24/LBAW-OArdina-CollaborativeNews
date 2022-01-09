@@ -10,5 +10,5 @@ composer install
 php artisan clear-compiled
 php artisan optimize
 
-docker build -t $IMAGE_NAME .
-docker push $IMAGE_NAME
+sudo docker build -t $IMAGE_NAME .
+sudo docker push $IMAGE_NAME

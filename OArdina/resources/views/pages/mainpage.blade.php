@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'O Ardina')
-
+{{-- @section('title', 'O Ardina') --}}
 
 @section('content')
-<div id=main_body>
 	<div id="body">
 		<div id="headlines">
 			<div id="headlines_carousel"></div>
@@ -17,7 +15,4 @@
 			<div id="advertising2"></div>
 		</div>
 	</div>
-	<p>OLA</p>
-</div>
 @endsection
-@extends('partials.footer')

@@ -11,9 +11,10 @@
 		<hr>
 	</div>
 	<div id="footer_logo">
-		<a href="{{ url('/OArdina') }}">
+		{{-- <a href="{{ url('/OArdina') }}">
 			@include('partials.svg.logomin')
-		</a>
+		</a> --}}
+		@include('partials.svg.logomin')
 	</div>
 	<div id="copyright"><span>&copy; Copyright 2022 Portugal. All rights reserved.</span></div>
 </div>
