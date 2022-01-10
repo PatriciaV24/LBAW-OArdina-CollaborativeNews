@@ -1,35 +1,42 @@
+DROP FUNCTION IF EXISTS acao_de_admin() CASCADE;
+DROP TRIGGER IF EXISTS acao_de_admin ON request;
+
+
 CREATE OR REPLACE FUNCTION acao_de_admin() RETURNS TRIGGER AS
    $BODY$
        BEGIN
-           IF NOT (SELECT permissao FROM utilizador WHERE USER_TYPE = 'u' ) THEN 
+           IF NOT (SELECT admin FROM utilizador WHERE utilizador.id = new.admin_id ) THEN 
                RAISE EXCEPTION 'Apenas administradores podem realizar esta operação.';
            END IF;
            RETURN utilizador;
        END
    $BODY$
 LANGUAGE plpgsql;
+
 CREATE TRIGGER acao_de_admin
-   BEFORE UPDATE ON utilizador
+   BEFORE UPDATE OF estado ON pedidos
    FOR EACH ROW
    EXECUTE PROCEDURE acao_de_admin();
 
 
-
+DROP FUNCTION IF EXISTS seguir_proprio() CASCADE;
+DROP TRIGGER IF EXISTS seguir_proprio ON request;
 
 CREATE OR REPLACE FUNCTION seguir_proprio() RETURNS TRIGGER AS
    $BODY$
    BEGIN
-       IF info_seguidor.autor_id = info_seguidor.followed_id THEN
+       IF NEW.followed_id = NEW.infos_id THEN
            RAISE EXCEPTION 'Nao se pode seguir a si próprio.';
        END IF;
        RETURN info_seguidor;
    END
    $BODY$
 LANGUAGE plpgsql;
-CREATE TRIGGER  seguir_proprio
+
+CREATE TRIGGER seguir_proprio
    BEFORE INSERT ON info_seguidor
    FOR EACH ROW
-   EXECUTE PROCEDURE  seguir_proprio();
+   EXECUTE PROCEDURE seguir_proprio();
 
 
 /*
@@ -187,3 +194,38 @@ CREATE TRIGGER utilizador_search_update
     BEFORE INSERT OR UPDATE ON utilizador
     FOR EACH ROW
     EXECUTE PROCEDURE utilizador_search_update(); 
+
+--Trigger - Utilizador não pode votar nas suas próprias publicações----
+
+DROP FUNCTION IF EXISTS votar_proprio() CASCADE;
+DROP FUNCTION IF EXISTS votar_proprio ON gosto;
+
+CREATE OR REPLACE FUNCTION votar_proprio() RETURN TRIGGER AS
+    $BODY$
+    BEGIN
+        IF new.utilizador_id = (SELECT autor_id FROM noticia WHERE new.noticia_id = noticia_id) THEN
+            RAISE EXCEPTION 'O utilizador não pode votar nos seus próprios conteúdos';
+        END IF;
+        RETURN new;
+    END;
+    $BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER votar_proprio
+    BEFORE INSERT ON gosto
+    FOR EACH ROW
+    EXECUTE PROCEDURE votar_proprio();
+
+
+-- Trigger - Lidar com Pedidos----
+DROP FUNCTION IF EXISTS lidar_com_pedidos() CASCADE;
+DROP TRIGGER IF EXISTS lidar_com_pedidos ON pedidos;
+
+CREATE OR REPLACE FUNCTION lidar_com_pedidos RETURN TRIGGER AS 
+
+    $BODY$
+    BEGIN
+        IF new.estado = 'aprovado' THEN
+        IF EXISTS (SELECT * FROM unban_appeal, users WHERE new.id = request_id AND utilizador.id = new.utilizador_id) THEN
+            UPDATE utilizador SET banido = false WHERE new.utilizador_id = utilizador.id;
+            IF EXISTS(SELECT * FROM banido WHERE ban.id --ACABAR-- );

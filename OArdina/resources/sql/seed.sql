@@ -1,4 +1,3 @@
-
 DROP SCHEMA IF EXISTS lbaw2163 CASCADE;
 CREATE SCHEMA lbaw2163;
 SET search_path TO "lbaw2163";
@@ -28,22 +27,32 @@ DROP TABLE IF EXISTS comentario CASCADE;
 DROP TABLE IF EXISTS tag CASCADE;
 DROP TABLE IF EXISTS noticia CASCADE;
 DROP TABLE IF EXISTS utilizador CASCADE;
+DROP TABLE IF EXISTS ban CASCADE;
+DROP TABLE IF EXISTS gosto CASCADE;
+DROP TABLE IF EXISTS unban_appeal CASCADE;
+DROP TABLE IF EXISTS pedidos CASCADE;
 
 DROP TYPE IF EXISTS USER_TYPE;
 DROP TYPE IF EXISTS GOSTO;
+DROP TYPE IF EXISTS ESTADO;
 
 DROP INDEX IF EXISTS nome_uti_idx;
-DROP INDEX IF EXISTS noticia_date_idx;
+DROP INDEX IF EXISTS noticia_date_idx; *   
 DROP INDEX IF EXISTS autor_not_idx;
 DROP INDEX IF EXISTS comentario_idx;
 DROP INDEX IF EXISTS search_not_idx;
-DROP INDEX IF EXISTS search_uti_idx;
+DROP INDEX IF EXISTS search_uti_idx; *
+DROP INDEX IF EXISTS banido_idx; *
+DROP INDEX IF EXISTS admin_idx; *
+DROP INDEX IF EXISTS nr_gostos_idx; *
+
 
 ----------------------------------------------------
 
 /* TIPOS */
 CREATE TYPE USER_TYPE AS ENUM('a','u','b'); /* a - Administrador, u - User Autenticado, b - User Banido*/
 CREATE TYPE GOSTO AS ENUM('like', 'dislike');
+CREATE TYPE ESTADO AS ENUM('aprovado', 'rejeitado');
 
 -------------------------------------------
 
@@ -58,15 +67,21 @@ CREATE TABLE utilizador(
     foto TEXT, /*url to text*/
     permissao USER_TYPE NOT NULL,
     contacto INTEGER NOT NULL,
+    admin BOOLEAN NOT NULL DEFAULT FALSE,
+    banido BOOLEAN NOT NULL DEFAULT FALSE,
+    conta_apagada BOOLEAN NOT NULL DEFAULT FALSE,
     CONSTRAINT contacto_limites CHECK (contacto > 99999999 AND contacto < 1000000000)
 );
+
 /* T: das Noticias*/
 CREATE TABLE noticia (
     id SERIAL PRIMARY KEY,
     autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
     titulo VARCHAR(90) NOT NULL,
     descricao TEXT NOT NULL,
-    image TEXT NOT NULL,
+    imagem TEXT NOT NULL,
+    nr_gostos INTEGER NOT NULL DEFAULT 0,
+    nr_comentarios INTEGER NOT NULL DEFAULT 0,
     data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
@@ -96,13 +111,6 @@ CREATE TABLE faq (
     autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE, /*O administrador que realizou ou alterou o faq*/
     questao TEXT NOT NULL,
     resposta TEXT NOT NULL
-);
-/* T: das Imagens (-> Noticia)*/
-CREATE TABLE imagem (
-    id SERIAL PRIMARY KEY,
-    legenda VARCHAR(30) NOT NULL,
-    imag_path TEXT NOT NULL UNIQUE,
-    not_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE
 );
 
 /* T: Votaçao nos Comentários (Utilizador <-> Comentario)*/
@@ -200,6 +208,7 @@ CREATE TABLE texto_report (
     id SERIAL PRIMARY KEY,
     report TEXT NOT NULL
 );
+
 /* T: Report Utilizador (Utilizador-> texto_report)*/
 CREATE TABLE report_u (
     id SERIAL PRIMARY KEY,
@@ -217,6 +226,7 @@ CREATE TABLE report_n (
     tiporesp_id INTEGER NOT NULL REFERENCES texto_report(id) ON DELETE CASCADE,
     resolvido BOOLEAN NOT NULL DEFAULT FALSE
 );
+
 /* T: Report Comentario (Utilizador-> texto_report <-> Comentario)*/
 CREATE TABLE report_c (
     id SERIAL PRIMARY KEY,
@@ -226,10 +236,43 @@ CREATE TABLE report_c (
     resolvido BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+/*T: do ban*/
+CREATE TABLE ban (
+    id SERIAL PRIMARY KEY,
+    utilizador_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
+    admin_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE, /*Trigger para verificar se user.is_admin == true*/
+    start_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    end_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT CHECK (end_date > start_date),
+    razao TEXT NOT NULL 
+)
+
+/*T: do gosto*/
+CREATE TABLE gosto {
+    utilizador_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
+    noticia_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE /*Trigger para verificar que autor não vota na própria noticia*/
+    valor INTEGER NOT NULL
+};
+
+/*T: Apelar unban*/
+CREATE TABLE unban_appeal (
+    request_id INTEGER NOT NULL REFERENCES request(id) ON DELETE CASCADE,
+    ban_id INTEGER NOT NULL REFERENCES ban(id) ON DELETE CASCADE
+);
+
 /* T: Publicidade*/
 CREATE TABLE publicidade (
     id SERIAL PRIMARY KEY,
     imagem TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE pedidos (
+    id SERIAL PRIMARY KEY;
+    utilizador_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
+    admin_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
+    razao TEXT NOT NULL,
+    data_criacao TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    estado ESTADO,
+    data_revisao TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
 );
 
 -------------------------------------------
@@ -237,6 +280,12 @@ CREATE TABLE publicidade (
 /* Índices */
 
 CREATE INDEX nome_uti_idx ON utilizador USING hash (nome);
+
+CREATE INDEX banido_idx ON utilizador USING hash(banido);
+
+CREATE INDEX admin_idx ON utilizador USING hash(admin);
+
+CREATE INDEX nr_gostos_idx ON noticia USING btree(nr_gostos);
 
 CREATE INDEX noticia_date_idx ON noticia USING btree(data);
 
