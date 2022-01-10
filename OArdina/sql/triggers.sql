@@ -92,7 +92,98 @@ CREATE OR REPLACE FUNCTION atualizar_feed() RETURNS TRIGGER AS
    END  
    $BODY$
 LANGUAGE plpgsql;
+
 CREATE TRIGGER atualizar_feed
    AFTER UPDATE ON noticia
    FOR EACH ROW
    EXECUTE PROCEDURE atualizar_feed();
+
+
+ --Trigger - Update TSVector(Noticia)-----
+DROP FUNCTION IF EXISTS noticias_search_update() CASCADE;
+DROP TRIGGER IF EXISTS noticias_search_update ON noticia;
+
+CREATE OR REPLACE FUNCTION noticias_search_update() RETURNS TRIGGER AS
+    $BODY$
+    DECLARE not_texto TEXT = (SELECT n.descricao FROM noticia n where n.id = new.id);
+    BEGIN
+        IF TG_OP = 'INSERT' THEN
+            NEW.search = 
+                setweight(to_tsvector(coalesce(NEW.titulo, '')), 'B') ||
+                setweight(to_tsvector(coalesce(not_texto, '')), 'C');
+        END IF;
+        IF TG_OP = 'UPDATE' THEN
+            IF NEW.titulo <> OLD.titulo THEN
+                NEW.search =
+                    setweight(to_tsvector(coalesce(NEW.titulo, '')), 'B') ||
+                    setweight(to_tsvector(coalesce(not_texto, '')), 'C');
+            END IF;
+        END IF;
+
+        RETURN NEW;
+    END
+    $BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER noticias_search_update
+    BEFORE INSERT OR UPDATE ON noticias_search_update
+    FOR EACH ROW
+    EXECUTE PROCEDURE noticias_search_update();
+
+-- Trigger - Update TSVector(Noticia) -----
+
+DROP FUNCTION IF EXISTS noticias_descricao_search_update() CASCADE;
+DROP TRIGGER IF EXISTS noticias_descricao_search_update ON noticia;
+
+CREATE OR REPLACE FUNCTION noticias_descricao_search_update() RETURN TRIGGER AS 
+    $BODY$
+    DECLARE not_titulo TEXT = (SELECT titulo FROM noticia WHERE noticia.id = new.id);
+    BEGIN
+        IF not_titulo IS NOT NULL THEN
+            IF NEW.descricao <> OLD.descricao THEN
+                UPDATE noticia
+                SET search = 
+                    setweight(to_tsvector(coalesce(not_titulo, '')), 'B') ||
+                    setweight(to_tsvector(coalesce(NEW.descricao, '')), 'C')
+                WHERE noticia.id = new.id;
+            END IF;
+        END IF;
+
+        RETURN NEW;
+    END
+    $BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER noticias_descricao_search_update
+    BEFORE UPDATE ON noticia
+    FOR EACH ROW
+    EXECUTE PROCEDURE noticias_descricao_search_update();
+
+-- Trigger - Update TSVector(utilizador)-----
+
+DROP FUNCTION IF EXISTS utilizador_search_update() CASCADE;
+DROP TRIGGER IF EXISTS utilizador_search_update ON utilizador;
+
+CREATE OR REPLACE FUNCTION utilizador_search_update() RETURN TRIGGER AS
+    $BODY$
+    BEGIN
+        IF TG_OP = 'INSERT' THEN
+            NEW.search = 
+                setweight(to_tsvector(coalesce(NEW.nome, '')), 'A')
+        END IF;
+        IF TG_OP = 'UPDATE' THEN
+            IF NEW.nome <> OLD.nome THEN
+                NEW.search = 
+                    setweight(to_tsvector(coalesce(NEW.nome, '')), 'A');
+            END IF;
+        END IF;
+
+        RETURN NEW;
+    END
+    $BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER utilizador_search_update
+    BEFORE INSERT OR UPDATE ON utilizador
+    FOR EACH ROW
+    EXECUTE PROCEDURE utilizador_search_update(); 
