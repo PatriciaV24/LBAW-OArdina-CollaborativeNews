@@ -35,7 +35,7 @@ Route:: get('/OArdina',function() {
 Route::get('/login/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login/', [LoginController::class, 'login']);
 Route::post('/logout/', [LoginController::class, 'logout'])->name('logout');
-Route::post('/recuperacao_password/', [UserController::class, 'recuperacao_password' ]);
+Route::post('/recuperacao_password/', [UserController::class, 'recuperacao_password']);
 Route::get('/signup/', [RegisterController::class, 'showRegistrationForm'])->name('signup');
 
 
@@ -66,22 +66,28 @@ Route::get('/signup/', [RegisterController::class, 'showRegistrationForm'])->nam
     //Necessita de autenticação
     Route::middleware(['auth']) -> group(function() {
 
+        Route::middleware(['ban'])->group(function(){
+            Route::get('/ban/', [BanPageController::class, 'show']) -> name('ban');
+            Route::post('/utilizador/{nome}/unban_appeal/'), [UserController::class, 'unban_appeal']);
+        });
+
+
         Route::middleware(['NaoBanido']) -> group(function() {
             
             //Noticias
             Route::post('/noticia/create/', [NoticiaController::class, 'create']);
             Route::patch('/noticia/{id}/', [NoticiaController::class, 'edit']) -> where(['id' => '[0-9]+']);
             Route::delete('/noticia/{id}/', [NoticiaController::class, 'delete']) -> where(['id' => '[0-9]+']);
-            Route::post('/noticia/{id}/report/', [NoticiaController::class, 'reportar']) -> where(['id' => '[0-9]+']);
+            Route::post('/noticia/{id}/report/', [NoticiaController::class, 'report']) -> where(['id' => '[0-9]+']);
 
             //Comentarios
             Route::post('/comentarios/criar/', [ComentarioController::class, 'create']);
             Route::patch('/comentarios/{id}', [ComentarioController::class, 'edit']) -> where(['id' => '[0-9]+']);
             Route::delete('/comentarios/{id}', [ComentarioController::class, 'delete']) -> where(['id' => '[0-9]+']);
-            Route::post('/comentarios/{id}/report/', [ComentarioController::class, 'reportar']) -> where(['id' => '[0-9]+']);
+            Route::post('/comentarios/{id}/report/', [ComentarioController::class, 'report']) -> where(['id' => '[0-9]+']);
             
             //Notificacoes
-            Route::get('/notificacoes/', [NotificacoesController::class, 'mostrar']);
+            Route::get('/notificacoes/', [NotificacoesController::class, 'show']);
             Route::delete('/notificacoes/', [NotificacoesController::class, 'delete']);
             
             //FAQ
@@ -98,18 +104,12 @@ Route::get('/signup/', [RegisterController::class, 'showRegistrationForm'])->nam
             Route::post('/mudanca_password/', [UserController::class, 'updatePassword']);
             Route::post('/perfil_update/', [UserController::class, 'updateUtilizador']);
             Route::post('/apagar_conta', [UserController::class, 'ApagarConta']);
+            Route::post('/follow', [UserController::class, 'follow']);
+            Route::post('/unfollow', [UserController::class, 'unfollow']);
 
-            //Pedidos Noticia
-            Route::patch('/pedidos/noticias/{id}/aceitar', [PedidoController::class, 'aprovadoN']);
-            Route::patch('/pedidos/noticias/{id}/rejeitar', [PedidoController::class, 'rejeitadoN']);
-
-            //Pedidos Comentario
-            Route::patch('pedidos/comentario/{id}/aceitar', [PedidoController::class, 'aprovadoC']);
-            Route::patch('pedidos/comentario/{id}/rejeitar', [PedidoController::class, 'rejeitadoC']);
-
-            //Pedidos Utilizador
-            Route::patch('pedidos/utilizador/{id}/aceitar', [PedidoController::class, 'aprovadoU']);
-            Route::patch('pedidos/utilizador/{id}/rejeitar', [PedidoController::class, 'rejeitadoU']);
+            //Pedidos
+            Route::patch('/pedidos/{id}/aceitar/', [PedidoController::class, 'approve']);
+            Route::patch('/pedidos/{id}/rejeitar', [PedidoController::class, 'reject']);
             
         });
 

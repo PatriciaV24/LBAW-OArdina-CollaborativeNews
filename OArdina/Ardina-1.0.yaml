@@ -978,9 +978,41 @@ paths:
         '401':
           description: 'Login para reportar'
   
+  /pedidos/{nome}/unban_appeal/:
+    post:
+      operationId: R604
+      summary: "R604: Criar Ação de apelo a Unban"
+      description: 'Criar ação de apelar a unban. Access: BAN'
+      tags:
+        - 'M06: Pedidos Administracao'
+
+      parameters:
+        - in: path
+          name: utilizador
+          schema:
+            type: string
+          required: true
+
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                required:
+                  - reason
+
+      responses:
+        '201':
+            description: 'Unban appeal created.'
+        '401':
+            description: 'Login to create unban appeal.'
 
   # -------------------- M07 --------------------         
-  /pedidos/noticia/{id}/aceitar/:
+  /pedidos/{id}/aceitar/:
     patch:
       operationId: R701
       summary: 'R701: Aceitar report'
@@ -1006,104 +1038,10 @@ paths:
         '401':
           description: 'Só pode ser aceite por um moderador'
   
-  /pedidos/comentario/{id}/aceitar/:
+  /pedidos/{id}/rejeitar/:
     patch:
       operationId: R702
-      summary: 'R702: Aceitar report'
-      description: 'Aceitar report. Acesso: ADM'
-      tags:
-        - 'M07: Adminstração do Admin'
-      
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-        - in: header
-          name: tempo_ban
-          schema:
-            type: integer
-          required: false
-      
-      responses:
-        '201':
-          description: 'Report aceite'
-        '401':
-          description: 'Só pode ser aceite por um moderador'
-          
-  /pedidos/utilizador/{id}/aceitar/:
-    patch:
-      operationId: R703
-      summary: 'R703: Aceitar report'
-      description: 'Aceitar report. Acesso: ADM'
-      tags:
-        - 'M07: Adminstração do Admin'
-      
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-        - in: header
-          name: tempo_ban
-          schema:
-            type: integer
-          required: false
-      
-      responses:
-        '201':
-          description: 'Report aceite'
-        '401':
-          description: 'Só pode ser aceite por um moderador'
-  
-  /pedidos/noticia/{id}/rejeitar/:
-    patch:
-      operationId: R704
-      summary: 'R704: Rejeitar report'
-      description: 'Rejeitar report. Acesso: ADM'
-      tags:
-        - 'M07: Adminstração do Admin'
-      
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          
-      responses:
-        '201':
-          description: 'Report rejeitado'
-        '401':
-          description: 'Só pode ser rejeitado por um moderador'
-
-  /pedidos/comentario/{id}/rejeitar/:
-    patch:
-      operationId: R705
-      summary: 'R705: Rejeitar report'
-      description: 'Rejeitar report. Acesso: ADM'
-      tags:
-        - 'M07: Adminstração do Admin'
-      
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: integer
-          required: true
-          
-      responses:
-        '201':
-          description: 'Report rejeitado'
-        '401':
-          description: 'Só pode ser rejeitado por um moderador'
-
-  /pedidos/utilizador/{id}/rejeitar/:
-    patch:
-      operationId: R706
-      summary: 'R706: Rejeitar report'
+      summary: 'R702: Rejeitar report'
       description: 'Rejeitar report. Acesso: ADM'
       tags:
         - 'M07: Adminstração do Admin'

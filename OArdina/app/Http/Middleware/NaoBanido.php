@@ -15,8 +15,9 @@ class NaoBanido {
             return $next($request);
         }
 
-        if(!Auth::user() -> permissao == 'b') {
-            return (redirect('ban'));
+        Auth::user()->checkBan();
+        if(Auth::user() -> is_banned) {
+            return(redirect('ban'));
         }
 
         return $next($request);
