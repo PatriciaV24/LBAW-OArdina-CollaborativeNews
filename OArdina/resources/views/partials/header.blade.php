@@ -18,7 +18,7 @@
 		<div id="navbar_sections">
 			<ul>
 				<li>	
-					<a href="{{ url('/') }}"> Home</a>
+					<a href="{{ url('/OArdina') }}"> Home</a>
 				</li>
 				<li>Nacional</li>
 				<li>Local</li>

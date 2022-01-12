@@ -19,17 +19,17 @@ class HomepageController extends Controller {
      */
 
     public function show(Request $request) {
-        /*if(!Auth::check()) {
-        }*/
-        
-        return view('pages.homepage');
+        if(!Auth::check()) {
+           return redirect('/OArdina');
+            //return redirect('/login');
+        }
 
-        /*$this->authorize('show', Noticia::class);
+        $this->authorize('show', Noticia::class);
         $noticias = Auth::user()->content()->orderBy('id')->get();
 
         $recentPosts = $noticias->sortByDesc('data');
 
         return view('pages.homepage', [
-            'recentPosts' => $recentPosts]);*/
+            'recentPosts' => $recentPosts]);
     }
 }
