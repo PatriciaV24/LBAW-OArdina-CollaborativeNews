@@ -27,9 +27,6 @@ use App\Http\Controllers\RegisterController;
 |
 */
 
-Route:: get('/OArdina',function() {
-    return view('pages.mainpage');
-});
 
 // Autenticação
 Route::get('/login/', [LoginController::class, 'showLoginForm'])->name('login');
