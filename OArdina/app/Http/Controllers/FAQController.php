@@ -8,57 +8,70 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Faq;
 
-class FAQController extends Controller {
+class FAQController extends Controller
+{
+    /**
+     * Show FAQ page.
+     *
+     * @param Request $request
+     * @return view
+     */
+    public function show(Request $request)
+    {      
+        $topics = Faq::all();
+        return view('pages.faq', [
+            'topics' => $topics
+        ]);
+    }
 
-	public function show(Request $request) {
-		$topics = Faq::all();
-		return view('pages.faq', [
-			'topics' => $topics
-		]);
-	}
+    /**
+     * Create FAQ Topic
+     */
+    public function create(Request $request){
+        $this->authorize('create', Faq::class);
 
-	public function create(Request $request) {
-		$this -> authorize('create', Faq::class);
+        $validator = $request->validate([
+            'question' => 'required|string',
+            'answer' => 'required|string'
+        ]);
 
-		$validator = $request -> validate([
-			'pergunta' => 'required|string',
-			'resposta' => 'required|string'
-		]);
+        Faq::create([
+            'question' => $request->question,
+            'answer' => $request->answer,
+        ]);
 
-		Faq::create([
-			'pergunta' => $request -> pergunta,
-			'resposta' => $request -> resposta
-		]);
+        return redirect('/faq/');
+    }
 
-		return redirect('/faq/');
-	}
+    /**
+     * Edit FAQ Topic
+     */
+    public function edit(Request $request, $id){
+        
+        $topic = Faq::findOrFail($id);
+        $this->authorize('update', $topic);
 
-	public function edit(Request $request, $id) {
+        $validator = $request->validate([
+            'question' => 'required|string',
+            'answer' => 'required|string'
+        ]);
 
-		$topic = Faq::findorFail($id);
-		$this -> authorize('update', $topic);
+        $topic->question = $request->question;
+        $topic->answer = $request->answer;
 
-		$validator = $request -> validate([
-			'pergunta' => 'required|string',
-			'resposta' => 'required|string'
-		]);
+        $topic->save();
 
-		$topic -> pergunta => $request -> pergunta;
-		$topic -> resposta => $request -> resposta;
+        return redirect('/faq/')->with('success', 'The question was successfully updated.');
+    }
 
-		$topic -> save();
+    /**
+     * Delete FAQ Topic
+     */
+    public function delete(Request $request, $id){
+        $topic = Faq::findOrFail($id);
+        $this->authorize('delete', $topic);
+        $topic->delete();
 
-		return redirect('/faq/') -> with('sucess', 'A questão foi editada com sucesso');
-	}
-
-	public function delete(Request $request, $id) {
-		$topic = Faq::findorFail($id);
-		$this -> authorize('delete', $topic);
-		$topic -> delete();
-
-		return redirect('/faq/') -> ('sucess', 'A questão foi apagada com sucesso');
-	}
-
-
-
+        return redirect('/faq/')->with('success', 'The question was successfully deleted.');
+    }
 }

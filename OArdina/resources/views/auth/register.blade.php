@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<form method="POST" action="{{ route('signup') }}">
+<form method="POST" action="{{ route('register') }}">
     {{ csrf_field() }}
 
     <label for="name">Name</label>
@@ -17,6 +17,15 @@
     @if ($errors->has('email'))
       <span class="error">
           {{ $errors->first('email') }}
+      </span>
+    @endif
+
+
+    <label for="contact">Contact</label>
+    <input id="contact" type="contact" name="contact" value="{{ old('contact') }}" required>
+    @if ($errors->has('contact'))
+      <span class="error">
+          {{ $errors->first('contact') }}
       </span>
     @endif
 

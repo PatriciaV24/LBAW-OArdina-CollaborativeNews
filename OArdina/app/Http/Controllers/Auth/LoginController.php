@@ -28,7 +28,7 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/';
-
+   
     /**
      * Create a new controller instance.
      *
@@ -39,11 +39,17 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public function utilizador() {
-        return 'nome';
+    /**
+     * Overrides the default Laravel login to use the user's username instead of email.
+     */
+    public function username() {
+        return 'username';
     }
 
+    /**
+     * Gets current user
+     */
     public function getUser(Request $request){
-        return $request->utilizador();
+        return $request->user();
     }
 }

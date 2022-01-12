@@ -2,591 +2,607 @@ DROP SCHEMA IF EXISTS lbaw2163 CASCADE;
 CREATE SCHEMA lbaw2163;
 SET search_path TO "lbaw2163";
 
-/*------------------------------------------------------------*/
-/*Caso nao esteja dentro do lbaw2163*/
-DROP TABLE IF EXISTS publicidade CASCADE;
-DROP TABLE IF EXISTS report_c CASCADE;
-DROP TABLE IF EXISTS report_n CASCADE;
-DROP TABLE IF EXISTS report_u CASCADE;
-DROP TABLE IF EXISTS texto_report CASCADE;
-DROP TABLE IF EXISTS n_uti_bloq CASCADE;
-DROP TABLE IF EXISTS n_vot_com CASCADE;
-DROP TABLE IF EXISTS n_vot_not CASCADE;
-DROP TABLE IF EXISTS n_comentario CASCADE;
-DROP TABLE IF EXISTS n_seguidor CASCADE;
-DROP TABLE IF EXISTS info_seguidor CASCADE;
-DROP TABLE IF EXISTS fav_tag CASCADE;
-DROP TABLE IF EXISTS fav_com CASCADE;
-DROP TABLE IF EXISTS fav_not CASCADE;
-DROP TABLE IF EXISTS vot_not CASCADE;
-DROP TABLE IF EXISTS vot_com CASCADE;
-DROP TABLE IF EXISTS imagem CASCADE;
 DROP TABLE IF EXISTS faq CASCADE;
-DROP TABLE IF EXISTS categoria CASCADE;
-DROP TABLE IF EXISTS comentario CASCADE;
-DROP TABLE IF EXISTS tag CASCADE;
-DROP TABLE IF EXISTS noticia CASCADE;
-DROP TABLE IF EXISTS utilizador CASCADE;
-DROP TABLE IF EXISTS ban CASCADE;
-DROP TABLE IF EXISTS gosto CASCADE;
+DROP TABLE IF EXISTS comment_notification CASCADE;
+DROP TABLE IF EXISTS vote_notification CASCADE;
+DROP TABLE IF EXISTS follow_notification CASCADE;
+DROP TABLE IF EXISTS vote CASCADE;
 DROP TABLE IF EXISTS unban_appeal CASCADE;
-DROP TABLE IF EXISTS pedidos CASCADE;
+DROP TABLE IF EXISTS report_content CASCADE;
+DROP TABLE IF EXISTS report_users CASCADE;
+DROP TABLE IF EXISTS request CASCADE;
+DROP TABLE IF EXISTS news_tag CASCADE;
+DROP TABLE IF EXISTS news CASCADE;
+DROP TABLE IF EXISTS tag CASCADE;
+DROP TABLE IF EXISTS ban CASCADE;
+DROP TABLE IF EXISTS content CASCADE;
+DROP TABLE IF EXISTS comment CASCADE;
+DROP TABLE IF EXISTS follow CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 
-DROP TYPE IF EXISTS USER_TYPE;
-DROP TYPE IF EXISTS GOSTO;
-DROP TYPE IF EXISTS ESTADO;
+DROP TYPE IF EXISTS STATUS_TYPE CASCADE;
 
-DROP INDEX IF EXISTS nome_uti_idx;
-DROP INDEX IF EXISTS noticia_date_idx;
-DROP INDEX IF EXISTS autor_not_idx;
-DROP INDEX IF EXISTS comentario_idx;
-DROP INDEX IF EXISTS search_not_idx;
-DROP INDEX IF EXISTS search_uti_idx; 
-DROP INDEX IF EXISTS banido_idx; 
-DROP INDEX IF EXISTS admin_idx; 
-DROP INDEX IF EXISTS nr_gostos_idx; 
+CREATE TYPE STATUS_TYPE AS ENUM('approved', 'rejected');
 
-
-----------------------------------------------------
-
-/* TIPOS */
-CREATE TYPE USER_TYPE AS ENUM('a','u','b'); /* a - Administrador, u - User Autenticado, b - User Banido*/
-CREATE TYPE GOSTO AS ENUM('like', 'dislike');
-CREATE TYPE ESTADO AS ENUM('aprovado', 'rejeitado');
-
--------------------------------------------
-
-/* TABELAS */
-
-/* T: dos Utilizadores*/
-CREATE TABLE utilizador(
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(20) NOT NULL UNIQUE,
+CREATE TABLE users(
+    id INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+    username VARCHAR(20) NOT NULL UNIQUE,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
-    foto TEXT, /*url to text*/
-    permissao USER_TYPE NOT NULL,
-    contacto INTEGER NOT NULL,
-    admin BOOLEAN NOT NULL DEFAULT FALSE,
-    banido BOOLEAN NOT NULL DEFAULT FALSE,
-    conta_apagada BOOLEAN NOT NULL DEFAULT FALSE,
-    CONSTRAINT contacto_limites CHECK (contacto > 99999999 AND contacto < 1000000000)
+    photo TEXT,
+    contact INTEGER NOT NULL,
+    is_admin BOOLEAN NOT NULL DEFAULT false,
+    is_banned BOOLEAN NOT NULL DEFAULT false,
+    is_deleted BOOLEAN NOT NULL DEFAULT false,
+    PRIMARY KEY(id)
 );
 
-/* T: das Noticias*/
-CREATE TABLE noticia (
-    id SERIAL PRIMARY KEY,
-    autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    titulo VARCHAR(90) NOT NULL,
-    descricao TEXT NOT NULL,
-    imagem TEXT NOT NULL,
-    nr_gostos INTEGER NOT NULL DEFAULT 0,
-    nr_comentarios INTEGER NOT NULL DEFAULT 0,
-    data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+CREATE TABLE follow(
+    follower_id INTEGER NOT NULL,
+    users_id INTEGER NOT NULL,
+    PRIMARY KEY(follower_id, users_id),
+    CONSTRAINT fk_follower_id
+        FOREIGN KEY(follower_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_users_id
+        FOREIGN KEY(users_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
 );
 
-/* T: das Tags*/
-CREATE TABLE tag (
-    id SERIAL PRIMARY KEY,
-    nome VARCHAR(40) NOT NULL UNIQUE,
-    prioridade INTEGER NOT NULL DEFAULT 0   
-);
-/* T: dos Comentários (Utilizador <-> Noticia)*/
-CREATE TABLE comentario (
-    id SERIAL PRIMARY KEY,
-    autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    not_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE,
-    texto TEXT NOT NULL,
-    data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
-);
-/* T: dos Categoria (Noticia <-> Tag)*/
-CREATE TABLE categoria (
-    not_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE,
-    tag_id INTEGER NOT NULL REFERENCES tag(id) ON DELETE CASCADE,
-    PRIMARY KEY (not_id, tag_id)
-);
-/* T: dos FAQ (-> Utilizador)*/
-CREATE TABLE faq (
-    id SERIAL PRIMARY KEY,
-    autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE, /*O administrador que realizou ou alterou o faq*/
-    questao TEXT NOT NULL,
-    resposta TEXT NOT NULL
-);
-
-/* T: Votaçao nos Comentários (Utilizador <-> Comentario)*/
-CREATE TABLE vot_com (
-    id SERIAL PRIMARY KEY,
-    com_id INTEGER NOT NULL REFERENCES comentario(id) ON DELETE CASCADE,
-    autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    tipo GOSTO NOT NULL
-);
-
-/* T: Votaçao nas Noticias (Utilizador <-> Noticia)*/
-CREATE TABLE vot_not (
-    id SERIAL PRIMARY KEY,
-    not_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE,
-    autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    tipo GOSTO NOT NULL
-);
-
-/* T: Favoritos Noticias (Utilizador <-> Noticia)*/
-CREATE TABLE fav_not (
-    autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    not_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE,
-    PRIMARY KEY(autor_id, not_id)
-);
-
-/* T: Favoritos Comentários (Utilizador <-> Comentario)*/
-CREATE TABLE fav_com (
-    autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    comentario_id INTEGER NOT NULL REFERENCES comentario(id) ON DELETE CASCADE,
-    PRIMARY KEY(autor_id, comentario_id)
-);
-
-/* T: Favoritos Tags (Utilizador <-> Tag)*/
-CREATE TABLE fav_tag (
-    autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    tag_id INTEGER NOT NULL REFERENCES tag(id) ON DELETE CASCADE,
-    PRIMARY KEY(autor_id, tag_id)
-);
-
-/* T: Seguidores (Utilizador <-> Utilizador)*/
-CREATE TABLE info_seguidor (
-    followed_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    infos_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    PRIMARY KEY(followed_id, infos_id)
-);
-
-/* T: Notificações Novos Seguidores (-> Utilizador)*/
-CREATE TABLE n_seguidor (
-    followed_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    infos_id INTEGER NOT NULL REFERENCES utilizador(id)  ON DELETE CASCADE,
-    lido BOOLEAN NOT NULL DEFAULT FALSE,
-    data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    PRIMARY KEY(followed_id, infos_id)
-);
-
-/* T: Notificações Novos Comentários (-> Comentario)*/
-CREATE TABLE n_comentario (
-    autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    com_id INTEGER NOT NULL REFERENCES comentario(id) ON DELETE CASCADE,
-    lido BOOLEAN NOT NULL DEFAULT FALSE,
-    data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    PRIMARY KEY(autor_id, com_id)
-
-);
-
-/* T: Notificações Votos Noticia (-> vot_not)*/
-CREATE TABLE n_vot_not (
-    autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    voto_id INTEGER NOT NULL REFERENCES vot_not(id) ON DELETE CASCADE,
-    lido BOOLEAN NOT NULL DEFAULT FALSE,
-    data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    PRIMARY KEY(autor_id, voto_id)
-);
-
-/* T: Notificações Votos Comentario (-> vot_com)*/
-CREATE TABLE n_vot_com (
-    autor_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    voto_id INTEGER NOT NULL REFERENCES vot_com(id) ON DELETE CASCADE,
-    lido BOOLEAN NOT NULL DEFAULT FALSE,
-    data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    PRIMARY KEY(autor_id, voto_id)
-);
-
-/* T: Notificações Utilizador Bloqueado (->report_u)*/
-CREATE TABLE n_uti_bloq (
-    id SERIAL PRIMARY KEY,
-    bloq_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    motivo TEXT NOT NULL,
-    lido BOOLEAN NOT NULL DEFAULT FALSE,
-    data TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
-);
-
-/* T: Report Utilizador (Utilizador-> texto_report)*/
-CREATE TABLE report_u (
-    pedido_id INTEGER NOT NULL REFERENCES pedidos(id) ON DELETE CASCADE,
-    utilizador_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE
-);
-
-/* T: Report Noticia (Utilizador-> texto_report <-> Noticia)*/
-CREATE TABLE report_n (
-    pedido_id INTEGER NOT NULL REFERENCES pedidos(id) ON DELETE CASCADE,
-    noticia_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE
-);
-
-/* T: Report Comentario (Utilizador-> texto_report <-> Comentario)*/
-CREATE TABLE report_c (
-    pedido_id INTEGER NOT NULL REFERENCES pedidos(id) ON DELETE CASCADE,
-    comentario_id INTEGER NOT NULL REFERENCES comentario(id) ON DELETE CASCADE
-);
-
-/*T: do ban*/
-CREATE TABLE ban (
-    id SERIAL PRIMARY KEY,
-    utilizador_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    admin_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE, /*Trigger para verificar se user.is_admin == true*/
+CREATE TABLE ban(
+    id INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+    users_id INTEGER NOT NULL,
+    admin_id INTEGER NOT NULL, /*CHECK users.is_admin == true with triggers*/
     start_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    end_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT CHECK (end_date > start_date),
-    razao TEXT NOT NULL 
-)
+    end_date TIMESTAMP WITH TIME ZONE  DEFAULT NULL CHECK (end_date > start_date),
+    reason TEXT NOT NULL,
+    PRIMARY KEY(id),
+    CONSTRAINT fk_admin_id
+        FOREIGN KEY(admin_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE,
+     CONSTRAINT fk_users_id
+        FOREIGN KEY(users_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
 
-/*T: do gosto*/
-CREATE TABLE gosto {
-    utilizador_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    noticia_id INTEGER NOT NULL REFERENCES noticia(id) ON DELETE CASCADE /*Trigger para verificar que autor não vota na própria noticia*/
-}
+);
 
-/*T: Apelar unban*/
+CREATE TABLE content (
+    id INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+    author_id INTEGER NOT NULL,
+    body TEXT NOT NULL,
+    date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    nr_votes INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY(id),
+    CONSTRAINT fk_author_id
+        FOREIGN KEY(author_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE tag (
+    id INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+    name VARCHAR(40) NOT NULL UNIQUE,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE news (
+    content_id INTEGER NOT NULL,
+    title TEXT NOT NULL,
+    image TEXT,
+    nr_comments INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY(content_id),
+    CONSTRAINT fk_content_id
+        FOREIGN KEY(content_id)
+            REFERENCES content (id)
+            ON DELETE CASCADE
+
+);
+
+CREATE TABLE news_tag (
+    news_id INTEGER,
+    tag_id INTEGER,
+    PRIMARY KEY(news_id, tag_id),
+    CONSTRAINT fk_news_id
+        FOREIGN KEY(news_id)
+            REFERENCES  news (content_id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_tag_id
+        FOREIGN KEY(tag_id)
+            REFERENCES  tag (id)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE comment (
+    content_id INTEGER NOT NULL,
+    news_id INTEGER NOT NULL,
+    PRIMARY KEY(content_id),
+    CONSTRAINT fk_content_id
+        FOREIGN KEY(content_id)
+            REFERENCES content (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_news_id
+        FOREIGN KEY(news_id)
+            REFERENCES news (content_id)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE request (
+   id INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+   from_id INTEGER NOT NULL,
+   admin_id INTEGER, /* CHECK admin_id.is_admin == true WITH TRIGGERS*/
+   reason TEXT NOT NULL,
+   creation_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+   status STATUS_TYPE,
+   revision_date TIMESTAMP WITH TIME ZONE CHECK (revision_date > creation_date),
+   PRIMARY KEY(id),
+   CONSTRAINT fk_from_id
+        FOREIGN KEY(from_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_admin_id
+        FOREIGN KEY(admin_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE report_users (
+    request_id INTEGER NOT NULL,
+    to_users_id INTEGER NOT NULL,
+    PRIMARY KEY(request_id),
+    CONSTRAINT fk_request_id
+        FOREIGN KEY(request_id)
+            REFERENCES request (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_to_users_id
+        FOREIGN KEY(to_users_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE report_content (
+    request_id INTEGER NOT NULL,
+    to_content_id INTEGER,
+    PRIMARY KEY(request_id),
+    CONSTRAINT fk_request_id
+        FOREIGN KEY(request_id)
+            REFERENCES request (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_to_content_id
+        FOREIGN KEY(to_content_id)
+            REFERENCES content (id)
+            ON DELETE SET NULL
+);
+
 CREATE TABLE unban_appeal (
-    request_id INTEGER NOT NULL REFERENCES request(id) ON DELETE CASCADE,
-    ban_id INTEGER NOT NULL REFERENCES ban(id) ON DELETE CASCADE
+    request_id INTEGER NOT NULL,
+    ban_id INTEGER NOT NULL,
+    PRIMARY KEY(request_id),
+    CONSTRAINT fk_request_id
+        FOREIGN KEY(request_id)
+            REFERENCES request (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_ban_id
+        FOREIGN KEY(ban_id)
+            REFERENCES ban (id)
+            ON DELETE CASCADE
 );
 
-/* T: Publicidade*/
-CREATE TABLE publicidade (
-    id SERIAL PRIMARY KEY,
-    imagem TEXT NOT NULL UNIQUE
+CREATE TABLE vote (
+    users_id INTEGER,
+    content_id INTEGER, /*CHECK content.author_id != users_id */
+    value INTEGER NOT NULL,
+    PRIMARY KEY(users_id, content_id),
+    CONSTRAINT fk_users_id
+        FOREIGN KEY(users_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_content_id
+        FOREIGN KEY(content_id)
+            REFERENCES content (id)
+            ON DELETE CASCADE
 );
 
-CREATE TABLE pedidos (
-    id SERIAL PRIMARY KEY;
-    utilizador_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    admin_id INTEGER NOT NULL REFERENCES utilizador(id) ON DELETE CASCADE,
-    razao TEXT NOT NULL,
-    data_criacao TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
-    estado ESTADO,
-    data_revisao TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL
+CREATE TABLE follow_notification (
+    id INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+    follower_id INTEGER NOT NULL,
+    users_id INTEGER NOT NULL,
+    is_new BOOLEAN NOT NULL DEFAULT true,
+    creation_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    PRIMARY KEY(id),
+    UNIQUE(follower_id, users_id),
+    CONSTRAINT fk_follower_id
+        FOREIGN KEY(follower_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_users_id
+        FOREIGN KEY(users_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
 );
 
--------------------------------------------
+CREATE TABLE vote_notification (
+    id INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+    voter_id INTEGER NOT NULL,
+    content_id INTEGER NOT NULL,
+    author_id INTEGER NOT NULL,
+    is_new BOOLEAN NOT NULL DEFAULT true,
+    creation_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    PRIMARY KEY(id),
+    UNIQUE(voter_id, content_id, author_id),
+    CONSTRAINT fk_voter_id
+        FOREIGN KEY(voter_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_content_id
+        FOREIGN KEY(content_id)
+            REFERENCES content (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_author_id
+        FOREIGN KEY(author_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
+);
 
-/* Índices */
+CREATE TABLE comment_notification (
+    id INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+    users_id INTEGER NOT NULL,
+    comment_id INTEGER NOT NULL,
+    is_new BOOLEAN NOT NULL DEFAULT true,
+    creation_date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL,
+    PRIMARY KEY(id),
+    UNIQUE(users_id, comment_id),
+    CONSTRAINT fk_users_id
+        FOREIGN KEY(users_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE,
+    CONSTRAINT fk_comment_id
+        FOREIGN KEY(comment_id)
+            REFERENCES comment (content_id)
+            ON DELETE CASCADE
+);
 
-CREATE INDEX nome_uti_idx ON utilizador USING hash (nome);
-
-CREATE INDEX banido_idx ON utilizador USING hash(banido);
-
-CREATE INDEX admin_idx ON utilizador USING hash(admin);
-
-CREATE INDEX nr_gostos_idx ON noticia USING btree(nr_gostos);
-
-CREATE INDEX noticia_date_idx ON noticia USING btree(data);
-
-CREATE INDEX autor_not_idx ON noticia USING hash(autor_id);
-
-CREATE INDEX comentario_idx ON comentario USING hash(not_id);
-
-ALTER TABLE noticia ADD COLUMN search TSVECTOR;
-CREATE INDEX search_not_idx ON noticia USING GIST (search);
-
-ALTER TABLE utilizador ADD COLUMN search TSVECTOR;
-CREATE INDEX search_uti_idx ON utilizador USING GIST (search);
-
------------------------------------------------------------
-
-/* Triggers */
-
---Trigger - Ação de admin-----
-
-DROP FUNCTION IF EXISTS acao_de_admin() CASCADE;
-DROP TRIGGER IF EXISTS acao_de_admin ON request;
-
-
-CREATE OR REPLACE FUNCTION acao_de_admin() RETURNS TRIGGER AS
-   $BODY$
-       BEGIN
-           IF NOT (SELECT admin FROM utilizador WHERE utilizador.id = new.admin_id ) THEN 
-               RAISE EXCEPTION 'Apenas administradores podem realizar esta operação.';
-           END IF;
-           RETURN utilizador;
-       END
-   $BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER acao_de_admin
-   BEFORE UPDATE OF estado ON pedidos
-   FOR EACH ROW
-   EXECUTE PROCEDURE acao_de_admin();
-
----Trigger - Seguir_Proprio----
-
-DROP FUNCTION IF EXISTS seguir_proprio() CASCADE;
-DROP TRIGGER IF EXISTS seguir_proprio ON request;
-
-CREATE OR REPLACE FUNCTION seguir_proprio() RETURNS TRIGGER AS
-   $BODY$
-   BEGIN
-       IF NEW.followed_id = NEW.infos_id THEN
-           RAISE EXCEPTION 'Nao se pode seguir a si próprio.';
-       END IF;
-       RETURN info_seguidor;
-   END
-   $BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER seguir_proprio
-   BEFORE INSERT ON info_seguidor
-   FOR EACH ROW
-   EXECUTE PROCEDURE seguir_proprio();
-   
----Trigger - Atualizar Feed---
-
-CREATE OR REPLACE FUNCTION atualizar_feed() RETURNS TRIGGER AS
-   $BODY$
-   BEGIN
-     SELECT *
-     FROM noticia
-     ORDER BY data DESC;
-   END  
-   $BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER atualizar_feed
-   AFTER UPDATE ON noticia
-   FOR EACH ROW
-   EXECUTE PROCEDURE atualizar_feed();
+CREATE TABLE faq (
+    id INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1 INCREMENT BY 1),
+    question TEXT NOT NULL UNIQUE,
+    answer TEXT NOT NULL,
+    PRIMARY KEY(id)
+);
 
 
- --Trigger - Update TSVector(Noticia)-----
+/**
+ *   Indices
+ */
+DROP INDEX IF EXISTS is_banned_idx;
+DROP INDEX IF EXISTS is_deleted_idx;
+DROP INDEX IF EXISTS content_date_idx;
+DROP INDEX IF EXISTS content_vote_idx;
+DROP INDEX IF EXISTS search_users_idx;
+DROP INDEX IF EXISTS content_author_idx;
 
- ----
-DROP FUNCTION IF EXISTS noticias_search_update() CASCADE;
-DROP TRIGGER IF EXISTS noticias_search_update ON noticia;
+CREATE INDEX is_banned_idx ON users USING hash(is_banned);
+CREATE INDEX is_deleted_idx ON users USING hash(is_deleted);
+CREATE INDEX content_date_idx ON content USING btree(date);
+CREATE INDEX content_vote_idx ON content USING btree(nr_votes);
+CREATE INDEX content_author_idx ON content USING hash(author_id);
 
-CREATE OR REPLACE FUNCTION noticias_search_update() RETURNS TRIGGER AS
+ALTER TABLE news ADD COLUMN search TSVECTOR;
+CREATE INDEX search_news_idx ON news USING GIST (search);
+ALTER TABLE users ADD COLUMN search TSVECTOR;
+CREATE INDEX search_users_idx ON users USING GIN (search);
+
+
+/**
+ *  Triggers
+ */
+
+--Trigger 1 - Ensure that only moderators can approve / reject requests
+DROP FUNCTION IF EXISTS action_is_from_moderator() CASCADE;
+DROP TRIGGER IF EXISTS trigger_is_from_moderator ON request;
+
+CREATE OR REPLACE FUNCTION action_is_from_moderator() RETURNS TRIGGER AS
     $BODY$
-    DECLARE not_texto TEXT = (SELECT n.descricao FROM noticia n where n.id = new.id);
-    BEGIN
-        IF TG_OP = 'INSERT' THEN
-            NEW.search = 
-                setweight(to_tsvector(coalesce(NEW.titulo, '')), 'B') ||
-                setweight(to_tsvector(coalesce(not_texto, '')), 'C');
-        END IF;
-        IF TG_OP = 'UPDATE' THEN
-            IF NEW.titulo <> OLD.titulo THEN
-                NEW.search =
-                    setweight(to_tsvector(coalesce(NEW.titulo, '')), 'B') ||
-                    setweight(to_tsvector(coalesce(not_texto, '')), 'C');
+        BEGIN
+            IF NOT (SELECT is_admin FROM users WHERE users.id = new.admin_id) THEN
+                RAISE EXCEPTION 'There must be a moderator to update a request status.';
             END IF;
-        END IF;
+            RETURN NEW;
+        END
+    $BODY$
+LANGUAGE plpgsql;
 
-        RETURN NEW;
+CREATE TRIGGER trigger_is_from_moderator
+    BEFORE UPDATE OF status ON request
+    FOR EACH ROW
+    EXECUTE PROCEDURE action_is_from_moderator();
+
+
+--Trigger 2 - A user cannot follow himself
+DROP FUNCTION IF EXISTS follow_self() CASCADE;
+DROP TRIGGER IF EXISTS follow_self ON follow;
+
+CREATE OR REPLACE FUNCTION follow_self() RETURNS TRIGGER AS
+    $BODY$
+    BEGIN
+        IF NEW.follower_id = NEW.users_id THEN
+            RAISE EXCEPTION 'An user cannot follow himself';
+        END IF;
+        RETURN New;
     END
     $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER noticias_search_update
-    BEFORE INSERT OR UPDATE ON noticias_search_update
+CREATE TRIGGER follow_self
+    BEFORE INSERT ON follow
     FOR EACH ROW
-    EXECUTE PROCEDURE noticias_search_update();
+    EXECUTE PROCEDURE follow_self();
 
--- Trigger - Update TSVector(Noticia) -----
 
-DROP FUNCTION IF EXISTS noticias_descricao_search_update() CASCADE;
-DROP TRIGGER IF EXISTS noticias_descricao_search_update ON noticia;
+--Trigger 3 - An Authenticated User can't vote on his own news/comments
+DROP FUNCTION IF EXISTS vote_self() CASCADE;
+DROP TRIGGER IF EXISTS vote_self ON vote;
 
-CREATE OR REPLACE FUNCTION noticias_descricao_search_update() RETURN TRIGGER AS 
-    $BODY$
-    DECLARE not_titulo TEXT = (SELECT titulo FROM noticia WHERE noticia.id = new.id);
-    BEGIN
-        IF not_titulo IS NOT NULL THEN
-            IF NEW.descricao <> OLD.descricao THEN
-                UPDATE noticia
-                SET search = 
-                    setweight(to_tsvector(coalesce(not_titulo, '')), 'B') ||
-                    setweight(to_tsvector(coalesce(NEW.descricao, '')), 'C')
-                WHERE noticia.id = new.id;
-            END IF;
-        END IF;
-
-        RETURN NEW;
-    END
-    $BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER noticias_descricao_search_update
-    BEFORE UPDATE ON noticia
-    FOR EACH ROW
-    EXECUTE PROCEDURE noticias_descricao_search_update();
-
--- Trigger - Update TSVector(utilizador)-----
-
-DROP FUNCTION IF EXISTS utilizador_search_update() CASCADE;
-DROP TRIGGER IF EXISTS utilizador_search_update ON utilizador;
-
-CREATE OR REPLACE FUNCTION utilizador_search_update() RETURN TRIGGER AS
+CREATE OR REPLACE FUNCTION vote_self() RETURNS TRIGGER AS
     $BODY$
     BEGIN
-        IF TG_OP = 'INSERT' THEN
-            NEW.search = 
-                setweight(to_tsvector(coalesce(NEW.nome, '')), 'A')
-        END IF;
-        IF TG_OP = 'UPDATE' THEN
-            IF NEW.nome <> OLD.nome THEN
-                NEW.search = 
-                    setweight(to_tsvector(coalesce(NEW.nome, '')), 'A');
-            END IF;
-        END IF;
-
-        RETURN NEW;
-    END
-    $BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER utilizador_search_update
-    BEFORE INSERT OR UPDATE ON utilizador
-    FOR EACH ROW
-    EXECUTE PROCEDURE utilizador_search_update(); 
-
---Trigger - Utilizador não pode votar nas suas próprias publicações----
-
-DROP FUNCTION IF EXISTS votar_proprio() CASCADE;
-DROP FUNCTION IF EXISTS votar_proprio ON gosto;
-
-CREATE OR REPLACE FUNCTION votar_proprio() RETURN TRIGGER AS
-    $BODY$
-    BEGIN
-        IF new.utilizador_id = (SELECT autor_id FROM noticia WHERE new.noticia_id = noticia_id) THEN
-            RAISE EXCEPTION 'O utilizador não pode votar nos seus próprios conteúdos';
+        IF new.users_id = (SELECT author_id FROM content WHERE new.content_id = content.id) THEN
+            RAISE EXCEPTION 'A user cannot vote in his own content';
         END IF;
         RETURN new;
-    END;
+    END
     $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER votar_proprio
-    BEFORE INSERT ON gosto
+CREATE TRIGGER vote_self
+    BEFORE INSERT ON vote
     FOR EACH ROW
-    EXECUTE PROCEDURE votar_proprio();
+    EXECUTE PROCEDURE vote_self();
 
+--Trigger 6 - Deal with Request
+DROP FUNCTION IF EXISTS deal_with_request() CASCADE;
+DROP TRIGGER IF EXISTS deal_with_request ON request;
 
--- Trigger - Lidar com Pedidos----
-DROP FUNCTION IF EXISTS lidar_com_pedidos() CASCADE;
-DROP TRIGGER IF EXISTS lidar_com_pedidos ON pedidos;
-
-CREATE OR REPLACE FUNCTION lidar_com_pedidos RETURN TRIGGER AS 
-
+CREATE OR REPLACE FUNCTION deal_with_request() RETURNS TRIGGER AS
     $BODY$
     BEGIN
-        IF new.estado = 'aprovado' THEN
-            IF EXISTS (SELECT * FROM unban_appeal, users WHERE new.id = request_id AND utilizador.id = new.utilizador_id) THEN
-                UPDATE utilizador SET banido = false WHERE new.utilizador_id = utilizador.id;
-                IF EXISTS(SELECT * FROM banido WHERE ban.id IN (SELECT ban_id FROM unban_appeal WHERE new.id = request_id)) THEN
-                UPDATE ban SET end_date = NOW() WHERE ban.id IN (SELECT ban_id FROM unban_appeal WHERE new.id = request_id);
+        IF new.status='approved' THEN
+           IF EXISTS (SELECT * FROM unban_appeal, users WHERE new.id=request_id AND users.id=new.from_id) THEN
+                UPDATE users SET is_banned=false WHERE new.from_id=users.id;
+                IF EXISTS (SELECT * FROM ban WHERE ban.id IN (SELECT ban_id FROM unban_appeal WHERE new.id=request_id)) THEN
+                UPDATE ban SET end_date=NOW() WHERE ban.id IN (SELECT ban_id FROM unban_appeal WHERE new.id=request_id);
                 END IF;
             END IF;
-            new.data_revisao = NOW();
+            new.revision_date=NOW();
         END IF;
         RETURN new;
     END
     $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER lidar_com_pedidos
-    AFTER UPDATE ON pedidos
+CREATE TRIGGER deal_with_request
+    AFTER UPDATE ON request
     FOR EACH ROW
-    EXECUTE PROCEDURE lidar_com_pedidos();
+    EXECUTE PROCEDURE deal_with_request();
 
--- Trigger - Aumentar nr de comentarios ---
-DROP FUNCTION IF EXISTS aumentar_comentarios() CASCADE;
-DROP TRIGGER IF EXISTS aumentar_comentarios ON noticia;
 
-CREATE OR REPLACE FUNCTION aumentar_comentarios() RETURN TRIGGER AS
+--Trigger 7 - Increase Number of Comments in a News Post
+DROP FUNCTION IF EXISTS increase_comments() CASCADE;
+DROP TRIGGER IF EXISTS increase_comments ON comment;
+
+CREATE OR REPLACE FUNCTION increase_comments() RETURNS TRIGGER AS
     $BODY$
     BEGIN
-        UPDATE noticia SET nr_comentarios = noticia.nr_comentarios + 1;
-        WHERE new.id = noticia.id;
+        UPDATE news SET nr_comments = news.nr_comments + 1
+        WHERE new.news_id=news.content_id;
 
         RETURN new;
     END
+
     $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER aumentar_comentarios
-    AFTER INSERT ON noticia
+CREATE TRIGGER increase_comments
+    AFTER INSERT ON comment
     FOR EACH ROW
-    EXECUTE PROCEDURE aumentar_comentarios();
+    EXECUTE PROCEDURE increase_comments();
 
--- Trigger - Diminuir nr de comentarios ---
-DROP FUNCTION IF EXISTS diminuir_comentarios() CASCADE:
-DROP TRIGGER IF EXISTS diminuir_comentarios ON noticia;
 
-CREATE OR REPLACE FUNCTION diminuir_comentarios() RETURN TRIGGER AS
+--Trigger 8 - Decrease Number of Comments in a News Post
+DROP FUNCTION IF EXISTS decrease_comments() CASCADE;
+DROP TRIGGER IF EXISTS decrease_comments ON comment;
+
+CREATE OR REPLACE FUNCTION decrease_comments() RETURNS TRIGGER AS
     $BODY$
     BEGIN
-        UPDATE noticia SET nr_comentarios = nr_comentarios - 1
-        WHERE old.id = id;
+        UPDATE news SET nr_comments = nr_comments - 1
+        WHERE old.news_id = content_id;
         RETURN old;
     END
+
     $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER diminuir_comentarios
+CREATE TRIGGER decrease_comments
     AFTER DELETE ON comment
     FOR EACH ROW
-    EXECUTE PROCEDURE diminuir_comentarios();
+    EXECUTE PROCEDURE decrease_comments();
 
--- Trigger - Aumentar nr de gostos ---
-DROP FUNCTION IF EXISTS aumentar_gostos() CASCADE;
-DROP TRIGGER IF EXISTS aumentar_gostos ON gosto;
+--Trigger 9 - Increase Number of Votes ----- 
+DROP FUNCTION IF EXISTS increase_votes() CASCADE;
+DROP TRIGGER IF EXISTS increase_votes ON vote;
 
-CREATE OR REPLACE FUNCTION aumentar_gostos() RETURN TRIGGER AS
+CREATE OR REPLACE FUNCTION increase_votes() RETURNS TRIGGER AS
     $BODY$
     BEGIN
-        UPDATE noticia
-        SET nr_gostos = nr_gostos + 1;
-        WHERE new.noticia_id = noticia.id;
+        UPDATE content
+        SET nr_votes = nr_votes + new.value
+        WHERE content.id=new.content_id;
+
+        RETURN new;
+    END
+
+    $BODY$
+LANGUAGE plpgsql;
+
+
+CREATE TRIGGER increase_votes
+    AFTER INSERT ON vote
+    FOR EACH ROW
+    EXECUTE PROCEDURE increase_votes();
+
+
+--Trigger 10 - Decrease Votes----
+DROP FUNCTION IF EXISTS decrease_votes() CASCADE;
+DROP TRIGGER IF EXISTS decrease_votes ON vote;
+
+CREATE OR REPLACE FUNCTION decrease_votes() RETURNS TRIGGER AS
+    $BODY$
+    BEGIN
+        UPDATE content
+        SET nr_votes = nr_votes - new.value
+        WHERE old.content_id = content.id ;
 
         RETURN old;
     END
     $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER aumentar_gostos
-    AFTER INSERT ON gosto
+CREATE TRIGGER decrease_votes
+    AFTER DELETE ON vote
     FOR EACH ROW
-    EXECUTE PROCEDURE aumentar_gostos;
+    EXECUTE PROCEDURE decrease_votes();
 
--- Trigger - Diminuir nr de gostos ---
-DROP FUNCTION IF EXISTS diminuir_gostos() CASCADE;
-DROP TRIGGER IF EXISTS diminuir_gostos ON gosto;
 
-CREATE OR REPLACE FUNCTION diminuir_gostos() RETURN TRIGGER AS
+--Trigger 11 - A trigger is needed to create a new follow notification when an user starts following another.
+DROP FUNCTION IF EXISTS create_follow_notification() CASCADE;
+DROP TRIGGER IF EXISTS create_follow_notification ON follow;
+
+CREATE OR REPLACE FUNCTION create_follow_notification() RETURNS TRIGGER AS
     $BODY$
     BEGIN
-        UPDATE noticia
-        SET nr_gostos = nr_gostos - 1;
-        WHERE new.noticia_id = noticia.id;
+        INSERT INTO follow_notification (follower_id, users_id, is_new, creation_date)
+        VALUES (new.follower_id, new.users_id, true, now());
 
         RETURN new;
     END
     $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER diminuir_gostos
-    AFTER DELETE ON gosto
+CREATE TRIGGER create_follow_notification
+    AFTER INSERT ON follow
     FOR EACH ROW
-    EXECUTE PROCEDURE diminuir_gostos();
+    EXECUTE PROCEDURE create_follow_notification();
 
- --Trigger - Update TSVector(Noticia)-----
-DROP FUNCTION IF EXISTS noticias_search_update() CASCADE;
-DROP TRIGGER IF EXISTS noticias_search_update ON noticia;
 
-CREATE OR REPLACE FUNCTION noticias_search_update() RETURNS TRIGGER AS
+-- Trigger 12 - Create Vote Notification
+DROP FUNCTION IF EXISTS create_vote_notification() CASCADE;
+DROP TRIGGER IF EXISTS create_vote_notification ON vote;
+
+CREATE OR REPLACE FUNCTION create_vote_notification() RETURNS TRIGGER AS
     $BODY$
-    DECLARE not_texto TEXT = (SELECT n.descricao FROM noticia n where n.id = new.id);
+    BEGIN
+        INSERT INTO vote_notification(voter_id, content_id, author_id, is_new, creation_date)
+            SELECT new.users_id, c.id, c.author_id, true, now()
+            FROM content c
+            WHERE new.content_id = c.id;
+        RETURN new;
+    END
+    $BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER create_vote_notification
+    AFTER INSERT ON vote
+    FOR EACH ROW
+    EXECUTE PROCEDURE create_vote_notification();
+
+
+-- Trigger 12 - Delete Vote Notification
+DROP FUNCTION IF EXISTS delete_vote_notification() CASCADE;
+DROP TRIGGER IF EXISTS delete_vote_notification ON vote;
+
+CREATE OR REPLACE FUNCTION delete_vote_notification() RETURNS TRIGGER AS
+    $BODY$
+    BEGIN
+        DELETE FROM vote_notification
+            WHERE vote_notification.voter_id=old.users_id
+            and old.content_id = vote_notification.content_id;
+        RETURN old;
+    END
+    $BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_vote_notification
+    AFTER DELETE ON vote
+    FOR EACH ROW
+    EXECUTE PROCEDURE delete_vote_notification();
+
+
+-- Trigger  - Delete Follow Notification
+DROP FUNCTION IF EXISTS delete_follow_notification() CASCADE;
+DROP TRIGGER IF EXISTS delete_follow_notification ON follow;
+
+CREATE OR REPLACE FUNCTION delete_follow_notification() RETURNS TRIGGER AS
+    $BODY$
+    BEGIN
+        DELETE FROM follow_notification
+            WHERE follow_notification.users_id=old.users_id
+            and old.follower_id = follow_notification.follower_id;
+        RETURN old;
+    END
+    $BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER delete_follow_notification
+    AFTER DELETE ON follow
+    FOR EACH ROW
+    EXECUTE PROCEDURE delete_follow_notification();
+
+--Trigger 13 - Create Comment Notification
+DROP FUNCTION IF EXISTS create_comment_notification() CASCADE;
+DROP TRIGGER IF EXISTS create_comment_notification ON comment;
+
+CREATE OR REPLACE FUNCTION create_comment_notification() RETURNS TRIGGER AS
+    $BODY$
+    BEGIN
+        IF (SELECT author_id FROM content WHERE NEW.news_id = id) <> (SELECT author_id FROM content WHERE NEW.content_id = id) THEN
+            INSERT INTO comment_notification(users_id, comment_id, is_new, creation_date)
+                SELECT news.author_id, NEW.content_id, true, now()
+                FROM content news
+                WHERE NEW.news_id = news.id;
+        END IF;
+
+        RETURN new;
+    END
+    $BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER create_comment_notification
+    AFTER INSERT ON comment
+    FOR EACH ROW
+    EXECUTE PROCEDURE create_comment_notification();
+
+
+--Trigger 14 - Update TSVECTOR (News)
+DROP FUNCTION IF EXISTS news_search_update() CASCADE;
+DROP TRIGGER IF EXISTS news_search_update ON news;
+
+CREATE OR REPLACE FUNCTION news_search_update() RETURNS TRIGGER AS
+    $BODY$
+    DECLARE news_body TEXT = (SELECT c.body FROM content c WHERE c.id = new.content_id);
     BEGIN
         IF TG_OP = 'INSERT' THEN
-            NEW.search = 
-                setweight(to_tsvector(coalesce(NEW.titulo, '')), 'B') ||
-                setweight(to_tsvector(coalesce(not_texto, '')), 'C');
+            NEW.search =
+                setweight(to_tsvector(coalesce(NEW.title, '')), 'B') ||
+                setweight(to_tsvector(coalesce(news_body, '')), 'C');
         END IF;
         IF TG_OP = 'UPDATE' THEN
-            IF NEW.titulo <> OLD.titulo THEN
+            IF NEW.title <> OLD.title THEN
                 NEW.search =
-                    setweight(to_tsvector(coalesce(NEW.titulo, '')), 'B') ||
-                    setweight(to_tsvector(coalesce(not_texto, '')), 'C');
+                    setweight(to_tsvector(coalesce(NEW.title, '')), 'B') ||
+                    setweight(to_tsvector(coalesce(news_body, '')), 'C');
             END IF;
         END IF;
 
@@ -595,27 +611,27 @@ CREATE OR REPLACE FUNCTION noticias_search_update() RETURNS TRIGGER AS
     $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER noticias_search_update
-    BEFORE INSERT OR UPDATE ON noticias_search_update
+CREATE TRIGGER news_search_update
+    BEFORE INSERT OR UPDATE ON news
     FOR EACH ROW
-    EXECUTE PROCEDURE noticias_search_update();
+    EXECUTE PROCEDURE news_search_update();
 
--- Trigger - Update TSVector(Noticia) -----
 
-DROP FUNCTION IF EXISTS noticias_descricao_search_update() CASCADE;
-DROP TRIGGER IF EXISTS noticias_descricao_search_update ON noticia;
+--Trigger 15 - Update TSVECTOR (News)
+DROP FUNCTION IF EXISTS news_body_search_update() CASCADE;
+DROP TRIGGER IF EXISTS news_body_search_update ON content;
 
-CREATE OR REPLACE FUNCTION noticias_descricao_search_update() RETURN TRIGGER AS 
+CREATE OR REPLACE FUNCTION news_body_search_update() RETURNS TRIGGER AS
     $BODY$
-    DECLARE not_titulo TEXT = (SELECT titulo FROM noticia WHERE noticia.id = new.id);
+    DECLARE news_title TEXT = (SELECT title FROM news WHERE news.content_id = new.id);
     BEGIN
-        IF not_titulo IS NOT NULL THEN
-            IF NEW.descricao <> OLD.descricao THEN
-                UPDATE noticia
-                SET search = 
-                    setweight(to_tsvector(coalesce(not_titulo, '')), 'B') ||
-                    setweight(to_tsvector(coalesce(NEW.descricao, '')), 'C')
-                WHERE noticia.id = new.id;
+        IF news_title IS NOT NULL THEN
+            IF NEW.body <> OLD.body THEN
+                UPDATE news
+                SET search =
+                        setweight(to_tsvector(coalesce(news_title, '')), 'B') ||
+                        setweight(to_tsvector(coalesce(NEW.body, '')), 'C')
+                WHERE news.content_id = new.id;
             END IF;
         END IF;
 
@@ -624,27 +640,30 @@ CREATE OR REPLACE FUNCTION noticias_descricao_search_update() RETURN TRIGGER AS
     $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER noticias_descricao_search_update
-    BEFORE UPDATE ON noticia
+CREATE TRIGGER news_body_search_update
+    BEFORE UPDATE ON content
     FOR EACH ROW
-    EXECUTE PROCEDURE noticias_descricao_search_update();
+    EXECUTE PROCEDURE news_body_search_update();
 
--- Trigger - Update TSVector(utilizador)-----
 
-DROP FUNCTION IF EXISTS utilizador_search_update() CASCADE;
-DROP TRIGGER IF EXISTS utilizador_search_update ON utilizador;
 
-CREATE OR REPLACE FUNCTION utilizador_search_update() RETURN TRIGGER AS
+--Trigger 16 - Update TSVECTOR (Users)
+DROP FUNCTION IF EXISTS users_search_update() CASCADE;
+DROP TRIGGER IF EXISTS users_search_update ON users;
+
+CREATE OR REPLACE FUNCTION users_search_update() RETURNS TRIGGER AS
     $BODY$
     BEGIN
-        IF TG_OP = 'INSERT' THEN
-            NEW.search = 
-                setweight(to_tsvector(coalesce(NEW.nome, '')), 'A')
+         IF TG_OP = 'INSERT' THEN
+            NEW.search =
+                setweight(to_tsvector(coalesce(NEW.username, '')), 'A') ||
+                setweight(to_tsvector(coalesce(NEW.description, '')), 'B');
         END IF;
         IF TG_OP = 'UPDATE' THEN
-            IF NEW.nome <> OLD.nome THEN
-                NEW.search = 
-                    setweight(to_tsvector(coalesce(NEW.nome, '')), 'A');
+            IF NEW.username <> OLD.username OR NEW.description <> OLD.description THEN
+                NEW.search =
+                    setweight(to_tsvector(coalesce(NEW.username, '')), 'A') ||
+                    setweight(to_tsvector(coalesce(NEW.description, '')), 'B');
             END IF;
         END IF;
 
@@ -653,16 +672,52 @@ CREATE OR REPLACE FUNCTION utilizador_search_update() RETURN TRIGGER AS
     $BODY$
 LANGUAGE plpgsql;
 
-CREATE TRIGGER utilizador_search_update
-    BEFORE INSERT OR UPDATE ON utilizador
+CREATE TRIGGER cnews_search_update
+    BEFORE INSERT OR UPDATE ON users
     FOR EACH ROW
-    EXECUTE PROCEDURE utilizador_search_update(); 
+    EXECUTE PROCEDURE users_search_update();
 
 
+--Trigger 17 - Update TSVECTOR (News)
+DROP FUNCTION IF EXISTS tags_insert_search_update() CASCADE;
+DROP TRIGGER IF EXISTS tags_insert_search_update ON content;
 
+CREATE OR REPLACE FUNCTION tags_insert_search_update() RETURNS TRIGGER AS
+    $BODY$
+    DECLARE tag TEXT = (SELECT name FROM tag WHERE tag.id = new.tag_id);
+    BEGIN
+        UPDATE news
+        SET search = search || setweight(to_tsvector(coalesce(tag, '')), 'A')
+        WHERE news.content_id = new.news_id;
 
+        RETURN NEW;
+    END
+    $BODY$
+LANGUAGE plpgsql;
 
+CREATE TRIGGER tags_insert_search_update
+    AFTER INSERT ON news_tag
+    FOR EACH ROW
+    EXECUTE PROCEDURE tags_insert_search_update();
 
+--Trigger 18 - Update TSVECTOR (News)
+DROP FUNCTION IF EXISTS tags_delete_search_update() CASCADE;
+DROP TRIGGER IF EXISTS tags_delete_search_update ON content;
 
+CREATE OR REPLACE FUNCTION tags_delete_search_update() RETURNS TRIGGER AS
+    $BODY$
+    DECLARE tag TEXT = (SELECT name FROM tag WHERE tag.id = old.tag_id);
+    BEGIN
+        UPDATE news
+        SET search = ts_delete(search, coalesce(tag, ''))
+        WHERE news.content_id = old.news_id;
 
-            
+        RETURN old;
+    END
+    $BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER tags_delete_search_update
+    AFTER DELETE ON news_tag
+    FOR EACH ROW
+    EXECUTE PROCEDURE tags_delete_search_update();

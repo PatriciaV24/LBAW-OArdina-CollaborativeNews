@@ -5,16 +5,31 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Faq extends Model {
+class Faq extends Model
+{
+    use HasFactory;
 
-	use HasFactory;
+    /**
+     * The table's name.
+     *
+     * @var string
+     */
+    protected $table = 'faq';
 
-	protected $table = 'faq';
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'question', 
+        'answer', 
+    ];
 
-	protected $fillable = [
-		'pergunta',
-		'resposta'
-	];
-
-	public $timestamps = false;
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 }

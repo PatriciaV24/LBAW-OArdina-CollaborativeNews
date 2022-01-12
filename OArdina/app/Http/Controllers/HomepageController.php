@@ -7,29 +7,38 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-use App\Models\Noticia;
-use App\Http\Controllers\Content\NoticiaController;
+use App\Models\News;
+use App\Models\Content;
+use App\Models\Follow;
+use App\Http\Controllers\Content\ContentController;
 
-class HomepageController extends Controller {
+class HomepageController extends Controller
+{
     /**
-     * Mostrar Homepage
-     * 
+     * Show Homepage
+     *
      * @param Request $request
      * @return view
      */
+    public function show(Request $request)
+    {      
+        $feedPosts = array(); 
+        
+        if(Auth::check()){
+            $feedPosts = News::getFeedPosts();
+        }        
 
-    public function show(Request $request) {
-        if(!Auth::check()) {
-           return redirect('/OArdina');
-            //return redirect('/login');
+        $posts = News::getNews();
+        foreach($posts as $post){
+            $post->content = $post->content;
         }
 
-        $this->authorize('show', Noticia::class);
-        $noticias = Auth::user()->content()->orderBy('id')->get();
-
-        $recentPosts = $noticias->sortByDesc('data');
+        $recentPosts = $posts->sortByDesc('content.date');      
+        $hotPosts = $posts->sortByDesc('content.nr_votes');
 
         return view('pages.homepage', [
-            'recentPosts' => $recentPosts]);
+            'feedPosts' => $feedPosts,
+            'recentPosts'=> $recentPosts, 
+            'hotPosts'=> $hotPosts]);
     }
 }

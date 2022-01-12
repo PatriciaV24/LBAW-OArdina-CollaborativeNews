@@ -8,19 +8,44 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Auth;
 
-class FaqPolicy {
+class FaqPolicy
+{
+    use HandlesAuthorization;
 
-	use HandlesAuthorization;
+    /**
+     * Determine whether the user can create models.
+     *
+     * @param \App\Models\User $user
+     *
+     * @return mixed
+     */
+    public function create(User $user)
+    {
+        return $user->is_admin;
+    }
 
-	public function create(Utilizador $user) {
-		return $user -> admin;
-	}
+    /**
+     * Determine whether the user can update the model.
+     *
+     * @param \App\Models\User $user
+     *
+     * @return mixed
+     */
+    public function update(User $user)
+    {
+        return $user->is_admin;
+    }
 
-	public function update(Utilizador $user) {
-		return $user -> admin;
-	}
+    /**
+     * Determine whether the user can delete the model.
+     *
+     * @param \App\Models\User $user
+     *
+     * @return mixed
+     */
+    public function delete(User $user)
+    {
+        return $user->is_admin;
+    }
 
-	public function delete(Utilizador $user) {
-		return $user -> admin;
-	}
 }
