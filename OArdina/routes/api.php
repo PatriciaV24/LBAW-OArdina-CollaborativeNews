@@ -2,13 +2,6 @@
 
 use Illuminate\Http\Request;
 
-use App\Http\Controllers\SearchController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Content\CommentController;
-use App\Http\Controllers\Content\ContentController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\NotificationsController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,4 +13,4 @@ use App\Http\Controllers\NotificationsController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', [LoginController::class, 'getUser']);
+Route::middleware('auth:api')->get('/user', 'Auth\LoginController@getUser');

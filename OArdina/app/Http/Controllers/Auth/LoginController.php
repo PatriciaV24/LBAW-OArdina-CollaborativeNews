@@ -28,13 +28,6 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/';
-    protected function redirectTo()
-    {
-        if (auth()->user()->is_deleted == true) {
-            return '/deleted_user';
-        }
-        return '/';
-    }
 
     /**
      * Create a new controller instance.
@@ -46,17 +39,11 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    /**
-     * Overrides the default Laravel login to use the user's username instead of email.
-     */
-    public function username() {
-        return 'username';
+    public function utilizador() {
+        return 'nome';
     }
 
-    /**
-     * Gets current user
-     */
     public function getUser(Request $request){
-        return $request->user();
+        return $request->utilizador();
     }
 }
