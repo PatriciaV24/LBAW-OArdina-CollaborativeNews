@@ -65,7 +65,7 @@ Route::get('/signup/', [RegisterController::class, 'showRegistrationForm'])->nam
 
         Route::middleware(['ban'])->group(function(){
             Route::get('/ban/', [BanPageController::class, 'show']) -> name('ban');
-            Route::post('/utilizador/{nome}/unban_appeal/'), [UserController::class, 'unban_appeal']);
+            Route::post('/utilizador/{nome}/unban_appeal/', [UserController::class, 'unban_appeal']);
         });
 
 
