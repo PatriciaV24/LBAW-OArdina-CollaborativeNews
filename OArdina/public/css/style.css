@@ -27,12 +27,25 @@ hr {
 	right: 30px;
 	display: flex;
 	align-items: center;
+	height: 60px;
 }
 #search {
 	margin-right: 50px;
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+#search svg {
+	height: 35%;
 }
 #user_box {
-	
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+#user_box svg {
+	height: 35%;
+	width: auto;
 }
 #navbar {
 	height: 40px;
