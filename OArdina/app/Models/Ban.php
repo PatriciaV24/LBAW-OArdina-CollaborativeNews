@@ -1,37 +1,65 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Models;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Ban extends Model {
-	use HasFactory;
+class Ban extends Model
+{
+    use HasFactory;
 
-	protected $table = 'ban';
+    /**
+     * The table's name.
+     *
+     * @var string
+     */
+    protected $table = 'ban';
 
-	public $timestamps = false;
 
-	public function user() {
-		return $this->belongsTo(Utilizador::class 'utilizador_id');
-	}
+    /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
 
-	public function admin() {
-		return $this->belongsTo(Utilizador::class, 'admin_id');
-	}
 
-	public function unbanAppeal() {
-		return $this -> hasOne(unbanAppeal::class 'ban_id');
-	}
+    /**
+     * Get the user associated with the ban.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'users_id');
+    }
 
-	public function printDates() {
-		if ($this->end_date) {
-			return 'De ' . date('d-m-Y', strtotime($this->start_date)) .' até ' . date('d-m-Y', strtotime($this->end_date));
+    /**
+     * Get the admin associated with the ban.
+     */
+    public function admin()
+    {
+        return $this->belongsTo(User::class, 'admin_id');
+    }
 
-		}
-		else {
-			return 'Permanente desde ' . date('d-m-Y', strtotime($this->start_date));
-		}
+    /**
+     * Get the unban_appeal related to this ban.
+     */
+    public function unbanAppeal()
+    {
+        return $this->hasOne(UnbanAppeal::class, 'ban_id');
+    }
 
-	}
+    /**
+     * Print dates used in the banned notification
+     */
+    public function printDates(){
+
+        if($this->end_date){
+            return 'from ' . date('d-m-Y', strtotime($this->start_date)) . ' until ' . date('d-m-Y', strtotime($this->end_date));
+        }
+        else{
+            return 'permanently since ' . date('d-m-Y', strtotime($this->start_date));
+        }
+    }
+
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\Utilizador;
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -48,10 +48,10 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'nome' => 'required|string|max:255|unique:utilizador',
-            'email' => 'required|string|email|max:255|unique:utilizador',
-            'password' => 'required|string|min:8|regex:/[a-z]/|regex:[A-Z]|regex:/[0-9]|confirmed',
-            'contacto' => 'required|integer|unique:utilizador'
+            'username' => 'required|string|max:16|unique:users',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|confirmed',
+            'contact' => 'required|string|min:9|regex:/[0-9]/|confirmed'
         ]);
     }
 
@@ -63,11 +63,11 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return Utilizador::create([
-            'nome' => $data['nome'],
+        return User::create([
+            'username' => $data['username'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
-            'contacto' => $data['contacto']
+            'contact' => $data['contact']
         ]);
     }
 }
