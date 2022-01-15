@@ -1,0 +1,15 @@
+.custom-file-upload {
+    font-size: small;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: 0.3s
+}
+
+.custom-file-upload:hover {
+    color: #69c97e
+}
+
+input[type='file'] {
+    display: none
+}
