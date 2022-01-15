@@ -6,5 +6,5 @@ Click below to recover your password
 Recover password
 @endcomponent
 Sincerely,
-Xekkit team.
+O Ardina team.
 @endcomponent

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Xekkit | Banned')
+@section('title', 'O Ardina | Banned')
 
 @section('content')
 

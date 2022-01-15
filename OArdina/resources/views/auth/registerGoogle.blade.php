@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'Xekkit | Register Google Account')
+@section('title', 'O Ardina | Register Google Account')
 
 @section('content')  
 <div class="container pt-3">
