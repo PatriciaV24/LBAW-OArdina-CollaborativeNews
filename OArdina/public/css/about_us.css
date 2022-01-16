@@ -1,9 +1,0 @@
-.feupimg {
-    opacity: 0.6;
-    transition: .5s ease;
-    background-color: black
-}
-
-.containerfeupimg:hover .feupimg {
-    opacity: 0.2
-}

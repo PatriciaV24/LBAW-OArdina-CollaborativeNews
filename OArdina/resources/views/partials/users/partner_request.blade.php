@@ -1,1 +1,0 @@
-<button class="col align-self-end btn btn-primary">Request Partnership</button>
