@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Page Not Found • O Ardina')
+@section('title', 'Page Not Found • Xekkit')
 
 @section('content')  
 

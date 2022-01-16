@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'O Ardina | Search') <!-- mostrar o q pesquisou? idk -->
+@section('title', 'Xekkit | Search') <!-- mostrar o q pesquisou? idk -->
 
 @section('content')
 <script defer src="../js/search.js"></script>

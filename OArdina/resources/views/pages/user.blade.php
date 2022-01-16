@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'O Ardina | x/' . $user->username )
+@section('title', 'Xekkit | x/' . $user->username )
 
 @section('content')
 

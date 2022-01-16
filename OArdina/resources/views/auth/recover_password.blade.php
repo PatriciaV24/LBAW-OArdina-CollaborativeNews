@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'O Ardina | Recuperar a Palavra-Passe')
+@section('title', 'Xekkit | Recover Password')
 
 @section('content') 
 
 <section class="container position-relative">
     <form method="POST" action="/recover_password" class="recover-password col-10 col-lg-8 p-3 g-2 border bg-light position-absolute top-50 start-50 translate-middle" novalidate>
-        <p class="text-center fs-1">Recuperar a Palavra-Passe</p>
-        <p class="text-center fs-4">Olá {{$user->username}}, insira a nova palavra-passe:</p>
+        <p class="text-center fs-1">Recover Password</p>
+        <p class="text-center fs-4">Hello {{$user->username}}, insert your new password:</p>
         {{ csrf_field() }}
         <input name="user_id" type="hidden" value="{{$user->id}}">
         <div class="row g-2">
@@ -20,13 +20,13 @@
                     placeholder="Password" 
                     required
                 >
-                <label for="password" class="form-label">Palavra-Passe *</label>
+                <label for="password" class="form-label">Password *</label>
                 <div class="invalid-feedback">
                     {{ $errors->first('password') }}
                 </div>
             </div>
             <div onclick="toggleEye(this)" class="col-1 text-center pt-3">
-                <i class="fa fa-eye clickable" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mostrar Palavra-Passe"></i>
+                <i class="fa fa-eye clickable" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show Password"></i>
             </div>
         </div>
         <div class="row g-2">
@@ -36,22 +36,22 @@
                     class="form-control pe-5" 
                     id="password_confirmation" 
                     name="password_confirmation" 
-                    placeholder="Confitmar Palavra-Passe" 
+                    placeholder="Confirm Password" 
                     required
                 >
-                <label for="password_confirmation" class="form-label">Confirmar Palavra-Passe *</label>
+                <label for="password_confirmation" class="form-label">Confirm Password *</label>
             </div>
             <div onclick="toggleEye(this)" class="col-1 text-center pt-3">
-                <i class="fa fa-eye clickable" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mostrar Palavra-Passe"></i>
+                <i class="fa fa-eye clickable" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show Password"></i>
             </div>
         </div>
         
-        <button type="submit" class="btn btn-primary">Confirmar</button>
+        <button type="submit" class="btn btn-primary" >Confirm</button>
     </form>
 </section>
 
 @once
-    <script src={{ asset('js/validate_form.js') }} defer></script>
+<script src={{ asset('js/validate_form.js') }} defer></script>
 @endonce
 
 @endsection

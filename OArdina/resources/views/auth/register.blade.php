@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'O Ardina | Criar Conta')
+@section('title', 'Xekkit | Register')
 
 @section('content')  
 <div class="container pt-3">
@@ -8,7 +8,7 @@
         @include('partials.auth.login_title')
         <form method="post" action="{{ route('register') }}" class="col-lg-5 p-3 g-2 border bg-light" novalidate >
             {{ csrf_field() }}
-            <p class="text-center fs-1">Criar Conta</p>
+            <p class="text-center fs-1">Register</p>
             <div class="form-floating mb-3">
                 <input 
                     type="text" 
@@ -47,16 +47,16 @@
                         class="form-control @if ($errors->has('password')) is-invalid @endif" 
                         id="password" 
                         name="password" 
-                        placeholder="Palavra-Passe" 
+                        placeholder="Password" 
                         required
                     >
-                    <label for="password" class="form-label">Palavra-Passe *</label>
+                    <label for="password" class="form-label">Password *</label>
                     <div class="invalid-feedback">
                         {{ $errors->first('password') }}
                     </div>
                 </div>
                 <div onclick="toggleEye(this)" class="col-1 text-center pt-3">
-                    <i class="fa fa-eye clickable" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mostrar  Palavra-Passe></i>
+                    <i class="fa fa-eye clickable" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show Password"></i>
                 </div>
             </div>
             <div class="row g-2">
@@ -69,10 +69,10 @@
                         placeholder="Confirm Password" 
                         required
                     >
-                    <label for="password_confirmation" class="form-label">Confirmar Palavra-Passe *</label>
+                    <label for="password_confirmation" class="form-label">Confirm Password *</label>
                 </div>
                 <div onclick="toggleEye(this)" class="col-1 text-center pt-3">
-                    <i class="fa fa-eye clickable" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mostrar Palavra-Passe"></i>
+                    <i class="fa fa-eye clickable" aria-hidden="true" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Show Password"></i>
                 </div>
             </div>
             <div class="form-floating mb-3">
@@ -81,11 +81,11 @@
                     class="form-control @if ($errors->has('birthDate')) is-invalid @endif" 
                     id="birthDate" 
                     name="birthDate" 
-                    placeholder="Data de Nascimento" 
+                    placeholder="Birth Date" 
                     value="{{old('birthDate')}}" 
                     required
                 >
-                <label for="birthDate" class="form-label">Data de Nascimento *</label>
+                <label for="birthDate" class="form-label">Birth Date *</label>
                 <div class="invalid-feedback">
                     {{ $errors->first('birthDate') }}
                 </div>
@@ -95,22 +95,22 @@
                     class="form-select @if ($errors->has('gender')) is-invalid @endif" 
                     id="gender" 
                     name="gender" 
-                    aria-label="Género *" 
+                    aria-label="Gender *" 
                     required
                 >
                     <option value="" {{old('gender') === "" ? 'selected' : ''}}></option>
-                    <option value="m" {{old('gender') === "m" ? 'selected' : ''}}>Masculino</option>
-                    <option value="f" {{old('gender') === "f" ? 'selected' : ''}}>Feminino</option>
-                    <option value="n" {{old('gender') === "n" ? 'selected' : ''}}>Prefiro não dizer</option>
+                    <option value="m" {{old('gender') === "m" ? 'selected' : ''}}>Male</option>
+                    <option value="f" {{old('gender') === "f" ? 'selected' : ''}}>Female</option>
+                    <option value="n" {{old('gender') === "n" ? 'selected' : ''}}>Rather Not Say</option>
                 </select>
-                <label for="gender">Género *</label>
+                <label for="gender">Gender *</label>
                 <div class="invalid-feedback">
                     {{ $errors->first('gender') }}
                 </div>
             </div>
-            <a href="{{ route('login') }}">Já tem conta?</a>
+            <a href="{{ route('login') }}">Already have an account?</a>
             <div class="col-autom text-center pt-2">
-                <button type="submit" class="btn btn-primary">Criar Conta</button>
+                <button type="submit" class="btn btn-primary">Register</button>
             </div>   
         </form>
     </div>
