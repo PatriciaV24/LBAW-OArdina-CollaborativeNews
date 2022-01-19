@@ -15,6 +15,16 @@ body {
     color: black;
 }
 
+.menuprincipal {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.newsmargin {
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
 #logo {
     height: 70%;
     width: 20%;

@@ -2,17 +2,9 @@
 
 @section('title','O Ardina')
 
-
-@section('content')
-
-
-@auth
-    @include('partials.modals.new_post')
-@endauth
-  
-
-<main class="container-xl">
-    @include('partials.homepage.feed')
-</main>
+@section('content')  
+    <main class="container-fluid p-0 m-0">
+        @include('partials.homepage.feed')
+    </main>
 
 @endsection

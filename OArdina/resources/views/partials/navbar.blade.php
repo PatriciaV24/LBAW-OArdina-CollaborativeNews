@@ -1,12 +1,20 @@
 <div>
-    <nav class="navbar navbar-expand-sm navbar-light custom_navbar">
-        <div class="container-xl p-1">
+    <nav class=" navbar navbar-expand-sm navbar-light custom_navbar">
+        <div class="container-xxl p-1">
             <a class="navbar-brand clickable" href="{{route('home')}}" id="logo">
                 @include('partials.svg.logo')
             </a>
             
             <!--Versao Pequena - Pesquisa/Notificações-->
             <div class="mobile ms-auto pe-2">
+                <button class="btn btn-primary clickable my-auto fas fa-plus" 
+                            type="submit" 
+                            data-bs-toggle="modal"
+                            data-bs-placement="bottom" 
+                            data-bs-target="#newPost"
+                            title="Nova Publicação">
+                            &nbsp;<i class=" fas fa-newspaper"></i>
+                </button>
                 <button href="javascript:void(0)" class="btn btn-primary clickable fas fa-search" onclick="openSearchBar()"></button>
                 @auth
                 <a href="/notifications/" class=" btn btnoputilzador clickable align-self-center text-decoration-none position-relative">
@@ -57,6 +65,18 @@
                 @auth
                 <!-- Versao Normal - Notificaçoes e Opções Utilizador-->
                 <div class="desktop ms-auto d-inline-flex">
+                    <!--Botão Nova Publicação-->
+                    <button class="btn btn-primary ms-0 clickable my-auto" 
+                            type="submit" 
+                            data-bs-toggle="modal"
+                            data-bs-placement="bottom" 
+                            data-bs-target="#newPost"
+                            title="Nova Publicação">
+                            <i class="fas fa-plus"></i>&nbsp;<i class=" fas fa-newspaper"></i>
+                    </button>
+                    <div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div> 
+
+                    <!--Alerta de Notificações-->
                     <a href="/notifications/" class=" btn btnoputilzador clickable align-self-center text-decoration-none position-relative">
                         <i data-count="2" 
                         class=" fas fa-bell " 
@@ -72,8 +92,9 @@
                     </a>
                     <div >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
 
+                    <!--Menu Utilizador DropDown-->
                     <div class="nav-item navbar-nav dropdown">
-                        <a class="nav-link btn btnoputilzador" 
+                        <a class="nav-link btn btnoputilzado" 
                         href="#" 
                         id="navbarDropdown" 
                         role="button" 
@@ -142,18 +163,57 @@
                 </button>
             </form>
         </div>
-    </nav>
-    <ul class="nav nav-pills mb-3 text-white bg-light-dark" id="pills-tab" role="tablist">
-        @auth
-            @include('partials.tab', ['active' => True, 'type' => 'feed', 'name' => "Feed"])
-            @include('partials.tab', ['active' => False, 'type' => 'recent', 'name' => "Recent"])
-        @endauth
 
-        @guest            
-            @include('partials.tab', ['active' => True, 'type' => 'recent', 'name' => "Recent"])
-        @endguest
-        
-        @include('partials.tab', ['active' => False, 'type' => 'hot', 'name' => "Hot"])
-    </ul>
+        <!-- Modal Nova Publicação-->
+        <div class="modal fade text-black" 
+            id="newPost" 
+            tabindex="-1" 
+            aria-labelledby="newPostLabel" 
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content bg-light">
+                    <div class="modal-header ">
+                        <h5 class="modal-title text-black" id="newPostLabel">Nova publicação</h5>
+                        <button type="button" 
+                                class="btn-close btn-close-white" 
+                                data-bs-dismiss="modal" 
+                                aria-label="Close">
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="/news/create/" enctype="multipart/form-data">
+                            {{ csrf_field() }}
+                            <div class="mb-3">
+                                <label for="News-modal-title" class="form-label">Título da Notícia*</label>
+                                <input type="text" name="title" class="form-control" id="News-modal-title" value="{{ old('title')}}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="News-modal-description" class="form-label">Descrição *</label>
+                                <textarea rows="4" 
+                                          name="body" 
+                                          id="News-modal-description" 
+                                          class="input form-control" 
+                                          required>
+                                          {{ old('body')}}
+                                </textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="custom-file-upload form-control" id="modal-image">
+                                    <input type="file" 
+                                           name="image" 
+                                           class="fileToUpload" 
+                                           value="{{ old('image')}}" 
+                                           accept="image/*">
+                                    <i class="fa fa-upload"></i> Imagem
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Submeter</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 </div>
 <script defer src="{{ asset('js/nav_bar_search.js') }}"></script>

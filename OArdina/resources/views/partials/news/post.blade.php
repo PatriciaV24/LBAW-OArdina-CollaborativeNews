@@ -11,7 +11,7 @@
             @if (Auth::user() && $news->content->author_id === Auth::user()->id)
                 <div class="col-1">
                     <button type="button" 
-                            class="card-report clickable-big text-primary pe-2 preventer" 
+                            class="card-report clickable-big text-black pe-2 preventer" 
                             data-bs-toggle="modal" 
                             data-bs-target="#editPost_{{$news->content_id}}">
                             <i class="fa fa-pencil" 
