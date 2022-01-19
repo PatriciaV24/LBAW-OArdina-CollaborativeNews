@@ -7,9 +7,9 @@
             <b class="text-danger">{{$request->status}}</b>
         @endif
         by
-        <a href="/user/{{$request->moderator->username}}" 
+        <a href="/user/{{$request->admin->username}}" 
            class="link-light">
-           {{$request->moderator->username}}
+           {{$request->admin->username}}
         </a>.
     </p>
 @else

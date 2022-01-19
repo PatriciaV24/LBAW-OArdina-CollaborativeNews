@@ -69,16 +69,16 @@
             @endisset
         </a>
 
-        <p class="card-text mt-3 text-black">
-            {!! nl2br(e($news->content->body)) !!}
-            @if($news->content->is_edited)
-                <small class="text-muted">
-                    (editado)
-                </small>
-            @endif
-        </p>
-        
-        <div class="row justify-content-between card-subtitle mb-2">
+            <p class="card-text mt-3 text-black">
+                {!! nl2br(e($news->content->body)) !!}
+                @if($news->content->is_edited)
+                    <small class="text-muted">
+                        (editado)
+                    </small>
+                @endif
+            </p>
+          
+            <div class="row justify-content-between card-subtitle mb-2">
             @auth
             <a class="col-auto clickable text-muted text-decoration-none" 
                 href="{{url('/user/' . $news->content->author->username)}}">

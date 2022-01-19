@@ -78,7 +78,7 @@ class User extends Authenticatable{
      * The bans I have moderated.
      */
     public function moderatedBans() {
-        return $this->hasMany(Ban::class, 'moderator_id');
+        return $this->hasMany(Ban::class, 'admin_id');
     }
 
     /**

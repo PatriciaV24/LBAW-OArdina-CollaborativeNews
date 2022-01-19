@@ -13,9 +13,9 @@
         <p class="card-text fw-light">{{$request->request->reason}}</p>
         <p class="card-text">
             banido por
-            <a href="/user/{{$request->ban->moderator->username}}" 
+            <a href="/user/{{$request->ban->admin->username}}" 
                class="link-light">
-                {{$request->ban->moderator->username}}
+                {{$request->ban->admin->username}}
             </a>
             {{$request->ban->printdates()}}:
         </p>

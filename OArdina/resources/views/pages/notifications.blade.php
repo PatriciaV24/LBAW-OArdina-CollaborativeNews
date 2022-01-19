@@ -21,9 +21,9 @@
             @if(Auth::user()->is_admin)
                 <li class="nav-item" role="presentation">
                     <button class="nav-link text-dark " 
-                            id="pills-moderator-tab" 
+                            id="pills-admin-tab" 
                             data-bs-toggle="pill" 
-                            data-bs-target="#pills-moderator" 
+                            data-bs-target="#pills-admin" 
                             type="button" 
                             role="tab" 
                             aria-controls="pills-top" 
@@ -43,10 +43,10 @@
                         @each('partials.notifications.all', $notifications, 'notification', 'partials.notifications.none')
                 </div>
                 <div class="tab-pane fade" 
-                     id="pills-moderator" 
+                     id="pills-admin" 
                      role="tabpanel" 
-                     aria-labelledby="pills-moderator-tab">
-                        @each('partials.notifications.moderator', $mod_notifications, 'request', 'partials.notifications.none')
+                     aria-labelledby="pills-admin-tab">
+                        @each('partials.notifications.admin', $admin_notifications, 'request', 'partials.notifications.none')
                 </div>
             </div>
         @else
