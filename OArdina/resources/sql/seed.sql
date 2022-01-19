@@ -866,3 +866,40 @@ CREATE TRIGGER tags_delete_search_update
     AFTER DELETE ON news_tag
     FOR EACH ROW
     EXECUTE PROCEDURE tags_delete_search_update();
+
+
+INSERT INTO users(username, email, password, contact, is_admin, is_banned, is_deleted) values(
+    'admin',
+    'admin@ardina.com',
+    '$2y$10$2WvKlTWYJVzZk3LQXzHVruhPJWASxIoHPUhCbcDZswzlFHrQ6nHIS', /*test1234*/
+    '229692206',
+    true,
+    false,
+    false
+);
+
+INSERT INTO users(username, email, password, contact, is_admin, is_banned, is_deleted) values(
+    'Edgar',
+    'edgar@ardina.com',
+    '$2y$10$2WvKlTWYJVzZk3LQXzHVruhPJWASxIoHPUhCbcDZswzlFHrQ6nHIS', /*test1234*/
+    '229692206',
+    false,
+    false,
+    false
+);
+
+INSERT INTO users(username, email, password, contact, is_admin, is_banned, is_deleted) values(
+    'Patricia',
+    'patricia@ardina.com',
+    '$2y$10$2WvKlTWYJVzZk3LQXzHVruhPJWASxIoHPUhCbcDZswzlFHrQ6nHIS', /*test1234*/
+    '229692206',
+    false,
+    false,
+    false
+);
+
+
+insert into tag (name) values('Desporto');
+insert into content(author_id, body, nr_votes) values(2, 'Man, North Korea is such a prison', 0);
+insert into news(content_id,title, trending_score, nr_comments) values (1,'How New Mexico Became the State With the Highest Rate of Full Vaccinations',0,0);
+insert into news_tag(news_id, tag_id) values (1,1);

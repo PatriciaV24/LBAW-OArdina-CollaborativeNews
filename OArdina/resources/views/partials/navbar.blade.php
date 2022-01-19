@@ -94,7 +94,7 @@
 
                     <!--Menu Utilizador DropDown-->
                     <div class="nav-item navbar-nav dropdown">
-                        <a class="nav-link btn btnoputilzado" 
+                        <a class="nav-link btn btnoputilzador" 
                         href="#" 
                         id="navbarDropdown" 
                         role="button" 
@@ -103,6 +103,7 @@
                             Olá {{Auth::user()->username}}!
                             <i class="fas fa-chevron-down"></i>
                         </a>
+
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li>
                                 <a class="dropdown-item clickable" h
