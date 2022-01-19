@@ -4,9 +4,9 @@
             <div class="card-title row justify-content-between">
                 <p class="col">
                     <i class="fas fa-comment"></i>
-                    <a href="/users/{{ $notification->author->username }}" 
+                    <a href="/user/{{ $notification->comment->content->author->username}}" 
                        class="link-light">
-                        {{$notification->author->username}}
+                        {{$notification->comment->content->author->username}}
                     </a>
                     <b class="text-info">Comentou</b> a
                     <a href="/news/{{ $notification->comment->news_id }}" c
