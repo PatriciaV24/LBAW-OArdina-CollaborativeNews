@@ -7,10 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
 
-class User extends Authenticatable
-{
-    const BECOME_PARTNER = 100000;
-
+class User extends Authenticatable{
     use Notifiable;
 
     /**
@@ -35,8 +32,9 @@ class User extends Authenticatable
     protected $fillable = [
         'username',
         'email',
-        'password',
-        'contact'
+        'contact',
+        'password'
+        
     ];
 
     /**

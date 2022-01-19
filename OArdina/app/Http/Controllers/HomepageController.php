@@ -35,9 +35,11 @@ class HomepageController extends Controller
 
         $recentPosts = $posts->sortByDesc('content.date');      
         $hotPosts = $posts->sortByDesc('content.nr_votes');
+        $trendingPosts = $posts->sortByDesc('trending_score');
 
 
         return view('pages.homepage', [
+            'trendingPosts' => $trendingPosts,
             'feedPosts' => $feedPosts,
             'recentPosts'=> $recentPosts, 
             'hotPosts'=> $hotPosts]);

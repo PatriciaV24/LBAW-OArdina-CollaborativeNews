@@ -18,7 +18,6 @@ class AuthServiceProvider extends ServiceProvider
         'App\Models\Faq' => 'App\Policies\FaqPolicy',
         'App\Models\FollowNotification' => 'App\Policies\FollowNotificationPolicy',
         'App\Models\News' => 'App\Policies\NewsPolicy',
-        'App\Models\PartnerRequest' => 'App\Policies\PartnerRequestPolicy',
         'App\Models\ReportContent' => 'App\Policies\ReportContentPolicy',
         'App\Models\ReportUser' => 'App\Policies\ReportUserPolicy',
         'App\Models\Requests' => 'App\Policies\RequestsPolicy',

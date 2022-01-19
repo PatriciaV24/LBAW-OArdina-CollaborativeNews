@@ -16,7 +16,6 @@ use App\Mail\MailtrapExample;
 
 use App\Models\User;
 use App\Models\Requests;
-use App\Models\PartnerRequest;
 use App\Models\ReportUser;
 use App\Models\News;
 use App\Models\Content;
@@ -54,6 +53,7 @@ class UserController extends Controller
             'user' => $user,
             'recentPosts' => $recentPosts,
             'topPosts' => $topPosts,
+            'trendingPosts' => $trendingPosts,
             'following' => $following
         ]);
     }
@@ -68,7 +68,7 @@ class UserController extends Controller
     {
         $user = User::getUser($username);
         $this->authorize('update', $user);
-        return view('pages.edit_user', ['minReputation' => User::BECOME_PARTNER]);
+        return view('pages.edit_user');
     }
 
     /**
@@ -98,7 +98,7 @@ class UserController extends Controller
         Auth::user()->password = bcrypt($request->newPassword);
         Auth::user()->save();
 
-        return view('pages.edit_user', ['minReputation' => User::BECOME_PARTNER]);
+        return view('pages.edit_user');
     }
 
     /**
@@ -121,7 +121,7 @@ class UserController extends Controller
         Auth::user()->email = $request->email;
         Auth::user()->contact = $request->contact;
         Auth::user()->save();
-        return view('pages.edit_user', ['minReputation' => User::BECOME_PARTNER]);
+        return view('pages.edit_user');
     }
 
     /**

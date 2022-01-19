@@ -71,6 +71,20 @@ class News extends Model
         return $this->belongsToMany(Tag::class, 'news_tag', 'news_id', 'tag_id');
     }
 
+    /**
+     * Get the comments that are being replied
+     */
+    public function getParentComments(){
+        $query = $this->hasMany(Comment::class, 'news_id')->where('reply_to_id', null)->orderByDesc(
+            Content::select('date')
+                ->whereColumn('id', 'comment.content_id')
+                ->orderByDesc('date')
+                ->limit(1)
+        );
+
+        return $query;
+    }
+
 
     /**
      * Get Posts from Feed
@@ -116,6 +130,10 @@ class News extends Model
                         ->orderBy('date')    
                 );
                 break;
+            
+            case 4: // trending
+                    $news->orderBy('trending_score', 'desc');
+                    break;
 
             default:
                 $news->orderByRaw('ts_rank(search, websearch_to_tsquery(\'english\', ?)) DESC', [$search]);

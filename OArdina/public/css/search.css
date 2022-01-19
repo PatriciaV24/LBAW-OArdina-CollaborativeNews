@@ -1,0 +1,45 @@
+#filterInput {
+    background-image: url('../img/searchicon.png');
+    background-color: #fff;
+    background-position: 10px 12px;
+    background-repeat: no-repeat;
+    width: 100%;
+    font-size: 16px;
+    padding: 12px 20px 12px 40px;
+    border: 1px solid #ddd;
+    margin-bottom: 12px
+}
+
+#listOption {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    border-radius: 5px;
+    max-height: 180px;
+    overflow-y: auto
+}
+
+#listOption li a {
+    font-family: 'Open Sans', sans-serif;
+    border-bottom: 1px solid #000;
+    background-color: rgb(43, 43, 43);
+    padding: 12px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #fff;
+    display: block
+}
+
+#listOption li a:hover:not(.header) {
+    background-color: #000
+}
+
+#listOption li a input[type=checkbox] {
+    float: right;
+    margin-top: 3px
+}
+
+.clear-all {
+    float: right;
+    display: block
+}

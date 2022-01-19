@@ -10,7 +10,7 @@ use App\Models\FollowNotification;
 use App\Models\CommentNotification;
 use App\Models\VoteNotification;
 
-use App\Models\PartnerRequest;
+
 use App\Models\ReportContent;
 use App\Models\ReportUser;
 use App\Models\UnbanAppeal;

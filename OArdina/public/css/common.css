@@ -1,0 +1,159 @@
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+main {
+    margin-bottom: 60px
+}
+
+body {
+    background-color: rgb(255, 255, 255);
+    color: black;
+}
+
+#logo {
+    height: 70%;
+    width: 20%;
+    text-align: center;
+}
+
+#logo svg {
+    height: 100%;
+}
+
+.notif {
+    background-color: #730909!important;
+}
+
+#footer_logo svg {
+    height: 10%;
+    display: flex;
+    align-items: center;
+    padding: 25%;
+}
+
+button,
+input {
+    border: 0;
+    outline: none;
+    background: none;
+    text-decoration: none;
+    box-shadow: 0;
+}
+
+.custom_navbar {
+    background-color: white;
+    width: 100%;
+}
+
+.card img {
+    max-height: 400px;
+    object-fit: scale-down
+}
+
+.recover-password {
+    margin-top: 15em
+}
+
+.clickable,
+.clickable-big,
+.clickable-small {
+    -webkit-transition: 0.2s;
+    transition: 0.2s
+}
+
+.clickable:focus,
+.clickable:hover {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1)
+}
+
+.clickable-big:focus,
+.clickable-big:hover {
+    -webkit-transform: scale(1.3);
+    transform: scale(1.3)
+}
+
+.clickable-small:focus,
+.clickable-small:hover {
+    -webkit-transform: scale(1.01);
+    transform: scale(1.01)
+}
+
+.nav-pills .nav-link.active {
+    background-color: #730909
+}
+
+.btnoputilzador {
+    color: #000;
+    transition: 0.2s;
+    background-color: #fff;
+}
+
+.btnoputilzador:focus,
+.btnoputilzador:hover {
+    color: #730909;
+    border-color: #730909;
+    box-shadow: 0 0 0 0.25rem #730909;
+}
+
+.little-badge {
+    font-size: 0.7rem
+}
+
+.myToast {
+    z-index: 2000;
+    width: inherit
+}
+
+.navbar .search-form-mobile {
+    display: none
+}
+
+.dropdown-menu-end[data-bs-popper] {
+    right: 0.4em;
+    left: auto
+}
+
+.modal-header {
+    color: #fff;
+    background-color: #730909;
+}
+
+#parentTags {
+    margin-top: 4px
+}
+
+#parentTags span {
+    margin-right: 4px
+}
+
+.card-body h6 {}
+
+@media (max-width: 575px) {
+    .desktop {
+        display: none !important
+    }
+}
+
+@media (min-width: 576px) {
+    .mobile {
+        display: none !important
+    }
+}
+
+@media (max-width: 992px) {
+    .hidden-md-down {
+        display: none
+    }
+}
+
+@media (min-width: 993px) {
+    .hidden-lg-up {
+        display: none
+    }
+}
