@@ -26,7 +26,7 @@ class NotificationsController extends Controller
     public function show(Request $request)
     {
         $notifications = array();
-        $admin = array();
+        $admin_notifications = array();
 
         $user = Auth::user();
 
@@ -48,7 +48,7 @@ class NotificationsController extends Controller
             $report_user_requests = ReportUser::all();
             $unban_appeals = UnbanAppeal::all();
 
-            $admin = $report_content_requests
+            $admin_notifications = $report_content_requests
                 ->toBase()->merge($report_user_requests)
                 ->toBase()->merge($unban_appeals)
                 ->sort(function ($a, $b) {
@@ -71,7 +71,7 @@ class NotificationsController extends Controller
 
         return view('pages.notifications', [
             'notifications' => $notifications,
-            'admin_notifications' => $admin
+            'admin_notifications' => $admin_notifications
         ]);
     }
 

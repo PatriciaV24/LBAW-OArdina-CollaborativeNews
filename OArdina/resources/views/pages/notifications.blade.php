@@ -20,7 +20,7 @@
             </li>
             @if(Auth::user()->is_admin)
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link text-dark " 
+                    <button class="nav-link text-white " 
                             id="pills-admin-tab" 
                             data-bs-toggle="pill" 
                             data-bs-target="#pills-admin" 

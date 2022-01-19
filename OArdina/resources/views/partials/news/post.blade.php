@@ -53,10 +53,25 @@
                 </div>
 
                 @include('partials.modals.delete_post', ['news' => $news])
-            @endif
 
+            @elseif(Auth::user() && $news->content->author_id != Auth::user()->id)
+                <button type="button" id="toastbtn" 
+                        class="col-1 card-report clickable-big text-black preventer" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#reportContent_{{$news->content_id}}_{{$type}}">
+                        <i class="fas fa-exclamation-triangle"></i>
+                </button>
+                @include('partials.modals.report', ['report_to_id' => $news->content_id, 'type'=>"news", 'tab'=>$type])
+            @endif
         </div>
 
+        <div class="row justify-content-between card-subtitle mb-2">
+            <a class="col-auto clickable text-muted text-decoration-none" 
+                href="{{url('/user/' . $news->content->author->username)}}">
+                <h6>{{ $news->content->author->username  }}</h6>
+            </a>
+            <h6 class="col-auto text-muted">{{ $news->content->formatDate() }}</h6>
+        </div>
 
         <a href="/news/{{$news->content_id}}" 
            class="clickable-small text-decoration-none">
@@ -77,16 +92,6 @@
                     </small>
                 @endif
             </p>
-          
-            <div class="row justify-content-between card-subtitle mb-2">
-            @auth
-            <a class="col-auto clickable text-muted text-decoration-none" 
-                href="{{url('/user/' . $news->content->author->username)}}">
-                <h6>{{ $news->content->author->username  }}</h6>
-            </a>
-            @endauth
-            <h6 class="col-auto text-muted">{{ $news->content->formatDate() }}</h6>
-        </div>
     </div>
     <footer class="card-footer text-muted">
         <div class="row">
