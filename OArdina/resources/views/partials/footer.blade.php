@@ -14,7 +14,7 @@
                 </div>
                 <div class="footer-border-bottom pb-2 pt-2">
                     <div class="d-flex justify-content-between align-items-center">
-                        <a href="{{ route('faq') }}" class="text-light text-decoration-none fs-6 clickable">Contactos</a>
+                        <a href="{{ route('contacts') }}" class="text-light text-decoration-none fs-6 clickable">Contactos</a>
                     </div>
                 </div>
             </div>

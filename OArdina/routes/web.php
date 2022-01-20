@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\FAQController;
 use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\Auth\LoginController;
@@ -67,6 +68,9 @@ Route::middleware(['deleted'])->group(function () {
 
         // FAQ
         Route::get('/faq/', [FAQController::class, 'show'])->name('faq');
+
+         // Contacts
+        Route::get('/contacts/', [ContactsController::class, 'show'])->name('contacts');
 
         // About
         Route::get('/about/', [AboutController::class, 'show'])->name('about');

@@ -33,6 +33,7 @@ CREATE TABLE users(
     password TEXT NOT NULL,
     photo TEXT,
     contact INTEGER NOT NULL,
+    reputation INTEGER NOT NULL DEFAULT 0,
     is_admin BOOLEAN NOT NULL DEFAULT false,
     is_banned BOOLEAN NOT NULL DEFAULT false,
     is_deleted BOOLEAN NOT NULL DEFAULT false,
@@ -352,41 +353,6 @@ CREATE TRIGGER follow_self
     FOR EACH ROW
     EXECUTE PROCEDURE follow_self();
 
---Trigger 3 - Maximum of 5 reputation points per day from voting
-DROP FUNCTION IF EXISTS maximum_rep_day() CASCADE;
-DROP TRIGGER IF EXISTS maximum_rep_day ON vote;
-
-CREATE OR REPLACE FUNCTION maximum_rep_day() RETURNS TRIGGER AS
-    $BODY$
-    BEGIN
-        IF CURRENT_DATE = (SELECT last_day_of_vote FROM users u WHERE new.users_id = u.id) THEN
-            IF 5 > (SELECT count_last_day_rep FROM users u WHERE new.users_id = u.id) THEN
-                UPDATE users u
-                SET count_last_day_rep = count_last_day_rep + 1,
-                    reputation = reputation + 1
-                WHERE new.users_id = u.id;
-            END IF;
-        ELSE
-            UPDATE users u
-            SET last_day_of_vote = CURRENT_DATE,
-                count_last_day_rep = 1,
-                reputation = reputation + 1
-            WHERE new.users_id = u.id;
-        END IF;
-        RETURN New;
-    END
-    $BODY$
-LANGUAGE plpgsql;
-
-CREATE TRIGGER maximum_rep_day
-    BEFORE INSERT ON vote
-    FOR EACH ROW
-    EXECUTE PROCEDURE maximum_rep_day();
-
-
---Trigger 4 - The minimum age for a user to be registers is 13 years old
-
-
 --Trigger 5 - An Authenticated User can't vote on his own news/comments
 DROP FUNCTION IF EXISTS vote_self() CASCADE;
 DROP TRIGGER IF EXISTS vote_self ON vote;
@@ -598,7 +564,7 @@ CREATE OR REPLACE FUNCTION increase_reputation() RETURNS TRIGGER AS
     $BODY$
     BEGIN
         UPDATE users
-        SET reputation = reputation + new.value --and last_day_of_vote=CURRENT_DATE
+        SET reputation = reputation + new.value
         from content
         WHERE new.content_id=content.id AND content.author_id=users.id;
         RETURN new;
@@ -612,9 +578,6 @@ CREATE TRIGGER increase_reputation
     AFTER INSERT ON vote
     FOR EACH ROW
     EXECUTE PROCEDURE increase_reputation();
-
-
-
 
 --Trigger 11 -A trigger is needed to create a new follow notification when an user starts following another.
 DROP FUNCTION IF EXISTS create_follow_notification() CASCADE;
@@ -845,6 +808,27 @@ CREATE TRIGGER tags_insert_search_update
     FOR EACH ROW
     EXECUTE PROCEDURE tags_insert_search_update();
 
+DROP FUNCTION IF EXISTS maximum_rep_day() CASCADE;
+DROP TRIGGER IF EXISTS maximum_rep_day ON vote;
+
+----------------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION maximum_rep_day() RETURNS TRIGGER AS
+    $BODY$
+    BEGIN
+        IF CURRENT_DATE = (SELECT last_day_of_vote FROM users u WHERE new.users_id = u.id) THEN
+            UPDATE users u
+            SET last_day_of_vote = CURRENT_DATE,
+                count_last_day_rep = 1,
+                reputation = reputation + 1
+            WHERE new.users_id = u.id;
+        END IF;
+        RETURN New;
+    END
+    $BODY$
+LANGUAGE plpgsql;
+--------------------------------------------------------------------------------------------
+
 --Trigger 18 - Update TSVECTOR (News)
 DROP FUNCTION IF EXISTS tags_delete_search_update() CASCADE;
 DROP TRIGGER IF EXISTS tags_delete_search_update ON content;
@@ -879,10 +863,20 @@ INSERT INTO users(username, email, password, contact, is_admin, is_banned, is_de
 );
 
 INSERT INTO users(username, email, password, contact, is_admin, is_banned, is_deleted) values(
+    'Manuel',
+    'manuel@ardina.com',
+    '$2y$10$2WvKlTWYJVzZk3LQXzHVruhPJWASxIoHPUhCbcDZswzlFHrQ6nHIS', /*test1234*/
+    '912345678',
+    false,
+    false,
+    false
+);
+
+INSERT INTO users(username, email, password, contact, is_admin, is_banned, is_deleted) values(
     'Edgar',
     'edgar@ardina.com',
     '$2y$10$2WvKlTWYJVzZk3LQXzHVruhPJWASxIoHPUhCbcDZswzlFHrQ6nHIS', /*test1234*/
-    '229692206',
+    '912345677',
     false,
     false,
     false
@@ -892,14 +886,74 @@ INSERT INTO users(username, email, password, contact, is_admin, is_banned, is_de
     'Patricia',
     'patricia@ardina.com',
     '$2y$10$2WvKlTWYJVzZk3LQXzHVruhPJWASxIoHPUhCbcDZswzlFHrQ6nHIS', /*test1234*/
-    '229692206',
+    '912345677',
     false,
     false,
     false
 );
 
 
+INSERT INTO users(username, email, password, contact, is_admin, is_banned, is_deleted) values(
+    'Antonio',
+    'antonio@ardina.com',
+    '$2y$10$2WvKlTWYJVzZk3LQXzHVruhPJWASxIoHPUhCbcDZswzlFHrQ6nHIS', /*test1234*/
+    '912345676',
+    false,
+    false,
+    false
+);
+
+INSERT INTO users(username, email, password, contact, is_admin, is_banned, is_deleted) values(
+    'Ronaldo',
+    'ronaldo@ardina.com',
+    '$2y$10$2WvKlTWYJVzZk3LQXzHVruhPJWASxIoHPUhCbcDZswzlFHrQ6nHIS', /*test1234*/
+    '912345675',
+    false,
+    true,
+    false
+);
+
+
 insert into tag (name) values('Desporto');
-insert into content(author_id, body, nr_votes) values(2, 'Man, North Korea is such a prison', 0);
-insert into news(content_id,title, trending_score, nr_comments) values (1,'How New Mexico Became the State With the Highest Rate of Full Vaccinations',0,0);
-insert into news_tag(news_id, tag_id) values (1,1);
+insert into tag (name) values('Cultura');
+insert into tag (name) values('História');
+insert into tag (name) values('Curiosidades');
+insert into tag (name) values('Tecnologia');
+
+insert into content(author_id, body, nr_votes) values(2, 'O FC Porto isolou-se hoje na liderança da I Liga de futebol, com uma heroica reviravolta no reduto do Estoril Praia, por 3-2, capitalizada aos 90 minutos por Francisco Conceição, mas muito graças ao endiabrado Luis Díaz. #Desporto', 0);
+insert into news(content_id,title, trending_score, nr_comments) values (1,'FCPorto lider isolado na primeira volta do campeonato',0,0);
+insert into content(author_id, body, nr_votes) values(3, 'Benfica passou 90 minutos a atacar no meio-campo do Moreirense, sofreu um autogolo e só conseguiu marcar uma vez. Encarnados voltaram a pecar na finalização e podem ficar ainda mais longe dos rivais. #Desporto', 0);
+insert into news(content_id,title, trending_score, nr_comments) values (2, 'Benfica empata com o Moreirense na Luz', 0, 0);
+
+insert into content(author_id, body, nr_votes) values (4, 'A obra pertence à fase mais criativa deste pintor - uma época em que a influência da pintura espanhola se fazia sentir em toda a região da Lombardia - que veio a falecer em 1656, em Cremona, "a cidade que o acolheu e lhe deu todas as possibilidades de se afirmar como um grande pintor do barroco lombardo", indica o museu num comunicado sobre a pintura. #Cultura',0);
+insert into news(content_id,title, trending_score, nr_comments) values (3, 'Museu de Arte Antiga exibe nova pintura do século XVII.',0,0);
+insert into content(author_id, body, nr_votes) values (5, 'Os portugueses Bruno Pernadas e The Black Mamba e a luso-angolana Carla Prata atuam esta semana no festival holandês Eurosonic Noorderslag, que começa hoje e irá decorrer totalmente online. #Cultura',0);
+insert into news(content_id,title, trending_score, nr_comments) values (4, 'Bruno Pernadas, The Black Mamba e Carla Prata no festival Eurosonic',0,0);
+
+insert into content(author_id, body, nr_votes) values (3, 'O autor de três livros sobre a história do Brasil acabou de lançar o segundo volume de uma investigação sobre a escravidão enquanto aos leitores portugueses chega o primeiro. Nega que tenha havido um "genocídio negro" no Brasil, mas já aceita que existiu e existe um genocídio cultural e um apagamento da herança africana no país. Garante que "não se vai ver o país sonhado se não se enfrentar a herança da escravidão". #Historia',0); 
+insert into news(content_id,title, trending_score, nr_comments) values (5, 'Existe ainda hoje no Brasil uma história de demonização de Portugal',0,0);
+insert into content(author_id, body, nr_votes) values (2, 'A análise ao ADN dos restos mortais do explorador, do irmão de Colombo, Diego, e do filho, Fernando, está a ser feita por laboratórios independentes na Europa e no continente americano. A publicação está prevista para outubro. Esta investigação concluiu um hiato de 16 anos provocado por dificuldades tecnológicas que havia no início da década de 2000. #Historia',0);
+insert into news(content_id,title, trending_score, nr_comments) values (6, 'Será originário de Portugal, Espanha ou de Itália? ADN de Cristóvão Colombo poderá revelar resposta', 0, 0);
+
+insert into content(author_id, body, nr_votes) values (2, 'Ao completar 190 anos de idade em janeiro de 2022, o réptil Jonathan acumulou dois recordes mundiais pelo World Guinness Records. Já considerado o animal terrestre vivo mais velho do mundo, ele agora leva também o título de tartaruga mais velha de todos os tempos. #Curiosidades', 0);
+insert into news(content_id,title, trending_score, nr_comments) values (7, 'Completando 190 anos, Jonathan é a tartaruga mais longeva da história', 0, 0);
+insert into content(author_id, body, nr_votes) values (3, 'Moradores da cidade norte-americana de Texarkana, no Texas, testemunharam uma cena bastante inusitada na última quarta-feira (29): eles viram uma “chuva” de peixes caindo do céu durante alguns minutos. O fenômeno foi registrado pela prefeitura local em um post no Facebook. “2021 está entregando todos os seus truques… incluindo chover peixes em Texarkana hoje. E não, isso não é uma piada", diz a postagem. #Curiosidades',0);
+insert into news(content_id,title, trending_score, nr_comments) values (8, '"Chuva" de peixes atinge cidade nos EUA; entenda o fenômeno', 0, 0);
+
+insert into content(author_id, body, nr_votes) values (4, 'A agência russa FSB confirma ter avançado depois de ter recebido pistas dos EUA e acusa o grupo de ter “desenvolvido software malicioso” e “organizado o roubo de dinheiro de contas bancárias de cidadãos estrangeiros”. As autoridades de Moscovo apreenderam 426 milhões de rublos aos piratas (cerca de quatro milhões de euros), incluindo aqui cerca de 400 mil euros em cibermoedas. Além do dinheiro, foram confiscados mais de 20 carros de topo de gama que terão sido adquiridos com receitas provenientes dos atos criminosos, noticia o ArsTechnica. #Tecnologia',0);
+insert into news(content_id,title, trending_score, nr_comments) values (9, 'Rússia desmantela grupo de hackers REvil', 0, 0);
+insert into content(author_id, body, nr_votes) values (5, 'A Daenerys & Co, que é a maior operadora de ATMs de cripto no país, já desligou todas as suas máquinas para garantir o cumprimento do que foi requerido pelas autoridades. “Parámos de oferecer serviços de compra e venda através das nossas cinco ATM, enquanto procuramos mais clarificações por parte da MAS”, confirmou a empresa à Reuters. Outra empresa, a Deodi Pte, publicou no seu website a informação de que tinha encerrado a sua única máquina ATM deste género. #Tecnologia', 0);
+insert into news(content_id,title, trending_score, nr_comments) values (10, 'Singapura suspende ATMs de critpomoeda', 0, 0);
+
+insert into news_tag values (1,1);
+insert into news_tag values (2,1);
+insert into news_tag values (3,2);
+insert into news_tag values (4,2);
+insert into news_tag values (5,3);
+insert into news_tag values (6,3);
+insert into news_tag values (7,4);
+insert into news_tag values (8,4);
+insert into news_tag values (9,5);
+insert into news_tag values (10,5);
+
+

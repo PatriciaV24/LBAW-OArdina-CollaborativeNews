@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'O Ardina | Sobre nós')
+@section('title', 'O Ardina | Contactos')
 
 @section('content')
 
 <main class="container-xl text-dark ">  
 
     <div class="container-xl pt-3">   
-        <h1 class="text-dark  text-center py-4">Nossa Equipa</h1>
+        <h1 class="text-dark  text-center py-4">Contactos</h1>
         <p class="text-dark  text-center py-4"> 
             COLOCAR UM TEXTOZINHO A FALAR DO ARDINA
         </p>

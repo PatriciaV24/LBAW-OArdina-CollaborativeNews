@@ -114,7 +114,7 @@ class UserController extends Controller
         Validator::make($request->all(), [
             'username' => 'required|string|max:16|unique:users,username,'.(string)Auth::id(),
             'email' => 'required|string|email|max:255|unique:users,email,'.(string)Auth::id(),
-            'contact' => 'required|string|max:8|unique:users,contact'.(string)Auth::id()
+            'contact' => 'required|string|min:9|max:9|unique:users'
         ])->validate();
 
         Auth::user()->username = $request->username;

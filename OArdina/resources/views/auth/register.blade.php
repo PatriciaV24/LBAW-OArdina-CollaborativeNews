@@ -10,7 +10,6 @@
         
         <form method="post" action="{{ route('register') }}" class="col-lg-6 p-4 g-2 border bg-light" novalidate >
             {{ csrf_field() }}
-
             <p class="text-center fs-1">Criar Conta</p>
             <div class="form-floating mb-4">
                 <input 
