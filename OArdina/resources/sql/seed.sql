@@ -985,8 +985,3 @@ insert into news_tag values (9,5);
 insert into news_tag values (10,5);
 insert into news_tag values (11,6);
 insert into news_tag values (12,6);
-insert into news_tag values (13,7);
-insert into news_tag values (14,7);
-insert into news_tag values (15,8);
-insert into news_tag values (16,8);
-
