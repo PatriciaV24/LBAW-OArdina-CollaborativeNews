@@ -25,7 +25,6 @@
                         <input type="password" name="password" class="input form-control" role="textbox" rows="3" contenteditable aria-multiline="true">
                     </div>
                 
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                     <button type="submit" class="btn btn-primary">Submeter</button>
                 </form>
             </div>

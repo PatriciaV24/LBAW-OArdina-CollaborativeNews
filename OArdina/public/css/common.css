@@ -31,6 +31,12 @@ body {
     text-align: center;
 }
 
+.autordata {}
+
+.autordata h3 {
+    color: black;
+}
+
 #logo svg {
     height: 100%;
 }
@@ -61,7 +67,7 @@ input {
 }
 
 .card img {
-    max-height: 400px;
+    max-height: 300px;
     object-fit: scale-down
 }
 
@@ -141,8 +147,6 @@ input {
 #parentTags span {
     margin-right: 4px
 }
-
-.card-body h6 {}
 
 @media (max-width: 575px) {
     .desktop {

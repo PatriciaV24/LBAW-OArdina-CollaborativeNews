@@ -4,7 +4,7 @@
      aria-labelledby="exampleModalLabel" a
      ria-hidden="true">
 
-    <div class="modal-dialog text-black">
+    <div class="modal-dialog modal-lg text-black">
         <div class="modal-content bg-light text-black">
             <div class="modal-header">
                 <h5 class="modal-title text-black" id="exampleModalLabel">Responder</h5>
@@ -19,9 +19,7 @@
                               width="100%">
                     </textarea>
                     <div class="col text-end mt-3">
-                        <button type="submit" class="btn btn-lg btn-primary">
-                            Submeter
-                        </button>
+                        <button type="submit" class="btn btn-lg btn-primary">Submeter</button>
                     </div>
                 </div>
             </div>

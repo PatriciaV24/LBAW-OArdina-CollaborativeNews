@@ -3,7 +3,7 @@
      tabindex="-1" 
      aria-hidden="true">
 
-    <div class="modal-dialog text-black">
+    <div class="modal-dialog modal-lg text-black">
         <div class="modal-content bg-light text-black">
             <div class="modal-header">
                 <h5 class="modal-title text-black">Atualizar Password</h5>
@@ -26,7 +26,6 @@
                         <input type="password" class="form-control" id="inputConfirmNewPassword" name="confirmNewPassword" required>
                     </div>
                     
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                     <button type="submit" class="btn btn-primary">Submeter</button>
                 </form>
             </div>

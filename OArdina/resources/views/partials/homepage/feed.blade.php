@@ -15,7 +15,12 @@
     </ul>
 </div>
 <div class="newsmargin tab-content" id="pills-tabContent">
+    <div class="row" data-aos="fade-up">
+
+        <div class="col-lg-12 stretch-card grid-margin p-3">
         @include('partials.tab_content', ['active'=>True, 'type'=>'recent', 'posts'=>$recentPosts]) 
         @include('partials.tab_content', ['active'=>False, 'type'=>'desporto', 'posts'=>$hotPosts]) 
         <!--ACRECENTAR PESQUISA PELAS TAGS--> 
+        </div>
+    </div>
 </div>

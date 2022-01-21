@@ -1,4 +1,4 @@
-<div class="col-auto d-flex flex-column pe-1">
+<div class="col-1 d-flex flex-column pe-1">
     <button onclick='vote("{{ $news->content->id }}", true, "{{$type}}")' class="clickable-big">
         
         @if ($news->content->getVoteFromContent() === "upvote")                        
@@ -37,7 +37,7 @@
         @endif
         </button>
 </div>
-<span class="col-auto ps-1 text-black" 
+<span class="col-1 ps-1 text-black" 
       id="n-votes_{{$news->content_id}}_{{$type}}">
     {{$news->content->nr_votes}}
 </span>

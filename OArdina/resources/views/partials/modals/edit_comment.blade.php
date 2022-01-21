@@ -4,7 +4,7 @@
      aria-labelledby="deletePost-modal-label" 
      aria-hidden="true">
 
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content bg-light text-black">
             <div class="modal-header">
                 <h5 class="modal-title text-black" id="deletePost-modal-label">Editar comentário</h5>

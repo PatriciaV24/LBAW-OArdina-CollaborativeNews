@@ -4,8 +4,8 @@
      aria-labelledby="newPostLabel" 
      aria-hidden="true">
 
-    <div class="modal-dialog">
-        <div class="modal-content bg-light-dark">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-light">
             <div class="modal-header">
                 <h5 class="modal-title text-black" id="newPostLabel">Editar publicação</h5>
                 <button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal" aria-label="Close"></button>
@@ -16,13 +16,13 @@
                     @method('patch')
                     <div class="mb-3">
                         <label for="News-modal-title_{{$news->content_id}}" class="form-label">
-                            Editar publicação
+                            Título
                         </label>
                         <input type="text" name="title" class="form-control" id="News-modal-title_{{$news->content_id}}" value="{{$news->title}}">
                     </div>
 
                     <div class="mb-3">
-                        <label for="News-modal-description_{{$news->content_id}}" class="form-label">Descriçõ</label>
+                        <label for="News-modal-description_{{$news->content_id}}" class="form-label">Descrição</label>
                         <textarea id="News-modal-description_{{$news->content_id}}" 
                                   name="body" 
                                   class="input form-control" 

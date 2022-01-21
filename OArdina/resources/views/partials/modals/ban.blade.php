@@ -4,7 +4,7 @@
      aria-labelledby="Report-modal-label" 
      aria-hidden="true">
 
-    <div class="modal-dialog text-black">
+    <div class="modal-dialog modal-lg text-black">
         <div class="modal-content bg-light text-black">
             <div class="modal-header">
                 <h5 class="modal-title text-black" id="Report-modal-label">Tipo de banição</h5>
@@ -24,7 +24,7 @@
                         ></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="Report-{{ $user_id }}-modal-date" class="form-label">Until Banição</label>
+                        <label for="Report-{{ $user_id }}-modal-date" class="form-label">Banido Até</label>
                         <input name="end_date" 
                                id="Report-{{ $user_id }}-modal-date" 
                                class="input form-control" 
@@ -36,10 +36,9 @@
                             type="checkbox"
                             onclick="toggleEndDate(this, {{$user_id}})" 
                             checked
-                        /> Forever
+                        /> Para Sempre
                     </div>
 
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                     <button type="submit" class="btn btn-primary">Submeter</button>
                 </form>
             </div>

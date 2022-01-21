@@ -3,7 +3,7 @@
     aria-labelledby="Unban-modal-label" aria-hidden="true">
 
 
-<div class="modal-dialog text-black">
+<div class="modal-dialog modal-lg text-black">
     <div class="modal-content bg-light text-black">
         <div class="modal-header">
             <h5 class="modal-title text-black" id="Unban-modal-label">

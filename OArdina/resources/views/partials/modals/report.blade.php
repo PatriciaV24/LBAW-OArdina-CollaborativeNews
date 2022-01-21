@@ -10,7 +10,7 @@
 >
     <iframe name="dummyframe" id="dummyframe" style="display:none"></iframe>
 
-    <div class="modal-dialog text-black">
+    <div class="modal-dialog modal-lg text-black">
         <div class="modal-content bg-light text-black">
             <div class="modal-header">
                 <h5 class="modal-title text-black" id="Report-modal-label">Tipo de denúncia</h5>
@@ -34,7 +34,6 @@
                         </textarea>
                     </div>
 
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                     <button class="btn btn-primary" data-bs-dismiss="modal"
                         onclick="report('{{ $type }}','{{ $tab ?? '' }}', {{ $report_to_id }})">Submeter</button>
                 </form>
