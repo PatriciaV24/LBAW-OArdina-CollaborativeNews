@@ -15,9 +15,9 @@
              width="30px" 
              height="30px">
     @endif
-    <p class="text-black text-muted px-2 m-0">
+    <p class="text-black px-2 m-0">
         <small>
-            <a class="col-auto text-muted pe-2" href="../user/{{ $comment->content->author->username  }}">
+            <a class="col-auto  text-black pe-2" href="../user/{{ $comment->content->author->username  }}">
                 {{ $comment->content->author->username }}
 
                 @if($comment->content->author->is_banned)
@@ -28,7 +28,7 @@
         </small>
 
         @if (Auth::user() && (Auth::user()->is_admin || Auth::user()->id === $comment->content->author_id))
-            <button class="clickable-big text-muted ps-2" 
+            <button class="clickable-big  text-black ps-2" 
                     data-bs-toggle="modal" 
                     data-bs-target="#deletePostModal_{{$comment->content_id}}">
                     <i class="fas fa-trash" 
@@ -41,7 +41,7 @@
             @include('partials.modals.delete_comment', ['comment' => $comment])
 
             @if(Auth::user()->id === $comment->content->author_id)
-                <button class="clickable-big text-muted ps-2" 
+                <button class="clickable-big  text-black ps-2" 
                         data-bs-toggle="modal" 
                         data-bs-target="#editComment_{{$comment->content_id}}">
                         <i class="fas fa-pencil-alt" 
@@ -57,7 +57,7 @@
         @else
             @include('partials.modals.report', ['report_to_id' => $comment->content_id, 'type'=>"comment", 'tab'=>''])
 
-            <button class="clickable-big text-muted ps-2 text-black" 
+            <button class="clickable-big  text-black ps-2 text-black" 
                     data-bs-toggle="modal" 
                     data-bs-target="#reportContent_{{$comment->content_id}}__">
                 <i class="fas fa-exclamation-triangle " 

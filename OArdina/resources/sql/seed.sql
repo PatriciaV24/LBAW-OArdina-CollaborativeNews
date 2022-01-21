@@ -904,26 +904,6 @@ INSERT INTO users(username, email, password, contact, is_admin, is_banned, is_de
 );
 
 INSERT INTO users(username, email, password, contact, is_admin, is_banned, is_deleted) values(
-    'José',
-    'jose@ardina.com',
-    '$2y$10$2WvKlTWYJVzZk3LQXzHVruhPJWASxIoHPUhCbcDZswzlFHrQ6nHIS', /*test1234*/
-    '912345675',
-    false,
-    false,
-    false
-);
-
-INSERT INTO users(username, email, password, contact, is_admin, is_banned, is_deleted) values(
-    'Maria',
-    'maria@ardina.com',
-    '$2y$10$2WvKlTWYJVzZk3LQXzHVruhPJWASxIoHPUhCbcDZswzlFHrQ6nHIS', /*test1234*/
-    '912345675',
-    false,
-    false,
-    false
-);
-
-INSERT INTO users(username, email, password, contact, is_admin, is_banned, is_deleted) values(
     'Ronaldo',
     'ronaldo@ardina.com',
     '$2y$10$2WvKlTWYJVzZk3LQXzHVruhPJWASxIoHPUhCbcDZswzlFHrQ6nHIS', /*test1234*/
@@ -965,14 +945,6 @@ insert into news(content_id,title, trending_score, nr_comments) values (9, 'Rús
 insert into content(author_id, body, nr_votes) values (5, 'A Daenerys & Co, que é a maior operadora de ATMs de cripto no país, já desligou todas as suas máquinas para garantir o cumprimento do que foi requerido pelas autoridades. “Parámos de oferecer serviços de compra e venda através das nossas cinco ATM, enquanto procuramos mais clarificações por parte da MAS”, confirmou a empresa à Reuters. Outra empresa, a Deodi Pte, publicou no seu website a informação de que tinha encerrado a sua única máquina ATM deste género. #Tecnologia', 0);
 insert into news(content_id,title, trending_score, nr_comments) values (10, 'Singapura suspende ATMs de critpomoeda', 0, 0);
 
-insert into content(author_id, body, nr_votes) values (6, 'Os materiais sustentáveis são uma das chaves para conseguir ajudar o planeta. No entanto, o custo de produção ou o elevado custo ambiental de produção são alguns dos obstáculos a uma maior adoção deste tipo de soluções. Agora, uma equipa da Universidade de Delaware conseguiu demonstrar um estudo prático e economicamente viável para se aproveitar um dos desperdícios da indústria do papel para gerar plástico sustentável. A equipa de alunos e investigadores liderada por Thomas H. Epps propôs-se usar a lignina, um componente de plantas e árvores que ajuda a endurecer a flora e que é desperdiçado na indústria do papel. Este tipo de desperdício, gerado aquando da produção do papel, é descartado, tendo muito pouca utilização. No entanto, sendo produzidas quase cem milhões de toneladas todos os anos, é uma fonte interessante para dar origem a outro material, caso se consiga ter um processo de transformação exequível. #Tecnologia',0);
-insert into news(content_id,title, trending_score, nr_comments) values (11, 'Investigadores querem construir materiais sustentáveis a partir de desperdícios', 0, 0);
-
-insert into content(author_id, body, nr_votes) values (7, 'Numa entrevista concedida ao The Washington Post, Phil Spencer abriu um pouco mais o jogo sobre os planos futuros da aquisição da Activision Blizzard. Os jogos parecem mesmo ser o centro da estratégia da aquisição, e não apenas pelos grandes sucessos da atualidade, como a série Call of Duty, World of Warcraft, Diablo ou Candy Crush para os smartphones. A Activision tem uma grande lista de séries importantes, muitas delas em estado de “hibernação” que a Microsoft quer recuperar. #Tecnologia',0);
-insert into news(content_id,title, trending_score, nr_comments) values (12, 'Líder da Xbox deseja manter Call of Duty na PlayStation e explorar o catálogo antigo da Activision Blizzard', 0, 0);
-
-
-
 insert into news_tag values (1,1);
 insert into news_tag values (2,1);
 insert into news_tag values (3,2);
@@ -983,5 +955,5 @@ insert into news_tag values (7,4);
 insert into news_tag values (8,4);
 insert into news_tag values (9,5);
 insert into news_tag values (10,5);
-insert into news_tag values (11,6);
-insert into news_tag values (12,6);
+
+

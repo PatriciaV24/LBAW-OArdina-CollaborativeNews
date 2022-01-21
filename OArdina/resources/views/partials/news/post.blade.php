@@ -16,7 +16,7 @@
                     
                     @isset($news->image)
                         <img src={{ asset('storage/img/news/' . $news->image) }} 
-                            class="card-img-top" 
+                            class="rounded card-img-top" 
                             alt="{{$news->title}} Image" 
                             draggable="false">
                     @endisset
@@ -30,7 +30,7 @@
                         @auth
                         <a class="row clickable text-muted text-decoration-none autordata" 
                             href="{{url('/user/' . $news->content->author->username)}}">
-                            <h4>{{ $news->content->author->username  }}</h4>
+                            <h5>{{ $news->content->author->username  }}</h5>
                         </a>   
                         @endauth                       
                     </div>

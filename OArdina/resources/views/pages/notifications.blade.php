@@ -3,10 +3,14 @@
 @section('title', 'O Ardina | Notificações')
 
 @section('content')
-    <div class="container-xl">
+<div class="mb-3 text-white bg-light-dark">
+    &nbsp;
+</div>
+<main class="container-fluid newsmargin p-0 m-0 limite">
+        <div class="newsmargin">
         <h1 class="text-dark ">Notificações</h1>
         <ul class="nav nav-pills mb-3 text-dark  bg-light-dark" id="pills-tab" role="tablist">
-            <li class="nav-item " role="presentation">
+            <li class="nav-item" role="presentation">
                 <button class="nav-link active text-white " 
                         id="pills-notification-tab" 
                         data-bs-toggle="pill" 
@@ -53,6 +57,7 @@
             @each('partials.notifications.all', $notifications, 'notification', 'partials.notifications.none')
         @endif
     </div>
+</main>
 
     @once
         <script defer src={{ asset('js/notifications.js') }}></script>

@@ -1,19 +1,16 @@
-<div class="col-auto text-center mb-3 clickable">
+<div class="text-center mb-3 clickable seguidores">
     <a href="{{url('/user/' . $user->username)}}" 
        class="text-decoration-none">
-        <div class="card align-items-center bg-light-dark pt-3" 
-             style="width: 18rem;">
+        <div class="card align-items-center bg-light pt-4 ">
                 @if(!empty($user->photo))
                 <img src={{ asset('storage/img/users/' . $user->photo) }} 
-                     class="card-img-top" 
-                     alt="{{ $user->username }}"
-                     style="width: 10rem;">
+                     class="rounded-circle card-img-top" 
+                     alt="{{ $user->username }}">
                 @else
                 
                 <img src={{ asset('img/user.png') }} 
-                     class="card-img-top" 
-                     alt="user image"
-                     style="width: 10rem;">
+                     class="rounded-circle card-img-top" 
+                     alt="user image">
                 @endif
 
                 <div class="card-body">

@@ -1,9 +1,9 @@
-<div class="card bg-light-dark text-dark  mb-3">
+<div class="card bg-light text-dark  mb-3">
     <div class="card-body">
         <div class="card-title">
             <i class="fas fa-ban"></i>
             <a href="/user/{{$request->request->user->username}}" 
-               class="link-light">
+               class="link-black">
                 {{$request->request->user->username}}
             </a>
             Pediu para
@@ -14,7 +14,7 @@
         <p class="card-text">
             banido por
             <a href="/user/{{$request->ban->admin->username}}" 
-               class="link-light">
+               class="link-black">
                 {{$request->ban->admin->username}}
             </a>
             {{$request->ban->printdates()}}:

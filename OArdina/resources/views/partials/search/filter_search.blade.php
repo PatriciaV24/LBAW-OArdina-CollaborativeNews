@@ -7,7 +7,9 @@
                     data-bs-target="#filterSearchCollapse" 
                     aria-expanded="true" 
                     aria-controls="filterSearchCollapse">
-                        Filtrar pesquisa
+                    <div class="fas fa-chevron-down"></div>
+                        &nbsp; Filtrar pesquisa
+                    
             </button>
         </h2>
         <div id="filterSearchCollapse" 

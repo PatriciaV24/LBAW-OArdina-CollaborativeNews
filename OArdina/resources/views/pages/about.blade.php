@@ -3,8 +3,10 @@
 @section('title', 'O Ardina | Sobre nós')
 
 @section('content')
-
-<main class="container-xl text-dark ">  
+<div class="mb-3 text-white bg-light-dark">
+    &nbsp;
+</div>
+<main class="container-xl text-dark limite">  
 
     <div class="container-xl pt-3">   
         <h1 class="text-dark  text-center py-4">Nossa Equipa</h1>

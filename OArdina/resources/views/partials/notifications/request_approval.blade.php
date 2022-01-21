@@ -8,7 +8,7 @@
         @endif
         by
         <a href="/user/{{$request->admin->username}}" 
-           class="link-light">
+           class="link-black">
            {{$request->admin->username}}
         </a>.
     </p>

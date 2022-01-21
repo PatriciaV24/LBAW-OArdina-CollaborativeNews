@@ -1,9 +1,9 @@
-<div class="card bg-light-dark text-dark  mb-3">
+<div class="card bg-light text-dark  mb-3">
     <div class="card-body">
         <div class="card-title">
             <i class="fas fa-exclamation-triangle"></i>
             <a href="/user/{{$request->request->user->username}}" 
-               class="link-light">
+               class="link-black">
                {{$request->request->user->username}}
             </a>
                 Pretende 
@@ -12,13 +12,13 @@
 
             @if(!empty($request->content))
                 <a href="/news/{{($request->content->type === "post") ? $request->content->content_id : $request->content->news_id}}" 
-                   class="link-light">{{$request->content->type}}
+                   class="link-black">{{$request->content->type}}
                 </a>
 
                 feito por
 
                 <a href="/user/{{$request->content->content->author->username}}" 
-                   class="link-light">{{$request->content->content->author->username}}
+                   class="link-black">{{$request->content->content->author->username}}
                 </a>:
 
             @else

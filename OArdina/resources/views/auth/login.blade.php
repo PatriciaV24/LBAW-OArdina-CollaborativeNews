@@ -3,7 +3,7 @@
 @section('title', 'O Ardina | Iniciar Sessão')
 
 @section('content')  
-<div class="container pt-5">
+<div class="container pt-5 limite">
     <div class="row align-items-center">           
         @include('partials.auth.login_title')
         <div class="col-lg-1 p-3 g-2"></div>

@@ -108,11 +108,16 @@
                             <li>
                                 <a class="dropdown-item clickable" h
                                 href="/user/{{Auth::user()->username}}">
-                                    Perfil
-                                </a>
+                                    <i class="fas fa-wrench"></i> 
+                                        Perfil
+                                    </a>
                             </li>
                             <li>
-                                <a class="dropdown-item clickable" href="{{ route('logout') }}">Sair</a>
+                                
+                                <a class="dropdown-item clickable" href="{{ route('logout') }}">
+                                <i class="fa fa-sign-out"></i>
+                                    Sair
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -124,7 +129,9 @@
                         <h3 class="text-black">Olá {{Auth::user()->username}}!</h3>
                     </li>
                     <li class="nav-item p-1 ">
-                        <a href="../pages/profile.php" class="nav-link clickable">Perfil</a>
+                        <a href="../pages/profile.php" class="nav-link clickable">
+                            <i class="fas fa-wrench"></i> 
+                        Perfil</a>
                     <li class="nav-item p-1">
                         <a href="{{ route('logout') }}" class="nav-link clickable">Sair</a>
                     </li>

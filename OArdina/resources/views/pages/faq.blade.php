@@ -4,7 +4,10 @@
 
 @section('content')
 
-<main class="container-xl text-dark ">
+<div class="mb-3 text-white bg-light-dark">
+    &nbsp;
+</div>
+<main class="container-xl text-dark limite">
     <div class="row mb-3">
         <h1 class="col-auto"><i class="fas fa-book mx-4 mt-5"></i>FAQ</h1>
     </div>

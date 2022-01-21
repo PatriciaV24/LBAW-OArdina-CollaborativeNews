@@ -7,7 +7,9 @@
 @once
     <script src={{ asset('js/validate_form.js') }} defer></script>
 @endonce
-
+<div class="mb-3 text-white bg-light-dark">
+    &nbsp;
+</div>
 <main class="container-xl">
     <nav aria-label="breadcrumb" class="p-3">
         <ol class="breadcrumb m-0">

@@ -25,6 +25,15 @@ a:checked {
     color: #8C4545
 }
 
+.centrarobj {
+    justify-content: center;
+    align-content: center;
+}
+
+.limite {
+    min-height: 560px;
+}
+
 .menuprincipal {
     margin-left: 5%;
     margin-right: 5%;
@@ -51,7 +60,7 @@ a:checked {
     font-size: 22px;
 }
 
-.autordata h4 {
+.autordata h5 {
     color: black;
 }
 
@@ -59,15 +68,32 @@ a:checked {
     height: 100%;
 }
 
+.perfil {
+    display: flex;
+    align-items: center;
+}
+
+.perfil img {
+    width: 60%;
+}
+
+.seguidores {
+    width: 15%;
+}
+
+.seguidores img {
+    width: 65%;
+}
+
 .notif {
     background-color: #730909!important;
 }
 
 .footer_logo svg {
-    width: 80%;
+    width: 60%;
     display: flex;
     align-items: center;
-    padding: 20%;
+    padding: 15%;
 }
 
 button,

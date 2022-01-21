@@ -1,27 +1,27 @@
 <article id="vote-{{$notification->voter_id}}-{{$notification->content_id}}-{{$notification->author_id}}" 
-         class="card bg-light-dark text-dark  mb-3">
-    <div class="card-body mx-2">
-        <div class="card-title row justify-content-between">
-            <p class="col">
+        class="card bg-light text-dark  mb-3">
+        <div class="card-body mx-2">
+            <div class="card-title row justify-content-between">
+                <p class="col m-0 p-0">
                 @if($notification->getVote()->value > 0)
                     <i class="fas fa-thumbs-up"></i>
                 @else
                     <i class="fas fa-thumbs-down"></i>
                 @endif
 
-                <a href="/users/{{ $notification->voter->username }}" 
-                   class="link-light">
+                <a href="/user/{{ $notification->voter->username }}" 
+                   class="link-black">
                     {{ $notification->voter->username }}
                 </a>
 
                 @if($notification->getVote()->value > 0)
-                    <b class="text-success">gostou </b>
+                    <b class="text-success">&nbsp; Colocou gosto na</b>
                 @else
-                    <b class="text-primary">não gotou </b>
+                    <b class="text-primary">&nbsp; Colocou não gostou na</b>
                 @endif
                 sua 
 
-                <a href="/news/{{ $notification->content->id }}" class="link-light">publicação</a>.
+                <a href="/news/{{ $notification->content->id }}" class="link-black">publicação</a>.
             </p>
             <button class="col-1 text-primary" 
                     onClick="deleteNotification({{$notification}}, '{{$notification->type}}')" 
