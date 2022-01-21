@@ -1,5 +1,9 @@
-@extends('layouts.app')
-
+@auth
+    @extends('layouts.auth')
+@endauth
+@guest
+    @extends('layouts.app')
+@endguest
 @section('title', 'Página não encontrada | O Ardina')
 
 @section('content')  

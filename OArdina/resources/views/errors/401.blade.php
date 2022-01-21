@@ -1,4 +1,9 @@
-@extends('layouts.app')
+@auth
+    @extends('layouts.auth')
+@endauth
+@guest
+    @extends('layouts.app')
+@endguest
 
 @section('title', 'Não Autorizado | O Ardina')
 

@@ -1,7 +1,7 @@
 <footer class="footer mt-auto py-2 bg-dark">
     <div class="container-sm">
         <div class="row">
-             <div class="col-sm-5 my-auto"> 
+             <div class="col-sm-8 my-auto"> 
                 <div class="footer-border-bottom pb-2">
                     <div class="d-flex justify-content-between align-items-center">
                         <a href="{{ route('about') }}" class="text-light text-decoration-none fs-6 clickable">O Ardina-Sobre nós</a>
@@ -28,14 +28,14 @@
             @endguest
             <div class="col-sm-3 my-auto">
                 <div class="text-center clickable">
-                    <a href="{{ route('home') }}" id="footer_logo">
+                    <a href="{{ route('home') }}" class="footer_logo">
                         @include('partials.svg.logomin')
                     </a>
                 </div>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row pontos">
             <span class="text-light fs-6"> &copy; {{ config('app.name', '') }} <?= date('Y') ?> </span>
         </div>
     </div>

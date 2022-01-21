@@ -63,11 +63,11 @@ a:checked {
     background-color: #730909!important;
 }
 
-#footer_logo svg {
-    height: 10%;
+.footer_logo svg {
+    width: 80%;
     display: flex;
     align-items: center;
-    padding: 25%;
+    padding: 20%;
 }
 
 button,
