@@ -14,7 +14,7 @@
                         Publicação:
                     </a>
                 </p>
-                <button class="col-1 text-danger" 
+                <button class="col-1 text-primary" 
                         onClick="deleteNotification({{$notification}}, '{{$notification->type}}')" 
                         data-bs-toggle="tooltip" 
                         data-bs-placement="bottom" 

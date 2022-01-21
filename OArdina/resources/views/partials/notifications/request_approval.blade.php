@@ -4,7 +4,7 @@
         @if($request->status === 'approved')
             <b class="text-success">{{$request->status}}</b>
         @else
-            <b class="text-danger">{{$request->status}}</b>
+            <b class="text-primary">{{$request->status}}</b>
         @endif
         by
         <a href="/user/{{$request->admin->username}}" 

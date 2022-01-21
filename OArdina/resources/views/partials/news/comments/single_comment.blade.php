@@ -21,14 +21,14 @@
                     <button onclick='vote("{{ $comment->content->id }}", true, "")' class="clickable-big ">
                         @if ($comment->content->getVoteFromContent() === "upvote")
                             <i id="arrow_up_{{$comment->content_id}}_" 
-                               class="fas fa-angle-up text-primary" 
+                               class="fas fa-thumbs-up text-primary" 
                                data-bs-toggle="tooltip" 
                                data-bs-placement="top" 
                                title="Gosto">
                             </i>
                         @else
                             <i id="arrow_up_{{$comment->content_id}}_" 
-                               class="fas fa-angle-up text-black" 
+                               class="fas fa-thumbs-up text-black" 
                                data-bs-toggle="tooltip" 
                                data-bs-placement="top" 
                                title="Gosto">
@@ -40,14 +40,14 @@
 
                         @if ($comment->content->getVoteFromContent() === "downvote")
                             <i id="arrow_down_{{$comment->content_id}}_" 
-                               class="fas fa-angle-down text-danger" 
+                               class="fas fa-thumbs-down text-primary" 
                                data-bs-toggle="tooltip" 
                                data-bs-placement="top" 
                                title="Não Gosto">
                             </i>
                         @else
                             <i id="arrow_down_{{$comment->content_id}}_" 
-                               class="fas fa-angle-down text-black" 
+                               class="fas fa-thumbs-down text-black" 
                                data-bs-toggle="tooltip" 
                                data-bs-placement="top" 
                                title="Não Gosto">

@@ -13,7 +13,15 @@
     <div class="modal-dialog modal-lg text-black">
         <div class="modal-content bg-light text-black">
             <div class="modal-header">
-                <h5 class="modal-title text-black" id="Report-modal-label">Tipo de denúncia</h5>
+                <h5 class="modal-title text-black" id="Report-modal-label">
+                @if ($type=='news')
+                    Denunciar Notícia
+                @elseif ($type=='comment')
+                    Denunciar Comentário
+                    @else
+                        Denunciar Utilizador
+                @endif
+                </h5>
                 <button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal"
                     aria-label="Close">
                 </button>

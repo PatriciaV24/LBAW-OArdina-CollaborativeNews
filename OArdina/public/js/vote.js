@@ -23,16 +23,16 @@ function vote(content_id, vote, type) {
                     arrow_up.classList.remove("text-primary");
                     arrow_up.classList.add("text-black")
                 }
-                if (arrow_down.classList.contains("text-danger")) {
-                    arrow_down.classList.remove("text-danger");
+                if (arrow_down.classList.contains("text-primary")) {
+                    arrow_down.classList.remove("text-primary");
                     arrow_down.classList.add("text-black")
                 }
             } else if (response.vote === false) {
                 if (arrow_down.classList.contains("text-black")) {
                     arrow_down.classList.remove("text-black");
-                    arrow_down.classList.add("text-danger")
-                } else if (arrow_down.classList.contains("text-danger")) {
-                    arrow_down.classList.remove("text-danger");
+                    arrow_down.classList.add("text-primary")
+                } else if (arrow_down.classList.contains("text-primary")) {
+                    arrow_down.classList.remove("text-primary");
                     arrow_down.classList.add("text-black")
                 }
                 if (arrow_up.classList.contains("text-primary")) {
@@ -40,7 +40,7 @@ function vote(content_id, vote, type) {
                     arrow_up.classList.add("text-black")
                 }
             } else {
-                console.log("error voting");
+                console.log("Erro no voto");
                 console.log(response)
             }
         }

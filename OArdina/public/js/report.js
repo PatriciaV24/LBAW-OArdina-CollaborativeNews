@@ -25,11 +25,11 @@ function report(type, tab, report_to_id) {
         toast = new bootstrap.Toast(toast);
         switch (xhttp.status) {
             case 200:
-                message.innerHTML = "<p class='text-dark'>Report received successfully.</p>";
+                message.innerHTML = "<p class='text-dark'>Denúncia recebido com sucesso.</p>";
                 toast.show();
                 break;
             case 400:
-                message.innerHTML = "<p class='text-danger'>Invalid reason, please try again!</p>";
+                message.innerHTML = "<p class='text-primary'>Motivo inválido, tente novamente!</p>";
                 toast.show();
                 break;
         }

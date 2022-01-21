@@ -1,8 +1,9 @@
-<div class="card m-1">
+<div class="card mb-4">
     <div class="card-body">
         <div class="row">
             <div class="col-sm-5 grid-margin">
                 <div class="position-relative">
+                    @auth
                     <div class="p-1">
                         @foreach ($news->tags as $tag) 
                             <a href="/search?search={{$tag->name}}" 
@@ -11,6 +12,7 @@
                             </a>
                         @endforeach
                     </div>
+                    @endauth
                     
                     @isset($news->image)
                         <img src={{ asset('storage/img/news/' . $news->image) }} 
@@ -21,18 +23,30 @@
                    
                 </div>
                 <div class="row align-items-center p-3 ">
-                    <div class="col-9">
+                    <div class="col-5">
                         <a class="row text-muted text-decoration-none autordata" >
                             <h6>{{ $news->content->formatDate() }}</h6>
                         </a>
+                        @auth
                         <a class="row clickable text-muted text-decoration-none autordata" 
                             href="{{url('/user/' . $news->content->author->username)}}">
-                            <h3>{{ $news->content->author->username  }}</h3>
-                        </a>                            
+                            <h4>{{ $news->content->author->username  }}</h4>
+                        </a>   
+                        @endauth                       
                     </div>
-                    @include('partials.news.vote',['news'=>$news, 'type'=>$type])
-
-                    <button class="col-1 clickable text-black p-">
+                    @auth
+                        @if (Auth::user() && $news->content->author_id !=  Auth::user()->id)
+                            @include('partials.news.vote',['news'=>$news, 'type'=>$type])
+                        @else
+                        <div class="col-4 d-flex flex-column pontos">
+                            Pontos: 
+                        </div>
+                        <span class="col-1 ps-1 text-black" 
+                            id="n-votes_{{$news->content_id}}_{{$type}}">
+                            {{$news->content->nr_votes}}
+                        </span>
+                        @endif
+                    <button class="col-2 clickable text-black p-">
                         <a href="/news/{{$news->content_id}}" 
                             class="text-decoration-none text-black">
                                 <i class="fas fa-comment text-black" 
@@ -44,14 +58,14 @@
                                 {{$news->nr_comments}}
                         </a>
                     </button>
-                    
+                    @endauth
                 </div>
             </div>
             <div class="col-sm-7  grid-margin">
                 <ul class="list-group list-group-flush flex-row-reverse">
                     @if (Auth::user() && $news->content->author_id === Auth::user()->id)
                         <button type="button" 
-                                class="col-auto card-report clickable-big text-danger p-2 preventer" 
+                                class="col-auto card-report clickable-big text-primary p-2 preventer" 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#deletePostModal_{{$news->content_id}}">
                                 <i class="fas fa-trash" 
@@ -78,7 +92,7 @@
 
                     @elseif (Auth::user() && Auth::user()->is_admin)
                         <button type="button" 
-                                class="col-auto card-report clickable-big text-danger p-2 preventer" 
+                                class="col-auto card-report clickable-big text-primary p-2 preventer" 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#deletePostModal_{{$news->content_id}}">
                                     <i class="fas fa-trash" 
@@ -110,9 +124,11 @@
                     </p>
                 </ul>
                 <div class="">
-                    <h2 class="mb-1 font-weight-600">
-                        {{$news->title}}
-                    </h2>
+                    <a href="/news/{{$news->content_id}}" class="text-decoration-none">
+                        <h2 class="mb-3">
+                                {{$news->title}}
+                        </h2>
+                    </a>
                     <p class="card-text">
                         {!! nl2br(e($news->content->body)) !!}
                     </p>
@@ -121,6 +137,7 @@
         </div>
     </div>
 </div>
+
 @once
     <script defer src="{{ asset('js/vote.js') }}"></script>
     <script defer src="{{ asset('js/reply.js') }}"></script>

@@ -13,7 +13,7 @@
                         Começou a seguir 
                     </b>
                 </p>
-                <button class="col-1 text-danger" o
+                <button class="col-1 text-primary" o
                         nClick="deleteNotification({{$notification}}, '{{$notification->type}}')" 
                         data-bs-toggle="tooltip" 
                         data-bs-placement="bottom" 
