@@ -978,10 +978,14 @@ insert into news_tag values (2,1);
 insert into news_tag values (3,2);
 insert into news_tag values (4,2);
 insert into news_tag values (5,3);
-insert into news_tag values (6,3);
+insert into news_tag values (6,7);
 insert into news_tag values (7,4);
 insert into news_tag values (8,4);
 insert into news_tag values (9,5);
 insert into news_tag values (10,5);
-insert into news_tag values (11,6);
-insert into news_tag values (12,6);
+insert into news_tag values (11,5);
+insert into news_tag values (12,5);
+
+
+
+

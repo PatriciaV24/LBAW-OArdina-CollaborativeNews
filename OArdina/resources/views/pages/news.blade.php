@@ -13,6 +13,7 @@
             @include('partials.news.post', ['news'=>$news,'type'=>""])
             @include('partials.news.comments.comments')
         </div>
+        @auth
         <sidebar class="row hidden-md-down col-lg-3">
             <form action="/comment/create/" 
                 class="container-sm mb-3 p-3 bg-light" 
@@ -39,6 +40,7 @@
                 </div>
             </form>
         </sidebar>
+        @endauth
     </div>
 </div>
 

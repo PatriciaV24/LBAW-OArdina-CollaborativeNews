@@ -12,17 +12,13 @@
     </ul>
 </div>
 <div class="newsmargin tab-content" id="pills-tabContent">
-    <div class="row" data-aos="fade-up">
-        <div class="col-lg-12 stretch-card grid-margin p-3">
-             @auth
-                @include('partials.tab_content', ['active'=>True, 'type'=>'feed', 'posts'=>$feedPosts])
-                @include('partials.tab_content', ['active'=>False, 'type'=>'recent', 'posts'=>$recentPosts]) 
-            @endauth
-            @guest
-                @include('partials.tab_content', ['active'=>True, 'type'=>'recent', 'posts'=>$recentPosts]) 
-            @endguest 
-            @include('partials.tab_content', ['active'=>False, 'type'=>'hot', 'posts'=>$hotPosts]) 
+    @auth
+        @include('partials.tab_content', ['active'=>True, 'type'=>'feed', 'posts'=>$feedPosts])
+        @include('partials.tab_content', ['active'=>False, 'type'=>'recent', 'posts'=>$recentPosts]) 
+    @endauth
+    @guest
+        @include('partials.tab_content', ['active'=>True, 'type'=>'recent', 'posts'=>$recentPosts]) 
+    @endguest 
+    @include('partials.tab_content', ['active'=>False, 'type'=>'hot', 'posts'=>$hotPosts]) 
 
-        </div>
-    </div>
 </div>

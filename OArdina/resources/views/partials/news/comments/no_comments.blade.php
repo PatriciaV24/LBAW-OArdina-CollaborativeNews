@@ -1,1 +1,1 @@
-<p class="text-center text-white">Sem comentários.</p>
+<p class="text-center text-black">Sem comentários.</p>

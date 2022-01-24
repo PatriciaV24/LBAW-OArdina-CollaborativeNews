@@ -7,7 +7,7 @@
     <div class="modal-dialog modal-lg text-white">
         <div class="modal-content bg-light text-white">
             <div class="modal-header">
-                <h5 class="modal-title text-white" id="Forgot-modal-label">
+                <h5 class="modal-title text-black" id="Forgot-modal-label">
                     Esqueci Palavra-Passe
                 </h5>
                 <button type="button" class="btn-close btn-close-white " data-bs-dismiss="modal" aria-label="Close"></button>

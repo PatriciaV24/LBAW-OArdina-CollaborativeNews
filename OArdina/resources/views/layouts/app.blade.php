@@ -24,7 +24,6 @@
     <link rel="stylesheet" href={{asset('css/colors/dark.css')}}>
     <link rel="stylesheet" href={{asset('css/colors/light-dark.css')}}>
     <link rel="stylesheet" href={{asset('css/about_us.css')}}>
-    <link rel="stylesheet" href={{asset('css/carousel.css')}}>
     <link rel="stylesheet" href={{asset('css/news_modal.css')}}>
     <link rel="stylesheet" href={{asset('css/search.css')}}>
     <link rel="stylesheet" href={{asset('css/common.css')}}>
