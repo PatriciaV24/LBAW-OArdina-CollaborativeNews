@@ -1,11 +1,11 @@
-<div class="modal fade text-white" 
+<div class="modal fade" 
      id="forgotPassword" 
      tabindex="-1" 
      aria-labelledby="exampleModalLabel" 
      aria-hidden="true">
 
-    <div class="modal-dialog modal-lg text-white">
-        <div class="modal-content bg-light text-white">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-light">
             <div class="modal-header">
                 <h5 class="modal-title text-black" id="Forgot-modal-label">
                     Esqueci Palavra-Passe
@@ -14,7 +14,9 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <p> Insira o meu email e irá receber um email com instruções para proceder à alteração da palavra-passe.</p>
+                    <p class="text-black"> 
+                        Insira o meu email e irá receber um email com instruções para proceder à alteração da palavra-passe.
+                    </p>
                 </div>
                 <div class="mb-3">
                 <form method="POST" action="{{route('forgot-password')}}">

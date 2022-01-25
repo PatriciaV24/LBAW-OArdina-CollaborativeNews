@@ -8,6 +8,7 @@
                     Notícias
         </button>
     </li>
+    @auth
     <li class="nav-item" role="presentation">
         <button class="nav-link text-white clickable" id="search-users-tab" 
                 data-bs-toggle="pill" 
@@ -18,6 +19,7 @@
                     Utilizadores
         </button>
     </li>
+    @endauth
 </ul>
 
 <section class="tab-content"> 
