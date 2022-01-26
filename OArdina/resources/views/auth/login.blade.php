@@ -57,7 +57,6 @@
                 <a href="" data-bs-toggle="modal" data-bs-target="#forgotPassword" >Esqueci-me da palavra passse</a>
                 <div class="col-auto text-center pt-2">
                     <button type="submit" class="btn btn-lg btn-primary">Iniciar Sessão</button>
-                    <!--<a href="{{ url('auth/google') }}" class="btn btn-lg btn-secondary btn-block">Login With Google</a>-->
                 </div>
             </form>
              
