@@ -104,11 +104,15 @@ Este artefacto contém a especificação dos atores e as histórias associadas a
 | US21 | Ver/Editar Perfil | alta | Como utilizador autenticado, quero poder ver ou editar o meu perfil de forma a alterar a foto de perfil, password, dados pessoais ou apenas consultar as informações dele |
 | US22 | Sign Out | alta | Como utilizador autenticado, quero poder fechar a conta de forma a sair do site sem o deixar com a minha conta aberta |
 | US23 | Ver Perfil de outro utilizador | alta | Como utilizador autenticado, quero poder ver o perfil de outro utilizador e consultar a sua informação pertinente |
+| US42 | Ver notificações | alta | Como utilizador autenticado, pretendo ver as minhas notificações |
+| US44 | Reportar Notícia | alta | Como utilizador autenticado, quero poder reportar uma notícia |
 | US24 | Reportar Utilizador/Comentário | média | Como utilizador autenticado, quero poder reportar um utilizador ou comentário por não cumprir com as regras do site |
 | US25 | Follow/Unfollow Utilizadores | média | Como utilizador autenticado, pretendo seguir ou deixar de seguir utilizadores, gerindo a minha rede de amigos |
 | US26 | Follow/Unfollow _Tags_ | média | Como utilizador autenticado, pretendo seguir ou deixar de seguir tags, gerindo o meu feed |
 | US27 | Filtrar Noticias | média | Como utilizador autenticado, pretendo filtrar as notícias de forma a selecionar aquilo que pretendo ver no momento |
 | US28 | Ver estatísticas | média | Como utilizador autenticado, pretendo ver o meu progresso relativo no site |
+
+
 
 **Autor da Notícia**
 | Identifier | Name | Priority | Description |
@@ -129,6 +133,7 @@ Este artefacto contém a especificação dos atores e as histórias associadas a
 | US34 | Ver reportes | alta | Como Administrador, desejo ver todos os comentários relatados para poder verificar se são ofensivos |
 | US35 | Ban/Unban Utilizador | alta | Como Administrador, pretendo banir um utilizador por infringir as regras do site ou remover o bloqueio após certo tempo definido. |
 | US36 | Remover Utilizador | alta | Como Administrador, pretendo remover a conta de um utilizador por constantemente infringir as regras do site (Bans consecutivos, scam,...) |
+|US43|Ver Pedidos Administração|alta| Como Administrador, pretendo ver os pedidos efetuados pelos utilizadores sobre conteúdos ou utilizadores|
 | US37 | Remover Comentários Impróprios | alta | Como Administrador, pretendo remover comentários por serem ofensivos ou violar as regras do site |
 | US38 | Remover Notícia | média | Como Administrador, pretendo remover uma notícia sendo que o autor na mesma recebe uma notificação com a justificação da mesma |
 | US39 | Adicionar FAQ | média | Como Administrador, pretendo adicionar FAQ's, para que os utilizadores não precisem de entrar em contato comigo sobre esse assunto |
