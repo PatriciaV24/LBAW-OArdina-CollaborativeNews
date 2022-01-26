@@ -2,12 +2,8 @@
 <html lang="{{ app()->getLocale() }}">
     <head>
         <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}">
-
         <title>@yield('title')</title>
 
         <!-- Styles -->
@@ -25,8 +21,7 @@
         <link rel="stylesheet" href={{asset('css/carousel.css')}}>
         <link rel="stylesheet" href={{asset('css/news_modal.css')}}>
         <link rel="stylesheet" href={{asset('css/search.css')}}>
-        <script type="text/javascript"></script>
-        <script type="text/javascript" src={{ asset('js/toast.js') }} defer>
+        <script src={{ asset('js/toast.js') }} defer>
         </script>
     </head>
     <body class="w-100">

@@ -15,7 +15,7 @@
                             title="Nova Publicação">
                             &nbsp;<i class=" fas fa-newspaper"></i>
                 </button>
-                <button href="javascript:void(0)" class="btn btn-primary clickable fas fa-search" onclick="openSearchBar()"></button>
+                <button class="btn btn-primary clickable fas fa-search" onclick="openSearchBar()"></button>
                 @auth
                 <a href="/notifications/" class=" btn btnoputilzador clickable align-self-center text-decoration-none position-relative">
                         <i data-count="2" 

@@ -2,16 +2,12 @@
 <html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>@yield('title')</title>
     <meta property="og:title" content="@yield('title')"/>
     <meta property="og:description" content="O Ardina"/>
-    <!--<meta property="og:image" content=""/>-->
 
     <!-- Styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
@@ -27,12 +23,10 @@
     <link rel="stylesheet" href={{asset('css/news_modal.css')}}>
     <link rel="stylesheet" href={{asset('css/search.css')}}>
     <link rel="stylesheet" href={{asset('css/common.css')}}>
-    <script type="text/javascript"></script>
 </head>
 <body class="w-100">
     
     @include('partials.navbar')
-
     <main>
         @if ($errors->any())
             <div class="container-xl alert alert-danger alert-dismissible fade show" role="alert">
