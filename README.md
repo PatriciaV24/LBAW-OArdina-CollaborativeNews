@@ -31,4 +31,3 @@ Dentro da pasta OArdina correr o seguinte comando : `docker run -it -p 8000:80 -
 | Patricia  | test1234 |
 | Edgar     | test1234 |
 | Manuel    | test1234 |
-
