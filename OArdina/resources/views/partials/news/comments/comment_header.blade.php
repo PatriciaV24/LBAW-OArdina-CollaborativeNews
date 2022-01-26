@@ -57,9 +57,10 @@
         @else
             @include('partials.modals.report', ['report_to_id' => $comment->content_id, 'type'=>"comment", 'tab'=>''])
 
-            <button class="clickable-big  text-black ps-2 text-black" 
+            <button class="clickable-big text-muted ps-2 text-white" 
                     data-bs-toggle="modal" 
-                    data-bs-target="#reportContent_{{$comment->content_id}}__">
+                    data-bs-target="#reportContent_{{$comment->content_id}}_{{$type ?? ''}}">
+
                 <i class="fas fa-exclamation-triangle " 
                    data-bs-toggle="tooltip" 
                    data-bs-placement="top" 
