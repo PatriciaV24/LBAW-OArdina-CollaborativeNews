@@ -71,7 +71,7 @@
 
         <form id="reply_form{{$comment->content_id}}" 
               action="/comment/create/" 
-              class="container-xl mb-3 p-3 bg-light-dark" 
+              class="container-xl mb-3 p-3 bg-light" 
               style="display: none;" 
               method="post">
 
