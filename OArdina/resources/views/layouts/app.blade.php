@@ -27,7 +27,7 @@
 <body class="w-100">
     
     @include('partials.navbar')
-    <main>
+    <main class="limite2">
         @if ($errors->any())
             <div class="container-xl alert alert-danger alert-dismissible fade show" role="alert">
                 <h4> Ocorreu algum erro: </h4>

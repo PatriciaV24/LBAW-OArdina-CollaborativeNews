@@ -15,7 +15,7 @@
 @else
     <div class="d-flex">
         @if(in_array($type, ['report_user', 'report_content' ]) /* Ban */)
-            <button class="btn btn-danger me-2"
+            <button class="btn btn-secondary me-2 text-white"
                     data-bs-toggle="modal" 
                     data-bs-target="#banUser_{{$user->id}}">
                         Banir usuário  
@@ -29,7 +29,7 @@
 
         @endif
         @if(in_array($type, ['report_content']) /* Remover conteudo */)
-                <button class="btn btn-secondary me-2" 
+                <button class="btn btn-secondary me-2 text-white" 
                         data-bs-toggle="modal" 
                         data-bs-target="#deletePostModal_{{$content->content_id}}">
                             Apagar conteúdo

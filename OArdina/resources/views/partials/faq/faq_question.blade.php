@@ -14,15 +14,15 @@
             @auth
                 @if(Auth::user()->is_admin)
                     <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-outline-primary btn-sm mt-2 me-2" 
+                        <button type="button" class="btn btn-secondary btn-sm mt-2 me-2 text-white" 
                                 data-bs-toggle="modal" data-bs-target="#editFAQ_{{$topic->id}}" 
                                 data-bs-questionID="{{$topic->id}}">
-                                    Edit
+                                    Editar
                         </button>
                         <form method="post" action="/faq/{{$topic->id}}">
                             @method('delete')
                             {{csrf_field()}}
-                            <button type="submit" class="btn btn-outline-danger btn-sm mt-2">
+                            <button type="submit" class="btn btn-primary btn-sm mt-2">
                                 Remover
                             </button>
                         </form>

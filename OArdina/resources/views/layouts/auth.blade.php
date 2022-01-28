@@ -26,7 +26,7 @@
     </head>
     <body class="w-100">
         @include('partials.navbar')
-        <main>
+        <main class="limite2">
             @yield('content')
         </main>
         @include('partials.footer')
