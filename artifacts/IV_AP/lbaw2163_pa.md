@@ -202,7 +202,6 @@ URL para o produto : <http://lbaw2163.lbaw.fe.up.pt>
 
 O vídeo de apresentação ao nosso projeto está disponível : [Ardina](https://drive.google.com/drive/u/1/folders/1-fPoSR3lXyPI38UgpWf6iQBe2Lk_ckoT)
 
-## Revisões ao projeto
 
 **_Grupo 63, Data :_** 09/11/2021
 
